@@ -1,0 +1,28 @@
+[
+  {
+    "Id": 1,
+    "Type": "text",
+    "Text": "SheIn",
+    "ImageUrl": "",
+    "FontFamily": "Arial",
+    "FontSize": 24,
+    "Color": "#333333",
+    "Name": "主LOGO",
+    "Width": 150,
+    "Height": 50,
+    "CreateTime": "2024-01-01T00:00:00"
+  },
+  {
+    "Id": 2,
+    "Type": "text",
+    "Text": "????",
+    "ImageUrl": "",
+    "FontFamily": "STXingkai",
+    "FontSize": 32,
+    "Color": "#ff6b35",
+    "Name": "??LOGO??",
+    "Width": 200,
+    "Height": 60,
+    "CreateTime": "2025-09-29T04:06:40.0790886+08:00"
+  }
+]

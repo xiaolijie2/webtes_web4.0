@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模拟业务员登录</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .success { background-color: #d4edda; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; border: 1px solid #f5c6cb; }
+        .info { background-color: #d1ecf1; border: 1px solid #bee5eb; }
+        .warning { background-color: #fff3cd; border: 1px solid #ffeaa7; }
+        .account-section {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>模拟业务员登录测试</h1>
+    
+    <div class="info">
+        <p>这个页面用于测试不同业务员账户的登录和客户数据显示。</p>
+    </div>
+    
+    <div class="account-section">
+        <h3>testuser (无客户)</h3>
+        <p>ID: 386b4686-b55b-4f78-b815-91b76328d351 | 邀请码: TEST123</p>
+        <button class="btn" onclick="simulateLogin('testuser', 'testpass')">登录 testuser</button>
+    </div>
+    
+    <div class="account-section">
+        <h3>yewuyuan1 (有5个客户)</h3>
+        <p>ID: 60ccf515-f7e3-46e9-8ee4-a43fbe5daf99 | 邀请码: 111111</p>
+        <button class="btn" onclick="simulateLogin('yewuyuan1', 'bi5vWeTHs0ztuzClnt3UfbPeS5eUhK1uZiAexM32wZY=')">登录 yewuyuan1</button>
+    </div>
+    
+    <div class="account-section">
+        <h3>其他操作</h3>
+        <button class="btn" onclick="clearStorage()">清除存储</button>
+        <button class="btn" onclick="checkStorage()">检查存储</button>
+        <button class="btn" onclick="testCustomerAPI()">测试客户API</button>
+        <button class="btn" onclick="goToSalesperson()">跳转到业务员后台</button>
+    </div>
+    
+    <div id="status"></div>
+    
+    <script>
+        const API_BASE = 'http://localhost:5065/api';
+        let currentLoginData = null;
+        
+        function showStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = `<div class="${type}">${message}</div>`;
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        }
+        
+        async function simulateLogin(username, password) {
+            showStatus(`正在模拟登录 ${username}...`, 'info');
+            
+            try {
+                const response = await fetch(`${API_BASE}/salesperson/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        password: password
+                    })
+                });
+                
+                const data = await response.json();
+                console.log('登录响应:', data);
+                
+                if (response.ok && data.success) {
+                    currentLoginData = data;
+                    
+                    // 保存登录信息到 localStorage
+                    const authToken = btoa(JSON.stringify({
+                        username: data.agent.username,
+                        loginTime: new Date().toISOString(),
+                        type: 'salesperson'
+                    }));
+                    
+                    // 确保保存的用户数据包含所有必要的属性
+                    const userInfo = {
+                        id: data.agent.id,
+                        username: data.agent.username,
+                        nickname: data.agent.nickname,
+                        inviteCode: data.agent.inviteCode,
+                        commissionRate: data.agent.commissionRate,
+                        status: data.agent.status,
+                        createdAt: data.agent.createdAt,
+                        customerCount: data.agent.customerCount
+                    };
+                    
+                    localStorage.setItem('authToken', authToken);
+                    localStorage.setItem('currentUser', JSON.stringify(userInfo));
+                    localStorage.setItem('permissionLevel', '2'); // 业务员权限级别
+                    
+                    showStatus(`登录成功！业务员: ${userInfo.username} (${userInfo.nickname})<br>ID: ${userInfo.id}<br>邀请码: ${userInfo.inviteCode}`, 'success');
+                    console.log('已保存到localStorage:', {
+                        authToken: authToken,
+                        currentUser: userInfo,
+                        permissionLevel: '2'
+                    });
+                    
+                    // 自动测试客户API
+                    setTimeout(() => testCustomerAPI(), 1000);
+                } else {
+                    showStatus(`登录失败: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                showStatus(`登录请求失败: ${error.message}`, 'error');
+                console.error('登录错误:', error);
+            }
+        }
+        
+        async function testCustomerAPI() {
+            if (!currentLoginData) {
+                showStatus('请先登录', 'warning');
+                return;
+            }
+            
+            showStatus('正在测试客户API...', 'info');
+            
+            try {
+                const salespersonId = currentLoginData.agent.id;
+                const response = await fetch(`${API_BASE}/salesperson/customers/${salespersonId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                console.log('客户API响应:', data);
+                
+                if (response.ok) {
+                    const customerCount = data.customers ? data.customers.length : 0;
+                    showStatus(`客户API测试成功！<br>找到 ${customerCount} 个客户<br>响应: ${JSON.stringify(data, null, 2)}`, 'success');
+                } else {
+                    showStatus(`客户API测试失败: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                showStatus(`客户API请求失败: ${error.message}`, 'error');
+                console.error('客户API错误:', error);
+            }
+        }
+        
+        function clearStorage() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('permissionLevel');
+            currentLoginData = null;
+            showStatus('已清除所有存储数据', 'info');
+        }
+        
+        function checkStorage() {
+            const authToken = localStorage.getItem('authToken');
+            const currentUser = localStorage.getItem('currentUser');
+            const permissionLevel = localStorage.getItem('permissionLevel');
+            
+            let message = '<h4>当前存储状态:</h4>';
+            message += `<p>认证令牌: ${authToken ? '存在' : '不存在'}</p>`;
+            message += `<p>当前用户: ${currentUser ? '存在' : '不存在'}</p>`;
+            message += `<p>权限等级: ${permissionLevel || '未设置'}</p>`;
+            
+            if (currentUser) {
+                try {
+                    const userData = JSON.parse(currentUser);
+                    message += `<p>用户详情: <pre>${JSON.stringify(userData, null, 2)}</pre></p>`;
+                } catch (e) {
+                    message += `<p>用户数据解析失败: ${e.message}</p>`;
+                }
+            }
+            
+            showStatus(message, 'info');
+        }
+        
+        function goToSalesperson() {
+            window.location.href = 'salesperson.html';
+        }
+        
+        // 页面加载时检查存储状态
+        window.onload = function() {
+            checkStorage();
+        };
+    </script>
+</body>
+</html>

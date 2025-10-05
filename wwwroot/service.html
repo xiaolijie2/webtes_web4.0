@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>客服</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="bottom-nav.css" rel="stylesheet">
+    <title>客服中心</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #e9ecef;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        
+        .mobile-container {
+            width: 450px;
+            max-width: 450px;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border-left: 1px solid #dee2e6;
+            border-right: 1px solid #dee2e6;
+            position: relative;
+            padding-bottom: 80px;
+        }
+        
+        .chat-header {
+            background: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 15px 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .service-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .online-indicator {
+            width: 8px;
+            height: 8px;
+            background: #34C759;
+            border-radius: 50%;
+            margin-left: 8px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f5f5f5;
+        }
+        
+        .message {
+            display: flex;
+            margin-bottom: 20px;
+            align-items: flex-start;
+        }
+        
+        .message.user {
+            flex-direction: row-reverse;
+        }
+        
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #007AFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            margin: 0 10px;
+            flex-shrink: 0;
+        }
+        
+        .message.user .message-avatar {
+            background: #34C759;
+        }
+        
+        .message-content {
+            max-width: 70%;
+            background: white;
+            padding: 12px 16px;
+            border-radius: 18px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .message.user .message-content {
+            background: #007AFF;
+            color: white;
+        }
+        
+        .chat-input-container {
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            padding: 15px 20px;
+            margin-bottom: 80px;
+        }
+        
+        .chat-input-wrapper {
+            display: flex;
+            align-items: center;
+            background: #f5f5f5;
+            border-radius: 25px;
+            padding: 8px 15px;
+        }
+        
+        .input-button {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 18px;
+            margin-right: 10px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+        
+        .input-button:hover {
+            background: #e0e0e0;
+        }
+        
+        .chat-input {
+            flex: 1;
+            border: none;
+            background: none;
+            outline: none;
+            font-size: 14px;
+            padding: 8px 0;
+        }
+        
+        .chat-input::placeholder {
+            color: #999;
+        }
+        
+        .send-button {
+            background: #007AFF;
+            border: none;
+            color: white;
+            font-size: 16px;
+            padding: 8px 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: all 0.3s;
+        }
+        
+        .send-button:hover {
+            background: #0056CC;
+        }
+        
+        .send-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .typing-indicator {
+            display: none;
+            padding: 10px 0;
+        }
+        
+        .typing-dots {
+            display: flex;
+            align-items: center;
+            margin-left: 50px;
+        }
+        
+        .typing-dots span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ccc;
+            margin: 0 2px;
+            animation: typing 1.4s infinite;
+        }
+        
+        .typing-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.5;
+            }
+            30% {
+                transform: translateY(-10px);
+                opacity: 1;
+            }
+        }
+        
+        /* 用户消息样式 */
+        .message.user {
+            flex-direction: row-reverse;
+        }
+        
+        .message.user .message-avatar {
+            background: #007AFF;
+            margin-left: 8px;
+            margin-right: 0;
+        }
+        
+        .message.user .message-content {
+            background: #007AFF;
+            color: white;
+            margin-left: 0;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <!-- 聊天头部 -->
+        <div class="chat-header">
+            <div class="service-status">
+                online service
+                <div class="online-indicator"></div>
+            </div>
+        </div>
+
+        <!-- 聊天容器 -->
+        <div class="chat-container">
+            <!-- 聊天消息区域 -->
+            <div class="chat-messages" id="chatMessages">
+                <!-- 客服欢迎消息 -->
+                <div class="message">
+                    <div class="message-avatar">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <div class="message-content">
+                        Benvenuto! Come possiamo aiutarti oggi?
+                    </div>
+                </div>
+                
+                <!-- 打字指示器 -->
+                <div class="typing-indicator" id="typingIndicator">
+                    <div class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 聊天输入区域 -->
+            <div class="chat-input-container">
+                <div class="chat-input-wrapper">
+                    <button class="input-button" onclick="selectImage()" title="发送图片">
+                        <i class="fas fa-image"></i>
+                    </button>
+                    <button class="input-button" onclick="selectEmoji()" title="表情">
+                        <i class="fas fa-smile"></i>
+                    </button>
+                    <input type="text" class="chat-input" id="messageInput" placeholder="Your message..." onkeypress="handleKeyPress(event)">
+                    <button class="send-button" id="sendButton" onclick="sendMessage()" disabled>
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="bottom-nav.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // 动态加载网站名称
+        function loadSiteName() {
+            // 尝试从API获取网站名称
+            fetch('/api/admin/site-settings')
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.siteName) {
+                        document.title = data.siteName + '-客服';
+                        localStorage.setItem('siteName', data.siteName);
+                    } else {
+                        // 从localStorage获取
+                        const siteName = localStorage.getItem('siteName');
+                        if (siteName) {
+                            document.title = siteName + '-客服';
+                        }
+                    }
+                })
+                .catch(error => {
+                    // 从localStorage获取
+                    const siteName = localStorage.getItem('siteName');
+                    if (siteName) {
+                        document.title = siteName + '-客服';
+                    }
+                });
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSiteName();
+            initChat();
+            // 隐藏打字指示器
+            document.getElementById('typingIndicator').style.display = 'none';
+        });
+
+        // 初始化聊天
+        function initChat() {
+            const messageInput = document.getElementById('messageInput');
+            const sendButton = document.getElementById('sendButton');
+            
+            // 监听输入框变化
+            messageInput.addEventListener('input', function() {
+                sendButton.disabled = this.value.trim() === '';
+            });
+        }
+
+        // 处理键盘事件
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        // 发送消息
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value.trim();
+            
+            if (message === '') return;
+            
+            // 添加用户消息
+            addMessage(message, 'user');
+            
+            // 清空输入框
+            messageInput.value = '';
+            document.getElementById('sendButton').disabled = true;
+            
+            // 显示打字指示器
+            showTypingIndicator();
+            
+            // 模拟客服回复
+            setTimeout(() => {
+                hideTypingIndicator();
+                const responses = [
+                    '感谢您的咨询，我正在为您查询相关信息...',
+                    '请稍等，我来帮您解决这个问题。',
+                    '好的，我明白了您的需求，让我为您处理。',
+                    '这个问题我需要进一步了解，请您提供更多详细信息。'
+                ];
+                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                addMessage(randomResponse, 'service');
+            }, 1500 + Math.random() * 1000);
+        }
+
+        // 添加消息
+        function addMessage(content, type) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type === 'user' ? 'user' : ''}`;
+            
+            if (type === 'user') {
+                messageDiv.innerHTML = `
+                    <div class="message-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="message-content">
+                        ${content}
+                    </div>
+                `;
+            } else {
+                messageDiv.innerHTML = `
+                    <div class="message-avatar">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <div class="message-content">
+                        ${content}
+                    </div>
+                `;
+            }
+            
+            // 在打字指示器之前插入消息
+            const typingIndicator = document.getElementById('typingIndicator');
+            chatMessages.insertBefore(messageDiv, typingIndicator);
+            
+            // 滚动到底部
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // 显示打字指示器
+        function showTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            typingIndicator.style.display = 'flex';
+            
+            // 滚动到底部
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // 隐藏打字指示器
+        function hideTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            typingIndicator.style.display = 'none';
+        }
+
+        // 选择图片
+        function selectImage() {
+            alert('图片上传功能正在开发中...');
+        }
+
+        // 选择表情
+        function selectEmoji() {
+            const emojis = ['😊', '😂', '👍', '❤️', '😢', '😮', '😡', '🤔'];
+            const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+            const messageInput = document.getElementById('messageInput');
+            messageInput.value += emoji;
+            messageInput.focus();
+            
+            // 更新发送按钮状态
+            document.getElementById('sendButton').disabled = messageInput.value.trim() === '';
+        }
+    </script>
+    <script src="bottom-nav.js"></script>
+</body>
+</html>

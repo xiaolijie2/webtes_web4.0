@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首页</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #e9ecef;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        
+        .mobile-container {
+            width: 450px;
+            max-width: 450px;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border-left: 1px solid #dee2e6;
+            border-right: 1px solid #dee2e6;
+            position: relative;
+            padding-bottom: 80px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #007AFF 0%, #0056CC 100%);
+            color: white;
+            padding: 15px 20px;
+            position: relative;
+        }
+        
+        .logo-area {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .brand-logo {
+            width: 120px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .language-selector {
+            width: 80px;
+            height: 30px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        .slideshow-container {
+            position: relative;
+            margin: 0;
+            border-radius: 0;
+            overflow: hidden;
+        }
+        
+        .slide {
+            display: none;
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, #FF6B35, #F7931E);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .slide.active {
+            display: block;
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .slide.slide-out {
+            opacity: 0;
+            transform: translateX(-100%);
+        }
+        
+        .slide-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+        }
+        
+        .slide-indicators {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+        }
+        
+        .indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .indicator.active {
+            background: white;
+            transform: scale(1.2);
+        }
+        
+        .marquee-container {
+            background: #f1f3f4;
+            padding: 10px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .marquee-content {
+            display: block;
+            font-size: 12px;
+            color: #666;
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            transform: translateX(100%);
+            opacity: 0;
+            transition: all 0.8s ease-in-out;
+        }
+        
+        .marquee-content.slide-in {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        
+        .marquee-content.slide-out {
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+        
+        .balance-cards-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            padding: 20px;
+        }
+        
+        .balance-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .balance-card .icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .balance-card .amount {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .balance-card .label {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .quick-actions {
+            padding: 20px;
+        }
+        
+        .quick-actions h3 {
+            margin-bottom: 15px;
+            font-size: 18px;
+            color: #333;
+        }
+        
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+        
+        .action-item {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .action-item:hover {
+            transform: translateY(-2px);
+        }
+        
+        .action-item .icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: #007AFF;
+        }
+        
+        .action-item .label {
+            font-size: 12px;
+            color: #333;
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 450px;
+            max-width: 450px;
+            background: white;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            z-index: 1000;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #666;
+            font-size: 12px;
+            padding: 5px;
+            transition: color 0.3s;
+        }
+        
+        .nav-item.active {
+            color: #007AFF;
+        }
+        
+        .nav-item .icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        
+        .user-info {
+            background: white;
+            margin: 20px;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .user-info .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #007AFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            margin: 0 auto 15px;
+        }
+        
+        .user-info .user-name {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .user-info .user-level {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <div class="header">
+            <div class="logo-area">
+                <div class="brand-logo" id="brandLogo">品牌LOGO</div>
+                <select class="language-selector" onclick="showLanguageMenu()">
+                    <option>中文</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- 轮播图 -->
+        <div class="slideshow-container">
+            <div class="slide active">
+                <div class="slide-content">
+                    <h3>欢迎使用我们的服务</h3>
+                    <p>享受便捷的移动体验</p>
+                </div>
+            </div>
+            <div class="slide">
+                <div class="slide-content">
+                    <h3>优质服务保障</h3>
+                    <p>7x24小时客户支持</p>
+                </div>
+            </div>
+            <div class="slide">
+                <div class="slide-content">
+                    <h3>安全可靠</h3>
+                    <p>银行级安全保护</p>
+                </div>
+            </div>
+            <div class="slide-indicators">
+                <span class="indicator active" onclick="currentSlide(1)"></span>
+                <span class="indicator" onclick="currentSlide(2)"></span>
+                <span class="indicator" onclick="currentSlide(3)"></span>
+            </div>
+        </div>
+
+        <!-- 滚动公告 -->
+        <div class="marquee-container">
+            <div class="marquee-content">欢迎使用我们的服务平台！</div>
+        </div>
+
+        <!-- 用户信息 -->
+        <div class="user-info">
+            <div class="user-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="user-name username-display">用户名</div>
+            <div class="user-level user-role-display">普通用户</div>
+        </div>
+
+        <!-- 余额卡片 -->
+        <div class="balance-cards-container">
+            <div class="balance-card">
+                <div class="icon" style="color: #28a745;">
+                    <i class="fas fa-wallet"></i>
+                </div>
+                <div class="amount" id="accountBalance">¥0.00</div>
+                <div class="label">账户余额</div>
+            </div>
+            <div class="balance-card">
+                <div class="icon" style="color: #ffc107;">
+                    <i class="fas fa-coins"></i>
+                </div>
+                <div class="amount" id="totalEarnings">¥0.00</div>
+                <div class="label">累计收益</div>
+            </div>
+        </div>
+
+        <!-- 快捷操作 -->
+        <div class="quick-actions">
+            <h3>快捷操作</h3>
+            <div class="actions-grid">
+                <div class="action-item" onclick="navigateTo('tasks')">
+                    <div class="icon"><i class="fas fa-tasks"></i></div>
+                    <div class="label">任务中心</div>
+                </div>
+                <div class="action-item" onclick="navigateTo('orders')">
+                    <div class="icon"><i class="fas fa-shopping-cart"></i></div>
+                    <div class="label">我的订单</div>
+                </div>
+                <div class="action-item" onclick="navigateTo('vip')">
+                    <div class="icon"><i class="fas fa-crown"></i></div>
+                    <div class="label">VIP中心</div>
+                </div>
+                <div class="action-item" onclick="navigateTo('account')">
+                    <div class="icon"><i class="fas fa-user-cog"></i></div>
+                    <div class="label">账户设置</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部导航 -->
+        <div class="bottom-nav">
+            <a href="home.html" class="nav-item active">
+                <div class="icon"><i class="fas fa-home"></i></div>
+                <span>首页</span>
+            </a>
+            <a href="tasks.html" class="nav-item">
+                <div class="icon"><i class="fas fa-tasks"></i></div>
+                <span>任务</span>
+            </a>
+            <a href="orders.html" class="nav-item">
+                <div class="icon"><i class="fas fa-shopping-cart"></i></div>
+                <span>订单</span>
+            </a>
+            <a href="account.html" class="nav-item">
+                <div class="icon"><i class="fas fa-user"></i></div>
+                <span>我的</span>
+            </a>
+        </div>
+    </div>
+
+    <script src="js/static-data-manager.js"></script>
+    <script src="js/static-auth.js"></script>
+    <script>
+        let slideIndex = 1;
+        let slideInterval;
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查登录状态
+            if (!window.staticAuth.isLoggedIn()) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // 初始化页面
+            initPage();
+            
+            // 启动轮播图
+            startSlideshow();
+            
+            // 加载用户数据
+            loadUserData();
+            
+            // 加载品牌LOGO
+            loadBrandLogo();
+        });
+
+        // 初始化页面
+        function initPage() {
+            const user = window.staticAuth.getCurrentUser();
+            if (user) {
+                updateUserDisplay(user);
+            }
+        }
+
+        // 更新用户显示信息
+        function updateUserDisplay(user) {
+            const usernameElements = document.querySelectorAll('.username-display');
+            usernameElements.forEach(el => {
+                el.textContent = user.username || user.phone || '用户';
+            });
+            
+            const roleElements = document.querySelectorAll('.user-role-display');
+            roleElements.forEach(el => {
+                el.textContent = window.staticAuth.getRoleDisplayName(user.role);
+            });
+        }
+
+        // 加载用户数据
+        async function loadUserData() {
+            try {
+                const user = window.staticAuth.getCurrentUser();
+                if (!user) return;
+
+                // 加载用户余额
+                const userStats = await window.staticDataManager.getUserStats(user.id);
+                if (userStats) {
+                    document.getElementById('accountBalance').textContent = `¥${userStats.balance || 0}`;
+                    document.getElementById('totalEarnings').textContent = `¥${userStats.totalEarnings || 0}`;
+                }
+            } catch (error) {
+                console.error('加载用户数据失败:', error);
+            }
+        }
+
+        // 轮播图相关函数
+        function startSlideshow() {
+            slideInterval = setInterval(nextSlide, 4000);
+        }
+
+        function nextSlide() {
+            slideIndex++;
+            if (slideIndex > 3) slideIndex = 1;
+            showSlide(slideIndex);
+        }
+
+        function currentSlide(n) {
+            clearInterval(slideInterval);
+            slideIndex = n;
+            showSlide(slideIndex);
+            startSlideshow();
+        }
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            const indicators = document.querySelectorAll('.indicator');
+            
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            indicators.forEach(indicator => {
+                indicator.classList.remove('active');
+            });
+            
+            if (slides[n-1]) {
+                slides[n-1].classList.add('active');
+            }
+            if (indicators[n-1]) {
+                indicators[n-1].classList.add('active');
+            }
+        }
+
+        // 导航函数
+        function navigateTo(page) {
+            switch(page) {
+                case 'tasks':
+                    window.location.href = 'tasks.html';
+                    break;
+                case 'orders':
+                    window.location.href = 'orders.html';
+                    break;
+                case 'vip':
+                    window.location.href = 'vip.html';
+                    break;
+                case 'account':
+                    window.location.href = 'account.html';
+                    break;
+                default:
+                    alert('页面开发中...');
+            }
+        }
+
+        // 语言选择菜单
+        function showLanguageMenu() {
+            alert('语言选择功能开发中...');
+        }
+
+        // 加载品牌LOGO
+        async function loadBrandLogo() {
+            try {
+                const logoData = await window.staticDataManager.getLogoSettings();
+                const logoElement = document.getElementById('brandLogo');
+                
+                if (logoData && logoData.type) {
+                    if (logoData.type === 'text') {
+                        logoElement.textContent = logoData.text || '品牌LOGO';
+                        logoElement.style.fontSize = logoData.fontSize || '16px';
+                        logoElement.style.color = logoData.color || 'white';
+                    } else if (logoData.type === 'image' && logoData.imageUrl) {
+                        logoElement.innerHTML = `<img src="${logoData.imageUrl}" alt="品牌LOGO" style="max-width: 100%; max-height: 100%; object-fit: contain;">`;
+                    }
+                }
+            } catch (error) {
+                console.error('加载LOGO失败:', error);
+            }
+        }
+    </script>
+</body>
+</html>

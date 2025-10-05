@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理员登录</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .admin-container {
+            width: 100%;
+            max-width: 450px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .form-container {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            background: #f8f9fa;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #2c3e50;
+            background: white;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-bottom: 20px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(44, 62, 80, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .user-login-link {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e5e9;
+        }
+
+        .user-login-link a {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .user-login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .alert {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .permission-info {
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #1565c0;
+        }
+
+        .permission-info ul {
+            margin: 8px 0 0 20px;
+        }
+
+        .permission-info li {
+            margin-bottom: 4px;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 480px) {
+            .admin-container {
+                padding: 10px;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+            
+            .form-group input {
+                padding: 12px 14px;
+                font-size: 16px;
+            }
+            
+            .btn {
+                padding: 14px;
+                font-size: 16px;
+            }
+            
+            h2 {
+                font-size: 20px !important;
+                margin-bottom: 20px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="login-container">
+            <div class="form-container">
+                <h2 style="text-align: center; margin-bottom: 30px; color: #333; font-size: 24px; font-weight: 600;">管理员登录</h2>
+                <div id="admin-alert"></div>
+                <form id="admin-login-form">
+                    <div class="form-group">
+                        <label for="admin-username">用户名</label>
+                        <input type="text" id="admin-username" placeholder="请输入用户名" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="admin-password">密码</label>
+                        <input type="password" id="admin-password" placeholder="请输入密码" required>
+                    </div>
+                    <button type="submit" class="btn">登录</button>
+                </form>
+                
+                <div class="user-login-link">
+                    <a href="home.html">返回首页</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5065/api';
+
+        // 显示提示信息
+        function showAlert(containerId, message, type) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+            setTimeout(() => container.innerHTML = '', 5000);
+        }
+
+        // 管理员登录表单提交
+        document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('admin-username').value.trim();
+            const password = document.getElementById('admin-password').value;
+
+            // 基本验证
+            if (!username || !password) {
+                showAlert('admin-alert', '请输入用户名和密码', 'error');
+                return;
+            }
+
+            try {
+                // 使用新的管理员登录API
+                const response = await fetch(`${API_BASE}/Auth/admin-login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        Username: username, 
+                        Password: password 
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success && result.adminInfo) {
+                    // 保存登录信息
+                    localStorage.setItem('authToken', result.token);
+                    localStorage.setItem('currentUser', JSON.stringify(result.adminInfo));
+                    localStorage.setItem('permissionLevel', result.adminInfo.permissionLevel.toString());
+                    localStorage.setItem('userType', result.adminInfo.userType);
+                    
+                    // 设置管理员登录状态
+                    localStorage.setItem('adminToken', result.token);
+                    localStorage.setItem('isAdminLoggedIn', 'true');
+                    localStorage.setItem('currentAdmin', JSON.stringify(result.adminInfo));
+                    
+                    // 如果是超级管理员，设置超级管理员登录信息
+                    if (result.adminInfo.permissionLevel === 0) {
+                        localStorage.setItem('superAdminLoginInfo', JSON.stringify({
+                            id: result.adminInfo.id,
+                            username: result.adminInfo.username,
+                            name: result.adminInfo.name,
+                            permissionLevel: result.adminInfo.permissionLevel,
+                            userType: result.adminInfo.userType
+                        }));
+                    }
+                    
+                    // 显示成功消息并跳转
+                    const permissionNames = {
+                        0: '超级管理员',
+                        1: '高级管理员',
+                        2: '普通管理员',
+                        3: '初级管理员'
+                    };
+                    
+                    const permissionName = permissionNames[result.adminInfo.permissionLevel] || '管理员';
+                    showAlert('admin-alert', `${permissionName}登录成功！正在跳转...`, 'success');
+                    
+                    setTimeout(() => {
+                        // 根据权限等级跳转到不同页面
+                        if (result.redirectUrl) {
+                            window.location.href = result.redirectUrl;
+                        } else {
+                            // 默认跳转逻辑
+                            if (result.adminInfo.permissionLevel === 0) {
+                                window.location.href = 'super-admin.html';
+                            } else {
+                                window.location.href = 'admin.html';
+                            }
+                        }
+                    }, 1500);
+                    
+                } else {
+                    showAlert('admin-alert', result.message || '登录失败', 'error');
+                }
+                
+            } catch (error) {
+                console.error('管理员登录失败:', error);
+                showAlert('admin-alert', '登录失败，请检查网络连接', 'error');
+            }
+        });
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('管理员登录页面加载完成');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>客服中心</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            padding-bottom: 80px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .service-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .service-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 36px;
+            color: white;
+        }
+
+        .service-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .service-subtitle {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .contact-methods {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .contact-item {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .contact-item:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+            transform: translateY(-2px);
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            font-size: 24px;
+            color: white;
+        }
+
+        .contact-info h4 {
+            margin: 0 0 8px 0;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .contact-info p {
+            margin: 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .contact-status {
+            margin-left: auto;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-online {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-busy {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-offline {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .faq-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid #e9ecef;
+            padding: 20px 0;
+            cursor: pointer;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .faq-answer {
+            color: #666;
+            line-height: 1.6;
+            display: none;
+            padding-top: 10px;
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        .faq-toggle {
+            transition: transform 0.3s;
+        }
+
+        .faq-item.active .faq-toggle {
+            transform: rotate(180deg);
+        }
+
+        .working-hours {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .hours-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .hours-item {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .hours-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .hours-time {
+            color: #667eea;
+            font-weight: 500;
+        }
+
+        .feedback-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .feedback-form {
+            display: grid;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-control {
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-control.textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e9ecef;
+            padding: 10px 0;
+            z-index: 1000;
+        }
+
+        .nav-items {
+            display: flex;
+            justify-content: space-around;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #666;
+            padding: 5px;
+            transition: color 0.3s;
+        }
+
+        .nav-item.active {
+            color: #667eea;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .nav-item span {
+            font-size: 12px;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 15px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .service-card, .faq-section, .working-hours, .feedback-section {
+                padding: 20px;
+            }
+
+            .contact-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+                margin-right: 15px;
+            }
+
+            .hours-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <div class="header">
+        <div class="header-content">
+            <button class="back-btn" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h1 class="header-title">客服中心</h1>
+            <div></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 客服介绍 -->
+        <div class="service-card">
+            <div class="service-header">
+                <div class="service-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <h2 class="service-title">专业客服团队</h2>
+                <p class="service-subtitle">7×24小时为您提供优质服务</p>
+            </div>
+
+            <!-- 联系方式 -->
+            <div class="contact-methods">
+                <div class="contact-item" onclick="openOnlineChat()">
+                    <div class="contact-icon" style="background: #07c160;">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div class="contact-info">
+                        <h4>在线客服</h4>
+                        <p>即时响应，快速解决问题</p>
+                    </div>
+                    <div class="contact-status status-online">在线</div>
+                </div>
+
+                <div class="contact-item" onclick="callPhone()">
+                    <div class="contact-icon" style="background: #1677ff;">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="contact-info">
+                        <h4>客服热线</h4>
+                        <p>400-888-8888</p>
+                    </div>
+                    <div class="contact-status status-online">24小时</div>
+                </div>
+
+                <div class="contact-item" onclick="sendEmail()">
+                    <div class="contact-icon" style="background: #ff6b35;">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="contact-info">
+                        <h4>邮件支持</h4>
+                        <p>service@example.com</p>
+                    </div>
+                    <div class="contact-status status-online">24小时内回复</div>
+                </div>
+
+                <div class="contact-item" onclick="openQQ()">
+                    <div class="contact-icon" style="background: #12b7f5;">
+                        <i class="fab fa-qq"></i>
+                    </div>
+                    <div class="contact-info">
+                        <h4>QQ客服</h4>
+                        <p>123456789</p>
+                    </div>
+                    <div class="contact-status status-busy">忙碌</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 工作时间 -->
+        <div class="working-hours">
+            <h3 class="section-title">服务时间</h3>
+            <div class="hours-grid">
+                <div class="hours-item">
+                    <div class="hours-title">在线客服</div>
+                    <div class="hours-time">24小时在线</div>
+                </div>
+                <div class="hours-item">
+                    <div class="hours-title">电话客服</div>
+                    <div class="hours-time">09:00 - 21:00</div>
+                </div>
+                <div class="hours-item">
+                    <div class="hours-title">邮件支持</div>
+                    <div class="hours-time">24小时接收</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 常见问题 -->
+        <div class="faq-section">
+            <h3 class="section-title">常见问题</h3>
+            
+            <div class="faq-item" onclick="toggleFAQ(this)">
+                <div class="faq-question">
+                    <span>如何充值？</span>
+                    <i class="fas fa-chevron-down faq-toggle"></i>
+                </div>
+                <div class="faq-answer">
+                    您可以通过以下方式充值：<br>
+                    1. 进入个人中心，点击"充值"按钮<br>
+                    2. 选择充值金额和支付方式<br>
+                    3. 完成支付后，余额将实时到账<br>
+                    支持支付宝、微信支付、银行卡等多种支付方式。
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="toggleFAQ(this)">
+                <div class="faq-question">
+                    <span>如何查看订单状态？</span>
+                    <i class="fas fa-chevron-down faq-toggle"></i>
+                </div>
+                <div class="faq-answer">
+                    您可以在"我的订单"页面查看所有订单的详细状态：<br>
+                    1. 点击底部导航的"订单"按钮<br>
+                    2. 选择相应的订单状态筛选<br>
+                    3. 点击订单可查看详细信息<br>
+                    订单状态包括：待付款、进行中、已完成、已取消等。
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="toggleFAQ(this)">
+                <div class="faq-question">
+                    <span>忘记密码怎么办？</span>
+                    <i class="fas fa-chevron-down faq-toggle"></i>
+                </div>
+                <div class="faq-answer">
+                    如果忘记密码，请按以下步骤操作：<br>
+                    1. 在登录页面点击"忘记密码"<br>
+                    2. 输入您的手机号或邮箱<br>
+                    3. 获取验证码并设置新密码<br>
+                    如果仍有问题，请联系客服协助处理。
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="toggleFAQ(this)">
+                <div class="faq-question">
+                    <span>如何提升VIP等级？</span>
+                    <i class="fas fa-chevron-down faq-toggle"></i>
+                </div>
+                <div class="faq-answer">
+                    VIP等级根据您的消费金额自动提升：<br>
+                    1. 普通用户：消费满100元升级VIP1<br>
+                    2. VIP1：消费满500元升级VIP2<br>
+                    3. VIP2：消费满1000元升级VIP3<br>
+                    不同等级享受不同的优惠和特权。
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="toggleFAQ(this)">
+                <div class="faq-question">
+                    <span>如何申请退款？</span>
+                    <i class="fas fa-chevron-down faq-toggle"></i>
+                </div>
+                <div class="faq-answer">
+                    如需申请退款，请联系客服：<br>
+                    1. 提供订单号和退款原因<br>
+                    2. 客服会在24小时内处理<br>
+                    3. 退款将原路返回到您的支付账户<br>
+                    退款到账时间：支付宝/微信1-3个工作日，银行卡3-7个工作日。
+                </div>
+            </div>
+        </div>
+
+        <!-- 意见反馈 -->
+        <div class="feedback-section">
+            <h3 class="section-title">意见反馈</h3>
+            <form class="feedback-form" onsubmit="submitFeedback(event)">
+                <div class="form-group">
+                    <label for="feedbackType">反馈类型</label>
+                    <select id="feedbackType" class="form-control" required>
+                        <option value="">请选择反馈类型</option>
+                        <option value="bug">功能异常</option>
+                        <option value="suggestion">功能建议</option>
+                        <option value="complaint">投诉建议</option>
+                        <option value="praise">表扬建议</option>
+                        <option value="other">其他</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="feedbackTitle">反馈标题</label>
+                    <input type="text" id="feedbackTitle" class="form-control" placeholder="请简要描述问题" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="feedbackContent">详细描述</label>
+                    <textarea id="feedbackContent" class="form-control textarea" placeholder="请详细描述您遇到的问题或建议..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="contactInfo">联系方式（可选）</label>
+                    <input type="text" id="contactInfo" class="form-control" placeholder="手机号或邮箱，便于我们联系您">
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-paper-plane"></i>
+                    提交反馈
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 底部导航 -->
+    <div class="bottom-nav">
+        <div class="nav-items">
+            <a href="home.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>首页</span>
+            </a>
+            <a href="orders.html" class="nav-item">
+                <i class="fas fa-shopping-cart"></i>
+                <span>订单</span>
+            </a>
+            <a href="service.html" class="nav-item active">
+                <i class="fas fa-headset"></i>
+                <span>客服</span>
+            </a>
+            <a href="account.html" class="nav-item">
+                <i class="fas fa-user"></i>
+                <span>我的</span>
+            </a>
+        </div>
+    </div>
+
+    <script src="js/static-data-manager.js"></script>
+    <script src="js/static-auth.js"></script>
+    <script>
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查登录状态（可选，客服页面可以允许未登录用户访问）
+            // if (!window.staticAuth.isLoggedIn()) {
+            //     window.location.href = 'login.html';
+            //     return;
+            // }
+        });
+
+        // 打开在线客服
+        function openOnlineChat() {
+            // 模拟打开在线客服窗口
+            alert('正在连接在线客服，请稍候...\n\n您也可以通过以下方式联系我们：\n电话：400-888-8888\n邮箱：service@example.com');
+        }
+
+        // 拨打客服电话
+        function callPhone() {
+            if (confirm('是否拨打客服热线 400-888-8888？')) {
+                window.location.href = 'tel:400-888-8888';
+            }
+        }
+
+        // 发送邮件
+        function sendEmail() {
+            window.location.href = 'mailto:service@example.com?subject=客服咨询&body=请在此处描述您的问题...';
+        }
+
+        // 打开QQ客服
+        function openQQ() {
+            // 模拟打开QQ客服
+            alert('QQ客服：123456789\n\n请添加QQ好友进行咨询，或直接点击QQ临时会话。');
+        }
+
+        // 切换FAQ显示
+        function toggleFAQ(element) {
+            const isActive = element.classList.contains('active');
+            
+            // 关闭所有FAQ
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // 如果当前不是激活状态，则激活
+            if (!isActive) {
+                element.classList.add('active');
+            }
+        }
+
+        // 提交反馈
+        async function submitFeedback(event) {
+            event.preventDefault();
+            
+            const formData = {
+                type: document.getElementById('feedbackType').value,
+                title: document.getElementById('feedbackTitle').value,
+                content: document.getElementById('feedbackContent').value,
+                contact: document.getElementById('contactInfo').value,
+                userId: window.staticAuth.isLoggedIn() ? window.staticAuth.getCurrentUser().id : null,
+                createdAt: new Date().toISOString()
+            };
+
+            try {
+                // 模拟提交反馈
+                await simulateSubmitFeedback(formData);
+                
+                // 显示成功消息
+                showSuccessMessage('反馈提交成功！我们会尽快处理您的反馈。');
+                
+                // 重置表单
+                event.target.reset();
+                
+            } catch (error) {
+                console.error('提交反馈失败:', error);
+                alert('提交失败，请重试');
+            }
+        }
+
+        // 模拟提交反馈
+        function simulateSubmitFeedback(data) {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    console.log('反馈数据:', data);
+                    resolve();
+                }, 1000);
+            });
+        }
+
+        // 显示成功消息
+        function showSuccessMessage(message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-success';
+            alertDiv.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            
+            const container = document.querySelector('.container');
+            container.insertBefore(alertDiv, container.firstChild);
+            
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+
+        // 返回上一页
+        function goBack() {
+            if (document.referrer) {
+                window.history.back();
+            } else {
+                window.location.href = 'home.html';
+            }
+        }
+    </script>
+</body>
+</html>

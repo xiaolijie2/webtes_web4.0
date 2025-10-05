@@ -1,0 +1,224 @@
+{
+  "CountryCodes": [
+    {
+      "Id": "US",
+      "CountryName": "\u7F8E\u56FD",
+      "Code": "\u002B1",
+      "Flag": "\uD83C\uDDFA\uD83C\uDDF8",
+      "Enabled": true,
+      "IsDefault": false,
+      "SortOrder": 2,
+      "CreatedAt": "2025-09-30T03:32:33.5500547Z",
+      "UpdatedAt": "2025-10-03T12:46:32.5201727+08:00"
+    },
+    {
+      "Id": "JP",
+      "CountryName": "\u65E5\u672C",
+      "Code": "\u002B81",
+      "Flag": "\uD83C\uDDEF\uD83C\uDDF5",
+      "Enabled": true,
+      "IsDefault": false,
+      "SortOrder": 1,
+      "CreatedAt": "2025-09-30T03:32:33.5501245Z",
+      "UpdatedAt": "2025-10-03T12:46:32.5201716+08:00"
+    },
+    {
+      "Id": "DE",
+      "CountryName": "\u5FB7\u56FD",
+      "Code": "\u002B49",
+      "Flag": "\uD83C\uDDE9\uD83C\uDDEA",
+      "Enabled": true,
+      "IsDefault": false,
+      "SortOrder": 3,
+      "CreatedAt": "2025-09-30T03:32:33.5501247Z",
+      "UpdatedAt": "2025-10-03T12:46:32.520173+08:00"
+    },
+    {
+      "Id": "GB",
+      "CountryName": "\u82F1\u56FD",
+      "Code": "\u002B44",
+      "Flag": "\uD83C\uDDEC\uD83C\uDDE7",
+      "Enabled": true,
+      "IsDefault": true,
+      "SortOrder": 4,
+      "CreatedAt": "2025-09-30T03:32:33.5501248Z",
+      "UpdatedAt": "2025-10-03T12:46:32.5201732+08:00"
+    },
+    {
+      "Id": "FR",
+      "CountryName": "\u6CD5\u56FD",
+      "Code": "\u002B33",
+      "Flag": "\uD83C\uDDEB\uD83C\uDDF7",
+      "Enabled": true,
+      "IsDefault": false,
+      "SortOrder": 5,
+      "CreatedAt": "2025-09-30T03:32:33.5501249Z",
+      "UpdatedAt": "2025-10-03T12:46:32.5201734+08:00"
+    },
+    {
+      "Id": "CA",
+      "CountryName": "\u52A0\u62FF\u5927",
+      "Code": "\u002B1",
+      "Flag": "\uD83C\uDDE8\uD83C\uDDE6",
+      "Enabled": true,
+      "IsDefault": false,
+      "SortOrder": 6,
+      "CreatedAt": "2025-09-30T03:32:33.5501285Z",
+      "UpdatedAt": "2025-10-03T12:46:32.5201737+08:00"
+    },
+    {
+      "Id": "AU",
+      "CountryName": "\u6FB3\u5927\u5229\u4E9A",
+      "Code": "\u002B61",
+      "Flag": "\uD83C\uDDE6\uD83C\uDDFA",
+      "Enabled": true,
+      "IsDefault": false,
+      "SortOrder": 7,
+      "CreatedAt": "2025-09-30T03:32:33.5501287Z",
+      "UpdatedAt": "2025-10-03T12:46:32.5201739+08:00"
+    },
+    {
+      "Id": "KR",
+      "CountryName": "\u97E9\u56FD",
+      "Code": "\u002B82",
+      "Flag": "\uD83C\uDDF0\uD83C\uDDF7",
+      "Enabled": true,
+      "IsDefault": false,
+      "SortOrder": 8,
+      "CreatedAt": "2025-09-30T03:32:33.5501288Z",
+      "UpdatedAt": "2025-10-03T12:46:32.5201769+08:00"
+    },
+    {
+      "Id": "IT",
+      "CountryName": "\u610F\u5927\u5229",
+      "Code": "\u002B39",
+      "Flag": "\uD83C\uDDEE\uD83C\uDDF9",
+      "Enabled": true,
+      "IsDefault": false,
+      "SortOrder": 9,
+      "CreatedAt": "2025-09-30T03:32:33.5501289Z",
+      "UpdatedAt": "2025-10-03T12:46:32.5201772+08:00"
+    },
+    {
+      "Id": "ES",
+      "CountryName": "\u897F\u73ED\u7259",
+      "Code": "\u002B34",
+      "Flag": "\uD83C\uDDEA\uD83C\uDDF8",
+      "Enabled": true,
+      "IsDefault": false,
+      "SortOrder": 10,
+      "CreatedAt": "2025-09-30T03:32:33.5501291Z",
+      "UpdatedAt": "2025-10-03T12:46:32.5201775+08:00"
+    },
+    {
+      "Id": "NL",
+      "CountryName": "\u8377\u5170",
+      "Code": "\u002B31",
+      "Flag": "\uD83C\uDDF3\uD83C\uDDF1",
+      "Enabled": false,
+      "IsDefault": false,
+      "SortOrder": 11,
+      "CreatedAt": "2025-09-30T03:32:33.5501292Z",
+      "UpdatedAt": "2025-10-03T12:46:32.5201778+08:00"
+    },
+    {
+      "Id": "CH",
+      "CountryName": "\u745E\u58EB",
+      "Code": "\u002B41",
+      "Flag": "\uD83C\uDDE8\uD83C\uDDED",
+      "Enabled": false,
+      "IsDefault": false,
+      "SortOrder": 12,
+      "CreatedAt": "2025-09-30T03:32:33.5501293Z",
+      "UpdatedAt": "2025-10-03T12:46:32.5201782+08:00"
+    },
+    {
+      "Id": "SE",
+      "CountryName": "\u745E\u5178",
+      "Code": "\u002B46",
+      "Flag": "\uD83C\uDDF8\uD83C\uDDEA",
+      "Enabled": false,
+      "IsDefault": false,
+      "SortOrder": 13,
+      "CreatedAt": "2025-09-30T03:32:33.5501294Z",
+      "UpdatedAt": "2025-10-03T12:46:32.5201785+08:00"
+    },
+    {
+      "Id": "NO",
+      "CountryName": "\u632A\u5A01",
+      "Code": "\u002B47",
+      "Flag": "\uD83C\uDDF3\uD83C\uDDF4",
+      "Enabled": false,
+      "IsDefault": false,
+      "SortOrder": 14,
+      "CreatedAt": "2025-09-30T03:32:33.5501294Z",
+      "UpdatedAt": "2025-10-03T12:46:32.5201788+08:00"
+    },
+    {
+      "Id": "DK",
+      "CountryName": "\u4E39\u9EA6",
+      "Code": "\u002B45",
+      "Flag": "\uD83C\uDDE9\uD83C\uDDF0",
+      "Enabled": false,
+      "IsDefault": false,
+      "SortOrder": 15,
+      "CreatedAt": "2025-09-30T03:32:33.5501295Z",
+      "UpdatedAt": "2025-10-03T12:46:32.5201792+08:00"
+    },
+    {
+      "Id": "FI",
+      "CountryName": "\u82AC\u5170",
+      "Code": "\u002B358",
+      "Flag": "\uD83C\uDDEB\uD83C\uDDEE",
+      "Enabled": false,
+      "IsDefault": false,
+      "SortOrder": 16,
+      "CreatedAt": "2025-09-30T03:32:33.5501296Z",
+      "UpdatedAt": "2025-10-03T12:46:32.5201795+08:00"
+    },
+    {
+      "Id": "BE",
+      "CountryName": "\u6BD4\u5229\u65F6",
+      "Code": "\u002B32",
+      "Flag": "\uD83C\uDDE7\uD83C\uDDEA",
+      "Enabled": false,
+      "IsDefault": false,
+      "SortOrder": 17,
+      "CreatedAt": "2025-09-30T03:32:33.5501297Z",
+      "UpdatedAt": "2025-10-03T12:46:32.5201799+08:00"
+    },
+    {
+      "Id": "AT",
+      "CountryName": "\u5965\u5730\u5229",
+      "Code": "\u002B43",
+      "Flag": "\uD83C\uDDE6\uD83C\uDDF9",
+      "Enabled": false,
+      "IsDefault": false,
+      "SortOrder": 18,
+      "CreatedAt": "2025-09-30T03:32:33.5501299Z",
+      "UpdatedAt": "2025-10-03T12:46:32.5201803+08:00"
+    },
+    {
+      "Id": "NZ",
+      "CountryName": "\u65B0\u897F\u5170",
+      "Code": "\u002B64",
+      "Flag": "\uD83C\uDDF3\uD83C\uDDFF",
+      "Enabled": false,
+      "IsDefault": false,
+      "SortOrder": 19,
+      "CreatedAt": "2025-09-30T03:32:33.55013Z",
+      "UpdatedAt": "2025-10-03T12:46:32.5201807+08:00"
+    },
+    {
+      "Id": "SG",
+      "CountryName": "\u65B0\u52A0\u5761",
+      "Code": "\u002B65",
+      "Flag": "\uD83C\uDDF8\uD83C\uDDEC",
+      "Enabled": false,
+      "IsDefault": false,
+      "SortOrder": 20,
+      "CreatedAt": "2025-09-30T03:32:33.55013Z",
+      "UpdatedAt": "2025-10-03T12:46:32.5201811+08:00"
+    }
+  ]
+}

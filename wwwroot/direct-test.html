@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>直接测试业务员登录</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+            font-size: 16px;
+        }
+        .btn:hover { background-color: #0056b3; }
+        .btn.success { background-color: #28a745; }
+        .btn.danger { background-color: #dc3545; }
+        .status {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid;
+        }
+        .success { background-color: #d4edda; border-color: #28a745; color: #155724; }
+        .error { background-color: #f8d7da; border-color: #dc3545; color: #721c24; }
+        .info { background-color: #d1ecf1; border-color: #17a2b8; color: #0c5460; }
+        .warning { background-color: #fff3cd; border-color: #ffc107; color: #856404; }
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+            white-space: pre-wrap;
+        }
+        .step {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .step h3 {
+            margin-top: 0;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>直接测试业务员登录和客户显示</h1>
+        <p>这个页面将直接设置正确的 localStorage 数据，然后跳转到业务员后台。</p>
+    </div>
+
+    <div class="container step">
+        <h3>步骤 1: 设置 yewuyuan1 登录数据</h3>
+        <button class="btn" onclick="setupYewuyuan1Login()">设置 yewuyuan1 登录数据</button>
+        <div id="setup-status"></div>
+    </div>
+
+    <div class="container step">
+        <h3>步骤 2: 验证客户 API</h3>
+        <button class="btn" onclick="testCustomerAPI()">测试客户 API</button>
+        <div id="api-status"></div>
+    </div>
+
+    <div class="container step">
+        <h3>步骤 3: 跳转到业务员后台</h3>
+        <button class="btn success" onclick="goToSalesperson()">打开业务员后台</button>
+        <p><small>点击后将在新窗口打开业务员后台</small></p>
+    </div>
+
+    <div class="container">
+        <h3>当前 localStorage 状态</h3>
+        <div id="storage-status"></div>
+        <button class="btn danger" onclick="clearStorage()">清除所有数据</button>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5065/api';
+
+        function showStatus(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="status ${type}">${message}</div>`;
+            console.log(`[${elementId}] ${message}`);
+        }
+
+        function updateStorageStatus() {
+            const authToken = localStorage.getItem('authToken');
+            const currentUser = localStorage.getItem('currentUser');
+            const permissionLevel = localStorage.getItem('permissionLevel');
+            
+            let html = '<h4>localStorage 内容:</h4>';
+            html += `<p><strong>authToken:</strong> ${authToken ? '已设置' : '未设置'}</p>`;
+            html += `<p><strong>currentUser:</strong> ${currentUser ? '已设置' : '未设置'}</p>`;
+            html += `<p><strong>permissionLevel:</strong> ${permissionLevel || '未设置'}</p>`;
+            
+            if (currentUser) {
+                try {
+                    const userData = JSON.parse(currentUser);
+                    html += '<h4>用户数据详情:</h4>';
+                    html += `<pre>${JSON.stringify(userData, null, 2)}</pre>`;
+                } catch (e) {
+                    html += `<p class="error">用户数据解析失败: ${e.message}</p>`;
+                }
+            }
+            
+            document.getElementById('storage-status').innerHTML = html;
+        }
+
+        async function setupYewuyuan1Login() {
+            showStatus('setup-status', '正在设置 yewuyuan1 登录数据...', 'info');
+            
+            try {
+                // 首先通过 API 登录获取完整的用户数据
+                const loginResponse = await fetch(`${API_BASE}/salesperson/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: 'yewuyuan1',
+                        password: 'bi5vWeTHs0ztuzClnt3UfbPeS5eUhK1uZiAexM32wZY='
+                    })
+                });
+
+                const loginData = await loginResponse.json();
+                console.log('登录响应:', loginData);
+
+                if (loginResponse.ok && loginData.success) {
+                    // 设置认证令牌
+                    const authToken = btoa(JSON.stringify({
+                        username: loginData.agent.username,
+                        loginTime: new Date().toISOString(),
+                        type: 'salesperson'
+                    }));
+
+                    // 设置用户信息 - 确保包含所有必要字段
+                    const userInfo = {
+                        id: loginData.agent.id,
+                        username: loginData.agent.username,
+                        nickname: loginData.agent.nickname,
+                        inviteCode: loginData.agent.inviteCode,
+                        commissionRate: loginData.agent.commissionRate,
+                        status: loginData.agent.status,
+                        createdAt: loginData.agent.createdAt,
+                        customerCount: loginData.agent.customerCount
+                    };
+
+                    // 保存到 localStorage
+                    localStorage.setItem('authToken', authToken);
+                    localStorage.setItem('currentUser', JSON.stringify(userInfo));
+                    localStorage.setItem('permissionLevel', '2');
+
+                    showStatus('setup-status', `✅ yewuyuan1 登录数据设置成功！<br>
+                        用户名: ${userInfo.username}<br>
+                        昵称: ${userInfo.nickname}<br>
+                        ID: ${userInfo.id}<br>
+                        邀请码: ${userInfo.inviteCode}<br>
+                        客户数量: ${userInfo.customerCount}`, 'success');
+                    
+                    updateStorageStatus();
+                } else {
+                    showStatus('setup-status', `❌ 登录失败: ${loginData.message}`, 'error');
+                }
+            } catch (error) {
+                showStatus('setup-status', `❌ 设置失败: ${error.message}`, 'error');
+                console.error('设置错误:', error);
+            }
+        }
+
+        async function testCustomerAPI() {
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) {
+                showStatus('api-status', '⚠️ 请先设置登录数据', 'warning');
+                return;
+            }
+
+            showStatus('api-status', '正在测试客户 API...', 'info');
+
+            try {
+                const userData = JSON.parse(currentUser);
+                const apiUrl = `${API_BASE}/salesperson/customers/${userData.id}`;
+                
+                console.log('测试 API URL:', apiUrl);
+
+                const response = await fetch(apiUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+                console.log('客户 API 响应:', data);
+
+                if (response.ok) {
+                    const customerCount = data.customers ? data.customers.length : 0;
+                    showStatus('api-status', `✅ 客户 API 测试成功！<br>
+                        找到 ${customerCount} 个客户<br>
+                        API 状态: ${data.success ? '成功' : '失败'}<br>
+                        消息: ${data.message}<br>
+                        <details><summary>查看客户数据</summary><pre>${JSON.stringify(data.customers, null, 2)}</pre></details>`, 'success');
+                } else {
+                    showStatus('api-status', `❌ 客户 API 测试失败: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                showStatus('api-status', `❌ API 请求失败: ${error.message}`, 'error');
+                console.error('API 错误:', error);
+            }
+        }
+
+        function goToSalesperson() {
+            const currentUser = localStorage.getItem('currentUser');
+            const authToken = localStorage.getItem('authToken');
+            const permissionLevel = localStorage.getItem('permissionLevel');
+            
+            if (!currentUser || !authToken || permissionLevel !== '2') {
+                alert('请先完成登录数据设置和 API 测试！');
+                return;
+            }
+            
+            console.log('跳转到业务员后台，当前数据:');
+            console.log('- authToken:', authToken);
+            console.log('- currentUser:', currentUser);
+            console.log('- permissionLevel:', permissionLevel);
+            
+            // 在新窗口打开业务员后台
+            window.open('salesperson.html', '_blank');
+        }
+
+        function clearStorage() {
+            localStorage.clear();
+            showStatus('setup-status', '已清除所有 localStorage 数据', 'info');
+            showStatus('api-status', '', 'info');
+            updateStorageStatus();
+        }
+
+        // 页面加载时更新状态
+        window.onload = function() {
+            updateStorageStatus();
+        };
+    </script>
+</body>
+</html>

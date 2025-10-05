@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网站任务系统</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .welcome-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            font-size: 48px;
+            color: white;
+        }
+
+        .welcome-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .welcome-subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .action-buttons {
+            display: grid;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #667eea;
+            color: #667eea;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-admin {
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            color: white;
+        }
+
+        .btn-admin:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+        }
+
+        .features {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .features-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            text-align: left;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #666;
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #667eea;
+        }
+
+        @media (max-width: 768px) {
+            .welcome-container {
+                padding: 30px 20px;
+            }
+
+            .welcome-title {
+                font-size: 28px;
+            }
+
+            .welcome-subtitle {
+                font-size: 16px;
+            }
+
+            .feature-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="welcome-container">
+        <div class="logo">
+            <i class="fas fa-tasks"></i>
+        </div>
+        
+        <h1 class="welcome-title">网站任务系统</h1>
+        <p class="welcome-subtitle">
+            欢迎使用我们的任务管理平台<br>
+            高效管理任务，轻松获得收益
+        </p>
+
+        <div class="action-buttons">
+            <a href="login.html" class="btn btn-primary">
+                <i class="fas fa-sign-in-alt"></i>
+                用户登录
+            </a>
+            
+            <a href="home.html" class="btn btn-outline">
+                <i class="fas fa-home"></i>
+                直接进入
+            </a>
+            
+            <a href="admin-login.html" class="btn btn-admin">
+                <i class="fas fa-user-shield"></i>
+                管理员登录
+            </a>
+        </div>
+
+        <div class="features">
+            <h3 class="features-title">核心功能</h3>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <span>任务管理</span>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <span>收益系统</span>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <span>VIP等级</span>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <span>邀请奖励</span>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <span>数据统计</span>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <span>客服支持</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/static-data-manager.js"></script>
+    <script src="js/static-auth.js"></script>
+    <script>
+        // 页面加载完成后检查登录状态
+        document.addEventListener('DOMContentLoaded', function() {
+            // 如果已经登录，可以显示不同的选项
+            if (window.staticAuth && window.staticAuth.isLoggedIn()) {
+                const currentUser = window.staticAuth.getCurrentUser();
+                
+                // 更新欢迎信息
+                const subtitle = document.querySelector('.welcome-subtitle');
+                subtitle.innerHTML = `欢迎回来，${currentUser.username}！<br>继续您的任务之旅`;
+                
+                // 更新按钮
+                const actionButtons = document.querySelector('.action-buttons');
+                actionButtons.innerHTML = `
+                    <a href="home.html" class="btn btn-primary">
+                        <i class="fas fa-home"></i>
+                        进入首页
+                    </a>
+                    
+                    <a href="account.html" class="btn btn-outline">
+                        <i class="fas fa-user"></i>
+                        个人中心
+                    </a>
+                    
+                    <button class="btn btn-outline" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        退出登录
+                    </button>
+                `;
+            }
+        });
+
+        // 退出登录
+        function logout() {
+            if (confirm('确定要退出登录吗？')) {
+                window.staticAuth.logout();
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>

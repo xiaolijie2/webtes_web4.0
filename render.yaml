@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: mobile-ecommerce-api
+    env: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: JWT_SECRET_KEY
+        value: MobileECommerceSecretKey2024ForJWTAuthentication
+      - key: JWT_ISSUER
+        value: MobileECommerceAPI
+      - key: JWT_AUDIENCE
+        value: MobileECommerceClient
+      - key: JWT_EXPIRE_MINUTES
+        value: "1440"
+      - key: DATA_PATH
+        value: Data
+    healthCheckPath: /
+    autoDeploy: true
+    buildFilter:
+      paths:
+        - "**"
+      ignoredPaths:
+        - "static_website/**"
+        - "*.md"
+        - ".git/**"
+    disk:
+      name: data-disk
+      mountPath: /app/Data
+      sizeGB: 1

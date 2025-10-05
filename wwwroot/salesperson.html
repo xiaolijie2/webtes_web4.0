@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>业务员后台管理</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f9fa;
+            overflow-x: hidden;
+        }
+
+        /* 主布局容器 */
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* 左侧导航菜单 */
+        .sidebar {
+            width: 240px;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        /* 顶部标题栏 */
+        .sidebar-header {
+            padding: 20px;
+            background-color: #34495e;
+            text-align: center;
+            border-bottom: 1px solid #34495e;
+        }
+
+        .sidebar-header h4 {
+            color: #ecf0f1;
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .sidebar-header .user-info {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #bdc3c7;
+        }
+
+        .sidebar-header .header-actions {
+            margin-top: 15px;
+        }
+
+        .sidebar-header .btn {
+            padding: 6px 12px;
+            font-size: 12px;
+            margin: 0 3px;
+        }
+
+        /* 导航菜单 */
+        .nav-menu {
+            padding: 0;
+            list-style: none;
+        }
+
+        .nav-item {
+            border-bottom: 1px solid #34495e;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: #ecf0f1;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            background-color: #34495e;
+            color: #3498db;
+        }
+
+        .nav-link.active {
+            background-color: #34495e;
+            color: #ff6b35;
+            border-left: 4px solid #ff6b35;
+        }
+
+        .nav-link i {
+            width: 20px;
+            margin-right: 12px;
+            text-align: center;
+        }
+
+        /* 主内容区域 */
+        .main-content {
+            flex: 1;
+            margin-left: 240px;
+            background-color: #ffffff;
+            min-height: 100vh;
+        }
+
+        /* 顶部面包屑导航 */
+        .content-header {
+            background-color: #ffffff;
+            padding: 20px 30px;
+            border-bottom: 1px solid #e9ecef;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .breadcrumb-nav h2 {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .breadcrumb {
+            background: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .breadcrumb-item {
+            color: #6c757d;
+        }
+
+        .breadcrumb-item.active {
+            color: #2c3e50;
+        }
+
+        /* 内容面板 */
+        .content-panel {
+            padding: 30px;
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 卡片样式 */
+        .card {
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+
+        .card-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            padding: 15px 20px;
+        }
+
+        .card-header h5 {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        /* 表单样式 */
+        .form-label {
+            font-weight: 500;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 10px 15px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        }
+
+        /* 按钮样式 */
+        .btn {
+            border-radius: 6px;
+            padding: 10px 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            border-color: #3498db;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+            border-color: #2980b9;
+        }
+
+        .btn-success {
+            background-color: #27ae60;
+            border-color: #27ae60;
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+            border-color: #e74c3c;
+        }
+
+        .btn-warning {
+            background-color: #ff6b35;
+            border-color: #ff6b35;
+        }
+
+        /* 表格样式 */
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table thead th {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            font-weight: 600;
+            color: #2c3e50;
+            padding: 12px;
+        }
+
+        .table tbody td {
+            padding: 12px;
+            vertical-align: middle;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* 状态标签 */
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-inactive {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .badge {
+            font-size: 0.75em;
+        }
+
+        /* 消息样式 */
+        .message-item {
+            border-left: 4px solid #3498db;
+            background-color: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .unread {
+            border-left-color: #e74c3c;
+            background-color: #fff5f5;
+        }
+
+        .chat-container {
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            background-color: white;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .message.user {
+            background-color: #e3f2fd;
+            margin-left: 20%;
+        }
+
+        .message.agent {
+            background-color: #f3e5f5;
+            margin-right: 20%;
+        }
+
+        /* 统计卡片样式 */
+        .stats-card {
+            background-color: #3498db;
+            color: white;
+            border-radius: 8px;
+        }
+
+        .stats-card .card-body {
+            padding: 20px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        /* 加载动画 */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- 左侧导航菜单 -->
+        <nav class="sidebar">
+            <!-- 顶部标题栏 -->
+            <div class="sidebar-header">
+                <h4><i class="fas fa-user-tie"></i> 业务员后台</h4>
+                <div class="user-info" id="userInfoDisplay">
+                    <i class="fas fa-user-circle"></i> <span id="userTypeLabel">业务员</span>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-outline-light btn-sm" onclick="goToHome()" title="返回首页">
+                        <i class="fas fa-home"></i>
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm" onclick="logout()" title="退出登录">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 导航菜单 -->
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a class="nav-link active" data-section="dashboard">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>工作台</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-section="customers">
+                        <i class="fas fa-users"></i>
+                        <span>客户管理</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-section="messages">
+                        <i class="fas fa-comments"></i>
+                        <span>消息管理</span>
+                        <span class="badge bg-danger ms-2" id="unreadCount">0</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-section="profile">
+                        <i class="fas fa-user"></i>
+                        <span>个人信息</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- 主内容区域 -->
+        <main class="main-content">
+            <!-- 顶部面包屑导航 -->
+            <div class="content-header">
+                <div class="breadcrumb-nav">
+                    <h2 id="page-title">工作台</h2>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">业务员后台</li>
+                            <li class="breadcrumb-item active" id="section-breadcrumb">工作台</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- 内容面板 -->
+            <div class="content-panel">
+                <!-- 工作台 -->
+                <div id="dashboard" class="content-section">
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h2><i class="fas fa-tachometer-alt me-2"></i>工作台</h2>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <div class="card stats-card">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-users fa-2x mb-2"></i>
+                                    <h4 id="totalCustomers">0</h4>
+                                    <p class="mb-0">总客户数</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card stats-card">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-envelope fa-2x mb-2"></i>
+                                    <h4 id="unreadMessages">0</h4>
+                                    <p class="mb-0">未读消息</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card stats-card">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-chart-line fa-2x mb-2"></i>
+                                    <h4 id="monthlyPerformance">0</h4>
+                                    <p class="mb-0">本月业绩</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card stats-card">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-star fa-2x mb-2"></i>
+                                    <h4 id="averageRating">0</h4>
+                                    <p class="mb-0">平均评分</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="fas fa-clock me-2"></i>最近活动</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="recentActivities">
+                                        <p class="text-muted">暂无最近活动</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="fas fa-bell me-2"></i>待处理事项</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="pendingTasks">
+                                        <p class="text-muted">暂无待处理事项</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 客户管理 -->
+                <div id="customers" class="content-section" style="display: none;">
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h2><i class="fas fa-users me-2"></i>客户管理</h2>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">客户列表</h5>
+                            <div>
+                                <input type="text" class="form-control d-inline-block" style="width: 200px;" 
+                                       placeholder="搜索客户..." id="customerSearch">
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>用户ID</th>
+                                            <th>用户名</th>
+                                            <th>当前余额</th>
+                                            <th>历史余额</th>
+                                            <th>信誉分</th>
+                                            <th>VIP等级</th>
+                                            <th>注册时间</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="customersTable">
+                                        <!-- 客户数据将通过JavaScript动态加载 -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 消息管理 -->
+                <div id="messages" class="content-section" style="display: none;">
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h2><i class="fas fa-comments me-2"></i>消息管理</h2>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">消息列表</h5>
+                                </div>
+                                <div class="card-body" style="height: 500px; overflow-y: auto;">
+                                    <div id="messagesList">
+                                        <!-- 消息列表将通过JavaScript动态加载 -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0" id="chatTitle">选择一个对话</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chat-container" id="chatContainer">
+                                        <div class="text-center text-muted">
+                                            <i class="fas fa-comments fa-3x mb-3"></i>
+                                            <p>请从左侧选择一个对话开始</p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-3" id="replySection" style="display: none;">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" placeholder="输入回复消息..." id="replyInput">
+                                            <button class="btn btn-primary" type="button" onclick="sendReply()">
+                                                <i class="fas fa-paper-plane"></i> 发送
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 个人信息 -->
+                <div id="profile" class="content-section" style="display: none;">
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h2><i class="fas fa-user me-2"></i>个人信息</h2>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">基本信息</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="profileForm">
+                                        <div class="mb-3">
+                                            <label class="form-label">用户名</label>
+                                            <input type="text" class="form-control" id="profileUsername" readonly>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">邀请码</label>
+                                            <input type="text" class="form-control" id="profileInviteCode" readonly>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">客户数量</label>
+                                            <input type="text" class="form-control" id="profileCustomerCount" readonly>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">注册时间</label>
+                                            <input type="text" class="form-control" id="profileRegisterTime" readonly>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">业绩统计</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row text-center">
+                                        <div class="col-6 mb-3">
+                                            <h4 class="text-primary" id="totalInvited">0</h4>
+                                            <p class="text-muted">累计邀请</p>
+                                        </div>
+                                        <div class="col-6 mb-3">
+                                            <h4 class="text-success" id="activeCustomers">0</h4>
+                                            <p class="text-muted">活跃客户</p>
+                                        </div>
+                                        <div class="col-6 mb-3">
+                                            <h4 class="text-warning" id="monthlyCommission">¥0</h4>
+                                            <p class="text-muted">本月佣金</p>
+                                        </div>
+                                        <div class="col-6 mb-3">
+                                            <h4 class="text-info" id="totalCommission">¥0</h4>
+                                            <p class="text-muted">累计佣金</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 编辑客户模态框 -->
+    <div class="modal fade" id="editCustomerModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">编辑客户信息</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editCustomerForm">
+                        <input type="hidden" id="editCustomerId">
+                        <div class="mb-3">
+                            <label class="form-label">用户名</label>
+                            <input type="text" class="form-control" id="editCustomerUsername" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">当前余额</label>
+                            <input type="number" class="form-control" id="editCustomerBalance" step="0.01">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">历史余额</label>
+                            <input type="number" class="form-control" id="editCustomerHistoryBalance" step="0.01">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">信誉分</label>
+                            <input type="number" class="form-control" id="editCustomerCreditScore" min="0" max="100">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">VIP等级</label>
+                            <select class="form-select" id="editCustomerVipLevel">
+                                <option value="0">普通用户</option>
+                                <option value="1">VIP1</option>
+                                <option value="2">VIP2</option>
+                                <option value="3">VIP3</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" onclick="saveCustomerChanges()">保存更改</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentSalesperson = null;
+        let currentChatUser = null;
+        let customers = [];
+        let messages = [];
+        let unreadCount = 0;
+
+        // 页面加载时检查登录状态
+        document.addEventListener('DOMContentLoaded', function() {
+            checkSalespersonLogin();
+        });
+
+        // 检查业务员登录状态
+        function checkSalespersonLogin() {
+            console.log('=== 检查业务员登录状态 ===');
+            
+            // 使用统一的认证方式
+            const authToken = localStorage.getItem('authToken');
+            const currentUser = localStorage.getItem('currentUser');
+            const permissionLevel = localStorage.getItem('permissionLevel');
+            
+            console.log('认证令牌:', authToken ? '存在' : '不存在');
+            console.log('当前用户:', currentUser ? '存在' : '不存在');
+            console.log('权限等级:', permissionLevel);
+            
+            if (!authToken || !currentUser || !permissionLevel) {
+                console.log('缺少认证信息，重定向到业务员登录页面');
+                window.location.href = 'salesperson-login.html';
+                return;
+            }
+            
+            try {
+                const userData = JSON.parse(currentUser);
+                const userPermissionLevel = parseInt(permissionLevel);
+                
+                console.log('解析的用户数据:', userData);
+                console.log('用户权限等级:', userPermissionLevel);
+                
+                // 检查是否为业务员权限（权限等级2）
+                if (userPermissionLevel !== 2) {
+                    alert('您没有访问业务员后台的权限');
+                    console.log('权限不足，重定向到业务员登录页面');
+                    window.location.href = 'salesperson-login.html';
+                    return;
+                }
+                
+                currentSalesperson = userData;
+                console.log('业务员登录验证成功:', currentSalesperson);
+                
+                // 显示业务员信息
+                displaySalespersonInfo(currentSalesperson);
+                loadDashboardData();
+                loadCustomers();
+                loadMessages();
+                loadProfile();
+            } catch (error) {
+                console.error('解析用户数据失败:', error);
+                localStorage.clear();
+                window.location.href = 'salesperson-login.html';
+            }
+        }
+        
+        // 显示业务员信息
+        function displaySalespersonInfo(salesperson) {
+            // 更新页面标题中的用户名显示
+            const titleElement = document.querySelector('h4');
+            if (titleElement) {
+                titleElement.innerHTML = `<i class="fas fa-user-tie me-2"></i>业务员后台 - ${salesperson.username}`;
+            }
+        }
+
+        // 退出登录
+        function logout() {
+            if (confirm('确定要退出登录吗？')) {
+                // 清除所有登录相关的本地存储
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('permissionLevel');
+                localStorage.removeItem('salespersonLoginInfo');
+                
+                // 重置全局变量
+                currentSalesperson = null;
+                currentChatUser = null;
+                customers = [];
+                messages = [];
+                unreadCount = 0;
+                
+                // 重定向到业务员登录页面
+                window.location.href = 'salesperson-login.html';
+            }
+        }
+
+        // 导航切换
+        document.querySelectorAll('.nav-link[data-section]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const section = this.dataset.section;
+                showSection(section);
+                
+                // 更新导航状态
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // 显示指定区域
+        function showSection(section) {
+            document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
+            document.getElementById(section).style.display = 'block';
+        }
+
+        // 加载工作台数据
+        async function loadDashboardData() {
+            try {
+                const authToken = localStorage.getItem('authToken');
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                
+                if (!currentUser) {
+                    console.error('用户信息不存在');
+                    return;
+                }
+                
+                // 获取业务员的客户数量
+                const customersResponse = await fetch(`/api/salesperson/customers/${currentUser.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                
+                let customerCount = 0;
+                if (customersResponse.ok) {
+                    const customersData = await customersResponse.json();
+                    customerCount = customersData.customers ? customersData.customers.length : 0;
+                }
+                
+                // 计算佣金（模拟数据）
+                const totalCommission = currentUser.monthlyPerformance * 12 || 0;
+                const monthlyCommission = currentUser.monthlyPerformance || 0;
+                
+                document.getElementById('totalCustomers').textContent = customerCount;
+                document.getElementById('unreadMessages').textContent = unreadCount;
+                document.getElementById('monthlyPerformance').textContent = `¥${monthlyCommission.toLocaleString()}`;
+                document.getElementById('averageRating').textContent = (4.5 + Math.random() * 0.5).toFixed(1);
+            } catch (error) {
+                console.error('加载仪表板数据失败:', error);
+            }
+        }
+
+        // 加载客户列表
+        async function loadCustomers() {
+            console.log('=== 开始加载客户列表 ===');
+            console.log('当前业务员信息:', currentSalesperson);
+            console.log('localStorage内容:');
+            console.log('- authToken:', localStorage.getItem('authToken'));
+            console.log('- currentUser:', localStorage.getItem('currentUser'));
+            console.log('- permissionLevel:', localStorage.getItem('permissionLevel'));
+            
+            if (!currentSalesperson || !currentSalesperson.id) {
+                console.error('当前业务员信息不完整');
+                console.error('currentSalesperson详情:', JSON.stringify(currentSalesperson, null, 2));
+                showCustomerLoadingError('业务员信息不完整');
+                return;
+            }
+            
+            try {
+                const authToken = localStorage.getItem('authToken');
+                const requestUrl = `/api/salesperson/customers/${currentSalesperson.id}`;
+                console.log('使用的认证令牌:', authToken ? '存在' : '不存在');
+                console.log('业务员ID:', currentSalesperson.id);
+                console.log('业务员邀请码:', currentSalesperson.inviteCode);
+                console.log('请求URL:', requestUrl);
+                
+                console.log('发送API请求...');
+                const response = await fetch(requestUrl, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                console.log('API响应状态:', response.status, response.statusText);
+                console.log('响应头:', Object.fromEntries(response.headers.entries()));
+                
+                const result = await response.json();
+                console.log('API响应数据完整内容:', JSON.stringify(result, null, 2));
+                
+                if (response.ok) {
+                    customers = result.customers || [];
+                    console.log('解析到的客户数量:', customers.length);
+                    console.log('客户数据详情:', JSON.stringify(customers, null, 2));
+                    
+                    if (customers.length === 0) {
+                        console.warn('该业务员没有分配的客户');
+                        console.log('可能的原因:');
+                        console.log('1. 客户的InviterId不匹配当前业务员ID');
+                        console.log('2. 客户的InviteCodeUsed不匹配当前业务员的邀请码');
+                        console.log('3. 客户数据中UserType不是"user"');
+                    }
+                    
+                    displayCustomers(customers);
+                } else {
+                    console.error('获取客户列表失败:', result.message);
+                    console.error('错误详情:', result);
+                    customers = [];
+                    showCustomerLoadingError(result.message || '获取客户列表失败');
+                    displayCustomers(customers);
+                }
+            } catch (error) {
+                console.error('加载客户列表失败:', error);
+                console.error('错误堆栈:', error.stack);
+                customers = [];
+                showCustomerLoadingError('网络请求失败: ' + error.message);
+                displayCustomers(customers);
+            }
+            
+            console.log('=== 客户列表加载完成 ===');
+        }
+
+        // 显示客户列表
+        function displayCustomers(customerList) {
+            console.log('=== 开始显示客户列表 ===');
+            console.log('要显示的客户数量:', customerList.length);
+            console.log('客户列表数据:', JSON.stringify(customerList, null, 2));
+            
+            const tbody = document.getElementById('customersTable');
+            console.log('表格元素:', tbody);
+            console.log('表格元素是否存在:', !!tbody);
+            
+            if (!tbody) {
+                console.error('找不到客户表格元素 #customersTable');
+                console.error('页面中所有table元素:', document.querySelectorAll('table'));
+                console.error('页面中所有tbody元素:', document.querySelectorAll('tbody'));
+                showCustomerLoadingError('页面元素加载失败');
+                return;
+            }
+            
+            console.log('清空表格内容...');
+            tbody.innerHTML = '';
+            
+            if (customerList.length === 0) {
+                console.log('没有客户数据，显示空状态');
+                const emptyRow = `
+                    <tr>
+                        <td colspan="8" class="text-center text-muted py-4">
+                            <i class="fas fa-users fa-2x mb-2"></i><br>
+                            暂无客户数据<br>
+                            <small class="text-muted">当前业务员: ${currentSalesperson?.username || '未知'} (ID: ${currentSalesperson?.id || '未知'})</small><br>
+                            <small class="text-muted">邀请码: ${currentSalesperson?.inviteCode || '未知'}</small>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML = emptyRow;
+                console.log('空状态HTML已设置:', emptyRow);
+                return;
+            }
+            
+            console.log('开始渲染客户数据...');
+            customerList.forEach((customer, index) => {
+                console.log(`处理第${index + 1}个客户:`, JSON.stringify(customer, null, 2));
+                const row = document.createElement('tr');
+                const rowHtml = `
+                    <td>${customer.id}</td>
+                    <td>${customer.username || customer.nickname || '未设置'}</td>
+                    <td>¥${customer.balance || 0}</td>
+                    <td>¥${customer.historyBalance || 0}</td>
+                    <td>${customer.creditScore || 0}</td>
+                    <td>
+                        <span class="badge bg-${getVipBadgeColor(customer.vipLevel)}">
+                            ${getVipLevelText(customer.vipLevel)}
+                        </span>
+                    </td>
+                    <td>${formatDate(customer.registerTime)}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" onclick="editCustomer('${customer.id}')">
+                            <i class="fas fa-edit"></i> 编辑
+                        </button>
+                    </td>
+                `;
+                row.innerHTML = rowHtml;
+                tbody.appendChild(row);
+                console.log(`第${index + 1}个客户行已添加到表格`);
+                console.log(`行HTML内容:`, rowHtml);
+            });
+            
+            console.log('客户列表显示完成');
+            console.log('最终表格内容:', tbody.innerHTML);
+            console.log('=== 客户列表显示结束 ===');
+        }
+
+        // 获取VIP等级文本
+        function getVipLevelText(level) {
+            const levels = ['普通用户', 'VIP1', 'VIP2', 'VIP3'];
+            return levels[level] || '普通用户';
+        }
+
+        // 获取VIP徽章颜色
+        function getVipBadgeColor(level) {
+            const colors = ['secondary', 'warning', 'info', 'success'];
+            return colors[level] || 'secondary';
+        }
+
+        // 格式化日期
+        function formatDate(dateString) {
+            if (!dateString) return '-';
+            return new Date(dateString).toLocaleDateString('zh-CN');
+        }
+
+        // 编辑客户
+        function editCustomer(customerId) {
+            const customer = customers.find(c => c.id === customerId);
+            if (!customer) return;
+            
+            document.getElementById('editCustomerId').value = customer.id;
+            document.getElementById('editCustomerUsername').value = customer.username;
+            document.getElementById('editCustomerBalance').value = customer.balance || 0;
+            document.getElementById('editCustomerHistoryBalance').value = customer.historyBalance || 0;
+            document.getElementById('editCustomerCreditScore').value = customer.creditScore || 0;
+            document.getElementById('editCustomerVipLevel').value = customer.vipLevel || 0;
+            
+            new bootstrap.Modal(document.getElementById('editCustomerModal')).show();
+        }
+
+        // 保存客户更改
+        async function saveCustomerChanges() {
+            const customerId = document.getElementById('editCustomerId').value;
+            const balance = parseFloat(document.getElementById('editCustomerBalance').value);
+            const historyBalance = parseFloat(document.getElementById('editCustomerHistoryBalance').value);
+            const creditScore = parseInt(document.getElementById('editCustomerCreditScore').value);
+            const vipLevel = parseInt(document.getElementById('editCustomerVipLevel').value);
+            
+            try {
+                const authToken = localStorage.getItem('authToken');
+                const response = await fetch(`/api/users/${customerId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({
+                        balance,
+                        historyBalance,
+                        creditScore,
+                        vipLevel
+                    })
+                });
+                
+                if (response.ok) {
+                    alert('客户信息更新成功！');
+                    bootstrap.Modal.getInstance(document.getElementById('editCustomerModal')).hide();
+                    loadCustomers(); // 重新加载客户列表
+                } else {
+                    alert('更新失败，请重试');
+                }
+            } catch (error) {
+                console.error('保存客户更改失败:', error);
+                alert('保存失败，请重试');
+            }
+        }
+
+        // 加载消息列表
+        async function loadMessages() {
+            try {
+                const authToken = localStorage.getItem('authToken');
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                
+                if (!currentUser || !currentUser.id) {
+                    console.error('用户信息不完整');
+                    return;
+                }
+                
+                const response = await fetch(`/api/service/agent/${currentUser.id}/messages`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const allMessages = data.messages || [];
+                    
+                    // 按用户分组消息
+                    const messagesByUser = {};
+                    allMessages.forEach(msg => {
+                        if (!messagesByUser[msg.userId]) {
+                            messagesByUser[msg.userId] = [];
+                        }
+                        messagesByUser[msg.userId].push(msg);
+                    });
+                    
+                    displayMessagesList(messagesByUser);
+                } else {
+                    console.error('Failed to load messages');
+                }
+            } catch (error) {
+                console.error('加载消息失败:', error);
+            }
+        }
+
+        // 显示消息列表
+        function displayMessagesList(messagesByUser) {
+            const container = document.getElementById('messagesList');
+            container.innerHTML = '';
+            
+            unreadCount = 0;
+            
+            Object.keys(messagesByUser).forEach(userId => {
+                const userMessages = messagesByUser[userId];
+                const lastMessage = userMessages[userMessages.length - 1];
+                const hasUnread = userMessages.some(msg => !msg.isRead && msg.sender === 'user');
+                
+                if (hasUnread) unreadCount++;
+                
+                const messageItem = document.createElement('div');
+                messageItem.className = `message-item ${hasUnread ? 'unread' : ''}`;
+                messageItem.style.cursor = 'pointer';
+                messageItem.onclick = () => openChat(userId);
+                
+                messageItem.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="mb-1">用户 ${userId}</h6>
+                            <p class="mb-1 text-muted">${lastMessage.content}</p>
+                            <small class="text-muted">${formatDate(lastMessage.timestamp)}</small>
+                        </div>
+                        ${hasUnread ? '<span class="badge bg-danger">新</span>' : ''}
+                    </div>
+                `;
+                
+                container.appendChild(messageItem);
+            });
+            
+            // 更新未读消息计数
+            document.getElementById('unreadCount').textContent = unreadCount;
+            document.getElementById('unreadMessages').textContent = unreadCount;
+        }
+
+        // 打开聊天
+        async function openChat(userId) {
+            currentChatUser = userId;
+            document.getElementById('chatTitle').textContent = `与用户 ${userId} 的对话`;
+            document.getElementById('replySection').style.display = 'block';
+            
+            try {
+                const authToken = localStorage.getItem('authToken');
+                const response = await fetch(`/api/service/messages/${userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const userMessages = data.messages || [];
+                    
+                    displayChatMessages(userMessages);
+                    
+                    // 标记消息为已读
+                    await markMessagesAsRead(userId);
+                } else {
+                    console.error('Failed to load chat messages');
+                }
+            } catch (error) {
+                console.error('加载聊天记录失败:', error);
+            }
+        }
+
+        // 显示聊天消息
+        function displayChatMessages(messages) {
+            const container = document.getElementById('chatContainer');
+            container.innerHTML = '';
+            
+            messages.forEach(msg => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${msg.sender}`;
+                messageDiv.innerHTML = `
+                    <div class="mb-1">${msg.content}</div>
+                    <small class="text-muted">${formatDate(msg.timestamp)}</small>
+                `;
+                container.appendChild(messageDiv);
+            });
+            
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // 发送回复
+        async function sendReply() {
+            const replyInput = document.getElementById('replyInput');
+            const content = replyInput.value.trim();
+            
+            if (!content) {
+                alert('请输入回复内容');
+                return;
+            }
+            
+            if (!currentChatUser) {
+                alert('请先选择要回复的用户');
+                return;
+            }
+            
+            const authToken = localStorage.getItem('authToken');
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            
+            if (!currentUser || !currentUser.id) {
+                alert('用户信息不完整');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/service/agent/reply', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({
+                        userId: currentChatUser,
+                        agentId: currentUser.id,
+                        content: content
+                    })
+                });
+                
+                if (response.ok) {
+                    replyInput.value = '';
+                    openChat(currentChatUser); // 刷新聊天记录
+                    loadMessages(); // 重新加载消息列表
+                } else {
+                    alert('发送失败');
+                }
+            } catch (error) {
+                console.error('发送回复失败:', error);
+                alert('发送失败');
+            }
+        }
+
+        // 标记消息为已读
+        async function markMessagesAsRead(userId) {
+            try {
+                const authToken = localStorage.getItem('authToken');
+                await fetch(`/api/messages/${userId}/read`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                loadMessages(); // 重新加载消息列表
+            } catch (error) {
+                console.error('标记消息已读失败:', error);
+            }
+        }
+
+        // 显示客户加载错误
+        function showCustomerLoadingError(message) {
+            console.log('显示客户加载错误:', message);
+            const tbody = document.getElementById('customersTable');
+            if (tbody) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="text-center text-danger py-4">
+                            <i class="fas fa-exclamation-triangle fa-2x mb-2"></i><br>
+                            ${message}<br>
+                            <button class="btn btn-sm btn-outline-primary mt-2" onclick="loadCustomers()">
+                                <i class="fas fa-refresh"></i> 重新加载
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // 加载个人信息
+        function loadProfile() {
+            if (!currentSalesperson) return;
+            
+            document.getElementById('profileUsername').value = currentSalesperson.username;
+            document.getElementById('profileInviteCode').value = currentSalesperson.inviteCode;
+            document.getElementById('profileCustomerCount').value = currentSalesperson.customerCount || 0;
+            document.getElementById('profileRegisterTime').value = formatDate(currentSalesperson.registerTime);
+            
+            // 加载业绩统计
+            document.getElementById('totalInvited').textContent = currentSalesperson.customerCount || 0;
+            document.getElementById('activeCustomers').textContent = Math.floor((currentSalesperson.customerCount || 0) * 0.8);
+            document.getElementById('monthlyCommission').textContent = '¥' + (Math.random() * 5000).toFixed(2);
+            document.getElementById('totalCommission').textContent = '¥' + (Math.random() * 50000).toFixed(2);
+        }
+
+
+
+        // 客户搜索
+        document.getElementById('customerSearch').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const filteredCustomers = customers.filter(customer => 
+                customer.username.toLowerCase().includes(searchTerm) ||
+                customer.id.toString().includes(searchTerm)
+            );
+            displayCustomers(filteredCustomers);
+        });
+
+        // 回车发送消息
+        document.getElementById('replyInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendReply();
+            }
+        });
+
+        // 定期刷新消息
+        setInterval(() => {
+            if (currentSalesperson) {
+                loadMessages();
+            }
+        }, 30000); // 每30秒刷新一次
+    </script>
+</body>
+</html>

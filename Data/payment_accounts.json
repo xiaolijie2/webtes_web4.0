@@ -1,0 +1,21 @@
+﻿{
+  "paymentAccounts": [
+    {
+      "id": "8d4b7847-c18b-4bf7-97c8-f691113cb22a",
+      "walletName": "阿瑟东13 ",
+      "accountType": "USDT",
+      "networkType": "TRON (TRC-20)",
+      "accountNumber": "撒旦吉萨家客户的空间",
+      "accountIdentifier": "奥斯威向大师",
+      "status": "enabled",
+      "isDefault": true,
+      "remarks": "111",
+      "createTime": "2025-10-04T15:07:58.9861401Z",
+      "updateTime": "2025-10-04T15:07:58.9861761Z",
+      "currencyType": "USDT",
+      "currencyName": "USDT",
+      "address": "撒旦吉萨家客户的空间",
+      "isActive": true
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "user_1": {
+    "user_id": "user_1",
+    "invitation_code": "INV001",
+    "invitation_link": "https://platform.com/register?code=INV001",
+    "total_invitations": 15,
+    "successful_invitations": 12,
+    "total_rewards": 2400.00,
+    "pending_rewards": 300.00,
+    "invitees": [
+      {
+        "id": "user_2",
+        "username": "张三",
+        "phone": "138****5678",
+        "registered_at": "2024-01-10T14:30:00Z",
+        "status": "active",
+        "reward_amount": 200.00,
+        "reward_status": "paid"
+      },
+      {
+        "id": "user_3",
+        "username": "李四",
+        "phone": "139****9876",
+        "registered_at": "2024-01-12T09:15:00Z",
+        "status": "active",
+        "reward_amount": 200.00,
+        "reward_status": "paid"
+      },
+      {
+        "id": "user_4",
+        "username": "王五",
+        "phone": "137****1234",
+        "registered_at": "2024-01-14T16:45:00Z",
+        "status": "pending",
+        "reward_amount": 200.00,
+        "reward_status": "pending"
+      }
+    ]
+  },
+  "user_2": {
+    "user_id": "user_2",
+    "invitation_code": "INV002",
+    "invitation_link": "https://platform.com/register?code=INV002",
+    "total_invitations": 8,
+    "successful_invitations": 6,
+    "total_rewards": 1200.00,
+    "pending_rewards": 200.00,
+    "invitees": [
+      {
+        "id": "user_5",
+        "username": "赵六",
+        "phone": "136****5555",
+        "registered_at": "2024-01-13T11:20:00Z",
+        "status": "active",
+        "reward_amount": 200.00,
+        "reward_status": "paid"
+      }
+    ]
+  },
+  "default": {
+    "user_id": "default",
+    "invitation_code": "INV000",
+    "invitation_link": "https://platform.com/register?code=INV000",
+    "total_invitations": 0,
+    "successful_invitations": 0,
+    "total_rewards": 0.00,
+    "pending_rewards": 0.00,
+    "invitees": []
+  }
+}

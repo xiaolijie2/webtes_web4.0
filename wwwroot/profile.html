@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人资料</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="bottom-nav.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #e9ecef;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        
+        .mobile-container {
+            width: 450px;
+            max-width: 450px;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border-left: 1px solid #dee2e6;
+            border-right: 1px solid #dee2e6;
+            position: relative;
+            padding-bottom: 80px;
+        }
+        
+        .page-header {
+            background: white;
+            padding: 20px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: #007AFF;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        
+        .page-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin: 0;
+            flex: 1;
+            text-align: center;
+        }
+        
+        .avatar-section {
+            background: white;
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 10px solid #f8f9fa;
+        }
+        
+        .current-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            background: #007AFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .current-avatar:hover {
+            transform: scale(1.05);
+        }
+        
+        .current-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .avatar-change-btn {
+            background: #007AFF;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .avatar-change-btn:hover {
+            background: #0056b3;
+        }
+        
+        .avatar-selector {
+            background: white;
+            padding: 20px;
+            margin-top: 10px;
+            border-radius: 10px;
+            display: none;
+        }
+        
+        .avatar-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .avatar-option {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 3px solid transparent;
+            overflow: hidden;
+        }
+        
+        .avatar-option:hover {
+            transform: scale(1.1);
+        }
+        
+        .avatar-option.selected {
+            border-color: #007AFF;
+        }
+        
+        .avatar-option img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .form-section {
+            background: white;
+            margin-top: 10px;
+            padding: 20px;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            background: #f8f9fa;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #007AFF;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .save-btn {
+            width: 100%;
+            background: #007AFF;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+        
+        .save-btn:hover {
+            background: #0056b3;
+        }
+        
+        .save-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+        
+        .error-message {
+            background: #ffe6e6;
+            color: #d63384;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <!-- 页面标题 -->
+        <div class="page-header">
+            <button class="back-btn" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h1 class="page-title">个人资料</h1>
+        </div>
+
+        <!-- 头像区域 -->
+        <div class="avatar-section">
+            <div class="current-avatar" id="currentAvatar" onclick="toggleAvatarSelector()">
+                <i class="fas fa-user"></i>
+            </div>
+            <button class="avatar-change-btn" onclick="toggleAvatarSelector()">
+                <i class="fas fa-camera me-2"></i>更换头像
+            </button>
+            
+            <!-- 头像选择器 -->
+            <div class="avatar-selector" id="avatarSelector">
+                <div class="section-title">选择头像</div>
+                <div class="avatar-grid" id="avatarGrid">
+                    <!-- 头像选项将通过JavaScript动态生成 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 个人信息表单 -->
+        <div class="form-section">
+            <div class="section-title">个人信息</div>
+            
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
+            
+            <form id="profileForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="firstName">名字</label>
+                        <input type="text" class="form-control" id="firstName" name="firstName" placeholder="请输入名字">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="lastName">姓氏</label>
+                        <input type="text" class="form-control" id="lastName" name="lastName" placeholder="请输入姓氏">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="email">邮箱</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="请输入邮箱地址">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="country">国家</label>
+                    <input type="text" class="form-control" id="country" name="country" placeholder="请输入国家">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="city">城市</label>
+                        <input type="text" class="form-control" id="city" name="city" placeholder="请输入城市">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="state">州/省</label>
+                        <input type="text" class="form-control" id="state" name="state" placeholder="请输入州/省">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="address">地址</label>
+                    <input type="text" class="form-control" id="address" name="address" placeholder="请输入详细地址">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="zipCode">邮编</label>
+                    <input type="text" class="form-control" id="zipCode" name="zipCode" placeholder="请输入邮编">
+                </div>
+                
+                <button type="submit" class="save-btn" id="saveBtn">
+                    <i class="fas fa-save me-2"></i>保存
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // 默认头像列表
+        const defaultAvatars = [
+            'https://trae-api-sg.mchost.guru/api/ide/v1/text_to_image?prompt=cute%20cartoon%20cat%20avatar%20round%20face%20big%20eyes%20pastel%20colors&image_size=square',
+            'https://trae-api-sg.mchost.guru/api/ide/v1/text_to_image?prompt=cute%20cartoon%20dog%20avatar%20round%20face%20friendly%20smile%20pastel%20colors&image_size=square',
+            'https://trae-api-sg.mchost.guru/api/ide/v1/text_to_image?prompt=cute%20cartoon%20panda%20avatar%20round%20face%20black%20white%20adorable&image_size=square',
+            'https://trae-api-sg.mchost.guru/api/ide/v1/text_to_image?prompt=cute%20cartoon%20rabbit%20avatar%20round%20face%20long%20ears%20pastel%20pink&image_size=square',
+            'https://trae-api-sg.mchost.guru/api/ide/v1/text_to_image?prompt=cute%20cartoon%20bear%20avatar%20round%20face%20brown%20friendly%20expression&image_size=square',
+            'https://trae-api-sg.mchost.guru/api/ide/v1/text_to_image?prompt=cute%20cartoon%20fox%20avatar%20round%20face%20orange%20white%20clever%20eyes&image_size=square',
+            'https://trae-api-sg.mchost.guru/api/ide/v1/text_to_image?prompt=cute%20cartoon%20owl%20avatar%20round%20face%20big%20eyes%20wise%20expression&image_size=square',
+            'https://trae-api-sg.mchost.guru/api/ide/v1/text_to_image?prompt=cute%20cartoon%20penguin%20avatar%20round%20face%20black%20white%20happy&image_size=square'
+        ];
+        
+        let selectedAvatar = '';
+        let userProfile = {};
+        
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeAvatars();
+            loadUserProfile();
+            setupFormSubmission();
+        });
+        
+        // 初始化头像选择器
+        function initializeAvatars() {
+            const avatarGrid = document.getElementById('avatarGrid');
+            avatarGrid.innerHTML = '';
+            
+            defaultAvatars.forEach((avatarUrl, index) => {
+                const avatarOption = document.createElement('div');
+                avatarOption.className = 'avatar-option';
+                avatarOption.innerHTML = `<img src="${avatarUrl}" alt="头像${index + 1}">`;
+                avatarOption.onclick = () => selectAvatar(avatarUrl, avatarOption);
+                avatarGrid.appendChild(avatarOption);
+            });
+        }
+        
+        // 选择头像
+        function selectAvatar(avatarUrl, element) {
+            // 移除其他选中状态
+            document.querySelectorAll('.avatar-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // 设置当前选中
+            element.classList.add('selected');
+            selectedAvatar = avatarUrl;
+            
+            // 更新当前头像显示
+            const currentAvatar = document.getElementById('currentAvatar');
+            currentAvatar.innerHTML = `<img src="${avatarUrl}" alt="当前头像">`;
+            
+            // 隐藏选择器
+            setTimeout(() => {
+                toggleAvatarSelector();
+            }, 300);
+        }
+        
+        // 切换头像选择器显示
+        function toggleAvatarSelector() {
+            const selector = document.getElementById('avatarSelector');
+            selector.style.display = selector.style.display === 'none' || selector.style.display === '' ? 'block' : 'none';
+        }
+        
+        // 获取JWT令牌
+        function getAuthToken() {
+            return localStorage.getItem('authToken');
+        }
+
+        // 加载用户资料
+        async function loadUserProfile() {
+            try {
+                const token = getAuthToken();
+                if (!token) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                const response = await fetch('http://localhost:5065/api/user/profile', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    userProfile = await response.json();
+                    populateForm(userProfile);
+                } else if (response.status === 401) {
+                    // 未授权，跳转到登录页
+                    localStorage.removeItem('authToken');
+                    window.location.href = 'login.html';
+                } else {
+                    console.error('加载用户资料失败:', response.status);
+                    showError('加载用户资料失败，请稍后重试');
+                }
+            } catch (error) {
+                console.error('加载用户资料失败:', error);
+                showError('加载用户资料失败，请稍后重试');
+            }
+        }
+        
+        // 填充表单数据
+        function populateForm(profile) {
+            document.getElementById('firstName').value = profile.firstName || '';
+            document.getElementById('lastName').value = profile.lastName || '';
+            document.getElementById('email').value = profile.email || '';
+            document.getElementById('country').value = profile.country || '';
+            document.getElementById('city').value = profile.city || '';
+            document.getElementById('state').value = profile.state || '';
+            document.getElementById('address').value = profile.address || '';
+            document.getElementById('zipCode').value = profile.zipCode || '';
+            
+            // 设置头像
+            if (profile.avatar) {
+                selectedAvatar = profile.avatar;
+                const currentAvatar = document.getElementById('currentAvatar');
+                currentAvatar.innerHTML = `<img src="${profile.avatar}" alt="当前头像">`;
+                
+                // 在头像选择器中标记选中状态
+                const avatarOptions = document.querySelectorAll('.avatar-option img');
+                avatarOptions.forEach(img => {
+                    if (img.src === profile.avatar) {
+                        img.parentElement.classList.add('selected');
+                    }
+                });
+            }
+        }
+        
+        // 设置表单提交
+        function setupFormSubmission() {
+            const form = document.getElementById('profileForm');
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                await saveProfile();
+            });
+        }
+        
+        // 保存用户资料
+        async function saveProfile() {
+            const saveBtn = document.getElementById('saveBtn');
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>保存中...';
+            
+            try {
+                const formData = {
+                    FirstName: document.getElementById('firstName').value.trim(),
+                    LastName: document.getElementById('lastName').value.trim(),
+                    Email: document.getElementById('email').value.trim(),
+                    Country: document.getElementById('country').value.trim(),
+                    City: document.getElementById('city').value.trim(),
+                    State: document.getElementById('state').value.trim(),
+                    Address: document.getElementById('address').value.trim(),
+                    ZipCode: document.getElementById('zipCode').value.trim(),
+                    Avatar: selectedAvatar
+                };
+                
+                // 基本验证
+                if (!formData.FirstName || !formData.LastName) {
+                    showError('请填写姓名信息');
+                    return;
+                }
+                
+                if (formData.Email && !isValidEmail(formData.Email)) {
+                    showError('请输入有效的邮箱地址');
+                    return;
+                }
+                
+                const token = getAuthToken();
+                if (!token) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                const response = await fetch('http://localhost:5065/api/user/profile', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                if (response.ok) {
+                    showSuccess('个人资料保存成功');
+                    userProfile = { ...userProfile, ...formData };
+                } else if (response.status === 401) {
+                    window.location.href = 'login.html';
+                } else {
+                    const errorData = await response.json();
+                    showError(errorData.message || '保存失败，请稍后重试');
+                }
+            } catch (error) {
+                console.error('保存用户资料失败:', error);
+                showError('保存失败，请检查网络连接');
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = '<i class="fas fa-save me-2"></i>保存';
+            }
+        }
+        
+        // 验证邮箱格式
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+        
+        // 显示错误消息
+        function showError(message) {
+            const errorElement = document.getElementById('errorMessage');
+            const successElement = document.getElementById('successMessage');
+            
+            successElement.style.display = 'none';
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+            }, 5000);
+        }
+        
+        // 显示成功消息
+        function showSuccess(message) {
+            const errorElement = document.getElementById('errorMessage');
+            const successElement = document.getElementById('successMessage');
+            
+            errorElement.style.display = 'none';
+            successElement.textContent = message;
+            successElement.style.display = 'block';
+            
+            setTimeout(() => {
+                successElement.style.display = 'none';
+            }, 3000);
+        }
+        
+        // 返回上一页
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>

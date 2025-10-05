@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理员登录</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #e9ecef;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .mobile-container {
+            width: 450px;
+            max-width: 450px;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border-left: 1px solid #dee2e6;
+            border-right: 1px solid #dee2e6;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+            padding: 20px;
+            position: relative;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .brand-logo {
+            width: 120px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .language-selector {
+            width: 80px;
+            height: 30px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .login-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .welcome-text {
+            font-size: 14px;
+            opacity: 0.9;
+            text-align: center;
+        }
+
+        .form-container {
+            flex: 1;
+            padding: 30px 20px;
+            background: white;
+            margin: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #dc3545;
+        }
+
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: white;
+            transition: border-color 0.3s;
+        }
+
+        .form-group select:focus {
+            outline: none;
+            border-color: #dc3545;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .user-login-link {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .user-login-link a {
+            color: #6c757d;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .user-login-link a:hover {
+            color: #dc3545;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <div class="header">
+            <div class="logo-area">
+                <div class="brand-logo" id="brandLogo">管理系统</div>
+                <select class="language-selector" onclick="showLanguageMenu()">
+                    <option>中文</option>
+                </select>
+            </div>
+            <div class="login-title">管理员登录</div>
+            <div class="welcome-text">请输入管理员账号信息</div>
+        </div>
+
+        <div class="form-container">
+            <div class="error-message" id="login-alert"></div>
+            <div class="success-message" id="login-success"></div>
+            
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label for="userType">登录类型</label>
+                    <select id="userType" name="userType" required>
+                        <option value="admin">管理员</option>
+                        <option value="agent">代理商</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="username">用户名</label>
+                    <input type="text" id="username" name="username" placeholder="请输入用户名" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">登录密码</label>
+                    <input type="password" id="password" name="password" placeholder="请输入登录密码" required>
+                </div>
+                
+                <button type="submit" class="login-btn">登录</button>
+            </form>
+
+            <div class="user-login-link">
+                <a href="login.html">普通用户登录</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/static-data-manager.js"></script>
+    <script src="js/static-auth.js"></script>
+    <script>
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 设置管理员登录表单
+            setupAdminLoginForm();
+            
+            // 加载品牌LOGO
+            loadBrandLogo();
+            
+            // 检查是否已经登录
+            if (window.staticAuth.isLoggedIn()) {
+                window.staticAuth.redirectToHome();
+            }
+        });
+
+        // 设置管理员登录表单
+        function setupAdminLoginForm() {
+            const form = document.getElementById('adminLoginForm');
+            const userTypeSelect = document.getElementById('userType');
+            
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const username = form.querySelector('input[name="username"]').value;
+                const password = form.querySelector('input[name="password"]').value;
+                const userType = userTypeSelect.value;
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const errorDiv = document.getElementById('login-alert');
+                
+                // 显示加载状态
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = '登录中...';
+                }
+                
+                try {
+                    const result = await window.staticAuth.login(username, password, userType);
+                    
+                    if (result.success) {
+                        // 登录成功，显示成功信息
+                        showAlert('login-success', '登录成功，正在跳转...', 'success');
+                        
+                        // 延迟跳转
+                        setTimeout(() => {
+                            window.staticAuth.redirectToHome();
+                        }, 1500);
+                    } else {
+                        // 显示错误信息
+                        showAlert('login-alert', result.message);
+                    }
+                } catch (error) {
+                    console.error('Login form error:', error);
+                    showAlert('login-alert', '登录过程中发生错误，请重试');
+                } finally {
+                    // 恢复按钮状态
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = '登录';
+                    }
+                }
+            });
+        }
+
+        // 显示提示信息
+        function showAlert(elementId, message, type = 'error') {
+            const alertElement = document.getElementById('login-alert');
+            const successElement = document.getElementById('login-success');
+            
+            // 隐藏所有提示
+            alertElement.style.display = 'none';
+            successElement.style.display = 'none';
+            
+            if (type === 'success') {
+                successElement.textContent = message;
+                successElement.style.display = 'block';
+            } else {
+                alertElement.textContent = message;
+                alertElement.style.display = 'block';
+            }
+        }
+
+        // 语言选择菜单
+        function showLanguageMenu() {
+            alert('语言选择功能开发中...');
+        }
+
+        // 加载品牌LOGO
+        async function loadBrandLogo() {
+            try {
+                const logoData = await window.staticDataManager.getLogoSettings();
+                const logoElement = document.getElementById('brandLogo');
+                
+                if (logoData && logoData.type) {
+                    if (logoData.type === 'text') {
+                        logoElement.textContent = logoData.text || '管理系统';
+                        logoElement.style.fontSize = logoData.fontSize || '16px';
+                        logoElement.style.color = logoData.color || 'white';
+                    } else if (logoData.type === 'image' && logoData.imageUrl) {
+                        logoElement.innerHTML = `<img src="${logoData.imageUrl}" alt="管理系统" style="max-width: 100%; max-height: 100%; object-fit: contain;">`;
+                    }
+                }
+            } catch (error) {
+                console.error('加载LOGO失败:', error);
+            }
+        }
+    </script>
+</body>
+</html>

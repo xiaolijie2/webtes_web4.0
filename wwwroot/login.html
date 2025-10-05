@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户登录</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #e9ecef;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .mobile-container {
+            width: 450px;
+            max-width: 450px;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border-left: 1px solid #dee2e6;
+            border-right: 1px solid #dee2e6;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #007AFF 0%, #0056CC 100%);
+            color: white;
+            padding: 20px;
+            position: relative;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .brand-logo {
+            width: 120px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .language-selector {
+            width: 80px;
+            height: 30px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .login-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .welcome-text {
+            font-size: 14px;
+            opacity: 0.9;
+            text-align: center;
+        }
+
+        .form-container {
+            flex: 1;
+            padding: 30px 20px;
+            background: white;
+            margin: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .phone-input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .country-code-select {
+            flex: 0 0 100px;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 14px;
+            background: white;
+            transition: border-color 0.3s;
+        }
+
+        .phone-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .country-code-select:focus {
+            outline: none;
+            border-color: #007AFF;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #007AFF 0%, #0056CC 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-bottom: 20px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,122,255,0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .register-link {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .register-link a {
+            color: #007AFF;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .alert {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <div class="header">
+            <div class="logo-area">
+                <div class="brand-logo" id="brand-logo">SheIn</div>
+                <select class="language-selector" onclick="showLanguageMenu()">
+                    <option>🇨🇳 中文</option>
+                </select>
+            </div>
+            <div class="login-title">用户登录</div>
+            <div class="welcome-text">欢迎回来，请登录您的账户</div>
+        </div>
+
+        <div class="form-container">
+            <div id="login-alert"></div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-phone">手机号码</label>
+                    <div class="phone-input-group">
+                        <select id="country-code" class="country-code-select">
+                            <option value="+86">🇨🇳 +86</option>
+                        </select>
+                        <input type="tel" id="login-phone" class="phone-input" placeholder="请输入手机号码" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">密码</label>
+                    <input type="password" id="login-password" placeholder="请输入密码" required>
+                </div>
+                <button type="submit" class="btn">登录</button>
+            </form>
+            <div class="register-link">
+                没有账户？ <a href="register.html">立即注册</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js?v=2.0"></script>
+    <script>
+        const API_BASE = 'http://localhost:5065/api';
+
+        // 显示提示信息
+        function showAlert(containerId, message, type) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+            setTimeout(() => container.innerHTML = '', 5000);
+        }
+
+        // 验证手机号格式（只验证普通用户的8位数字手机号）
+        function validatePhone(phone) {
+            return /^\d{8,}$/.test(phone);
+        }
+
+        // 登录表单提交
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const countryCode = document.getElementById('country-code').value;
+            const phone = document.getElementById('login-phone').value;
+            const password = document.getElementById('login-password').value;
+
+            // 基本验证
+            if (!phone || !password) {
+                showAlert('login-alert', '请输入手机号码和密码', 'error');
+                return;
+            }
+
+            // 验证手机号格式
+            if (!validatePhone(phone)) {
+                showAlert('login-alert', '请输入正确的手机号码（至少8位数字）', 'error');
+                return;
+            }
+
+            try {
+                // 使用统一的登录API
+                const fullPhoneNumber = countryCode + phone;
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        phone: fullPhoneNumber, 
+                        password: password 
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    // 只处理注册用户（权限等级3）
+                    if (result.permissionLevel === 3) {
+                        // 保存登录信息
+                        localStorage.setItem('authToken', result.token);
+                        localStorage.setItem('currentUser', JSON.stringify(result.user));
+                        localStorage.setItem('permissionLevel', result.permissionLevel.toString());
+                        
+                        if (typeof authManager !== 'undefined') {
+                            authManager.setAuth(result.token, result.user);
+                        }
+                        
+                        showAlert('login-alert', '登录成功！正在跳转...', 'success');
+                        
+                        setTimeout(() => {
+                            // 跳转到用户前台页面
+                            window.location.href = result.redirectUrl || 'home.html';
+                        }, 1500);
+                    } else {
+                        // 如果是管理员或业务员，提示使用管理员登录页面
+                        showAlert('login-alert', '请使用管理员登录页面', 'error');
+                    }
+                } else {
+                    showAlert('login-alert', result.message || '登录失败', 'error');
+                }
+                
+            } catch (error) {
+                console.error('登录失败:', error);
+                showAlert('login-alert', '登录失败，请检查网络连接', 'error');
+            }
+        });
+
+        // 语言选择菜单
+        function showLanguageMenu() {
+            alert('语言选择功能开发中...');
+        }
+
+        // 加载品牌LOGO
+        async function loadBrandLogo() {
+            try {
+                const response = await fetch(`${API_BASE}/admin/logo-settings`);
+                if (response.ok) {
+                    const logoData = await response.json();
+                    const logoElement = document.querySelector('.logo-area');
+                    
+                    if (logoData.type === 'text') {
+                        logoElement.innerHTML = `<span class="logo" style="font-size: ${logoData.fontSize}px; color: ${logoData.color}; font-weight: ${logoData.fontWeight};">${logoData.text}</span>`;
+                        logoElement.style.background = 'transparent';
+                        logoElement.style.border = 'none';
+                    } else if (logoData.type === 'image') {
+                        logoElement.innerHTML = `<img src="${logoData.imageUrl}" alt="Logo" style="max-width: 100%; max-height: 100%; object-fit: contain;">`;
+                        logoElement.style.background = 'transparent';
+                        logoElement.style.border = 'none';
+                    } else if (logoData.type === 'combined') {
+                        // 图文组合逻辑
+                        const isImageLeft = logoData.imagePosition === 'left';
+                        logoElement.innerHTML = `
+                            <div style="display: flex; align-items: center; gap: 8px; ${isImageLeft ? 'flex-direction: row;' : 'flex-direction: row-reverse;'}">
+                                <img src="${logoData.imageUrl}" alt="Logo" style="height: 30px; object-fit: contain;">
+                                <span style="font-size: ${logoData.fontSize}px; color: ${logoData.color}; font-weight: ${logoData.fontWeight};">${logoData.text}</span>
+                            </div>
+                        `;
+                        logoElement.style.background = 'transparent';
+                        logoElement.style.border = 'none';
+                    }
+                } else {
+                    console.log('LOGO设置加载失败，使用默认LOGO');
+                }
+            } catch (error) {
+                console.log('使用默认LOGO:', error);
+            }
+        }
+
+        // 加载网站名称
+        async function loadSiteName() {
+            try {
+                const response = await fetch('/api/admin/site-settings');
+                const settings = await response.json();
+                
+                if (settings && settings.siteName) {
+                    document.title = settings.siteName + ' - 用户登录';
+                } else {
+                    const savedSiteName = localStorage.getItem('siteName');
+                    if (savedSiteName) {
+                        document.title = savedSiteName + ' - 用户登录';
+                    } else {
+                        document.title = '用户登录';
+                    }
+                }
+            } catch (error) {
+                console.error('加载网站名称失败:', error);
+                const savedSiteName = localStorage.getItem('siteName');
+                if (savedSiteName) {
+                    document.title = savedSiteName + ' - 用户登录';
+                } else {
+                    document.title = '用户登录';
+                }
+            }
+        }
+
+        // 加载区号数据
+        async function loadCountryCodes() {
+            try {
+                const response = await fetch(`${API_BASE}/countrycode/enabled`);
+                if (response.ok) {
+                    const countryCodes = await response.json();
+                    const select = document.getElementById('country-code');
+                    
+                    // 清空现有选项
+                    select.innerHTML = '';
+                    
+                    // 按排序顺序添加选项
+                    countryCodes.sort((a, b) => a.sortOrder - b.sortOrder);
+                    
+                    let defaultSelected = false;
+                    countryCodes.forEach(country => {
+                        const option = document.createElement('option');
+                        option.value = country.code;
+                        option.textContent = `${country.flag} ${country.code}`;
+                        
+                        // 设置默认选中
+                        if (country.isDefault && !defaultSelected) {
+                            option.selected = true;
+                            defaultSelected = true;
+                        }
+                        
+                        select.appendChild(option);
+                    });
+                    
+                    // 如果没有默认项，选择第一个
+                    if (!defaultSelected && countryCodes.length > 0) {
+                        select.selectedIndex = 0;
+                    }
+                } else {
+                    console.error('加载区号数据失败');
+                    // 添加默认的+86选项作为备用
+                    const select = document.getElementById('country-code');
+                    select.innerHTML = '<option value="+86">🇨🇳 +86</option>';
+                }
+            } catch (error) {
+                console.error('加载区号数据出错:', error);
+                // 添加默认的+86选项作为备用
+                const select = document.getElementById('country-code');
+                select.innerHTML = '<option value="+86">🇨🇳 +86</option>';
+            }
+        }
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadBrandLogo();
+            loadSiteName();
+            loadCountryCodes();
+            console.log('用户登录页面加载完成');
+        });
+    </script>
+    </div>
+</body>
+</html>

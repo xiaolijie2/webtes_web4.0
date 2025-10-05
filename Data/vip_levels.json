@@ -1,0 +1,60 @@
+[
+  {
+    "level": 1,
+    "name": "VIP 1",
+    "min_deposit": 0,
+    "commission_rate": 0.01,
+    "daily_order_limit": 5,
+    "withdrawal_limit": 1000,
+    "benefits": [
+      "基础会员权益"
+    ],
+    "color": "#6B7280",
+    "icon": "🥉"
+  },
+  {
+    "level": 2,
+    "name": "VIP 2",
+    "min_deposit": 1000,
+    "commission_rate": 0.02,
+    "daily_order_limit": 10,
+    "withdrawal_limit": 5000,
+    "benefits": [
+      "佣金返利2%",
+      "每日10单"
+    ],
+    "color": "#9CA3AF",
+    "icon": "🥈"
+  },
+  {
+    "level": 3,
+    "name": "VIP 3",
+    "min_deposit": 5000,
+    "commission_rate": 0.03,
+    "daily_order_limit": 15,
+    "withdrawal_limit": 10000,
+    "benefits": [
+      "佣金返利3%",
+      "每日15单",
+      "专属客服"
+    ],
+    "color": "#F59E0B",
+    "icon": "🥇"
+  },
+  {
+    "level": 4,
+    "name": "VIP 4",
+    "min_deposit": 10000,
+    "commission_rate": 0.05,
+    "daily_order_limit": 25,
+    "withdrawal_limit": 50000,
+    "benefits": [
+      "佣金返利5%",
+      "每日25单",
+      "专属客服",
+      "优先提现"
+    ],
+    "color": "#EF4444",
+    "icon": "👑"
+  }
+]

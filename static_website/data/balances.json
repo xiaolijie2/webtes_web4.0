@@ -1,0 +1,42 @@
+{
+  "user_1": {
+    "user_id": "user_1",
+    "balance": 15680.50,
+    "frozen_balance": 2500.00,
+    "available_balance": 13180.50,
+    "total_earnings": 45230.80,
+    "total_withdrawals": 32000.00,
+    "commission_rate": 0.06,
+    "last_updated": "2024-01-15T20:30:00Z"
+  },
+  "user_2": {
+    "user_id": "user_2",
+    "balance": 8920.30,
+    "frozen_balance": 1200.00,
+    "available_balance": 7720.30,
+    "total_earnings": 23450.60,
+    "total_withdrawals": 15000.00,
+    "commission_rate": 0.05,
+    "last_updated": "2024-01-15T19:45:00Z"
+  },
+  "user_3": {
+    "user_id": "user_3",
+    "balance": 25340.75,
+    "frozen_balance": 5000.00,
+    "available_balance": 20340.75,
+    "total_earnings": 78920.40,
+    "total_withdrawals": 55000.00,
+    "commission_rate": 0.08,
+    "last_updated": "2024-01-15T21:15:00Z"
+  },
+  "default": {
+    "user_id": "default",
+    "balance": 1000.00,
+    "frozen_balance": 0.00,
+    "available_balance": 1000.00,
+    "total_earnings": 1000.00,
+    "total_withdrawals": 0.00,
+    "commission_rate": 0.05,
+    "last_updated": "2024-01-15T00:00:00Z"
+  }
+}

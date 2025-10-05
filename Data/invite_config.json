@@ -1,0 +1,44 @@
+{
+  "Levels": [
+    {
+      "Level": 1,
+      "Name": "\u521D\u7EA7\u63A8\u5E7F\u5458",
+      "Reward": 10,
+      "Commission": 5,
+      "Requirement": 0,
+      "Description": "\u9080\u8BF71\u4EBA\u5373\u53EF\u83B7\u5F9710\u5143\u5956\u52B1\uFF0C\u4E0B\u7EA7\u4EFB\u52A15%\u4F63\u91D1"
+    },
+    {
+      "Level": 2,
+      "Name": "\u4E2D\u7EA7\u63A8\u5E7F\u5458",
+      "Reward": 20,
+      "Commission": 8,
+      "Requirement": 10,
+      "Description": "\u9080\u8BF710\u4EBA\u53EF\u83B7\u5F9720\u5143\u5956\u52B1\uFF0C\u4E0B\u7EA7\u4EFB\u52A18%\u4F63\u91D1"
+    },
+    {
+      "Level": 3,
+      "Name": "\u9AD8\u7EA7\u63A8\u5E7F\u5458",
+      "Reward": 50,
+      "Commission": 12,
+      "Requirement": 50,
+      "Description": "\u9080\u8BF750\u4EBA\u53EF\u83B7\u5F9750\u5143\u5956\u52B1\uFF0C\u4E0B\u7EA7\u4EFB\u52A112%\u4F63\u91D1"
+    },
+    {
+      "Level": 4,
+      "Name": "\u91D1\u724C\u63A8\u5E7F\u5458",
+      "Reward": 100,
+      "Commission": 15,
+      "Requirement": 100,
+      "Description": "\u9080\u8BF7100\u4EBA\u53EF\u83B7\u5F97100\u5143\u5956\u52B1\uFF0C\u4E0B\u7EA7\u4EFB\u52A115%\u4F63\u91D1"
+    }
+  ],
+  "Rules": [
+    "1. \u9080\u8BF7\u597D\u53CB\u6CE8\u518C\u5E76\u5B8C\u6210\u9996\u6B21\u4EFB\u52A1\u5373\u53EF\u83B7\u5F97\u5956\u52B1",
+    "2. \u88AB\u9080\u8BF7\u7528\u6237\u6BCF\u5B8C\u6210\u4E00\u4E2A\u4EFB\u52A1\uFF0C\u9080\u8BF7\u4EBA\u53EF\u83B7\u5F97\u76F8\u5E94\u4F63\u91D1",
+    "3. \u9080\u8BF7\u7B49\u7EA7\u6839\u636E\u6709\u6548\u9080\u8BF7\u4EBA\u6570\u81EA\u52A8\u5347\u7EA7",
+    "4. \u9080\u8BF7\u5956\u52B1\u548C\u4F63\u91D1\u5B9E\u65F6\u5230\u8D26",
+    "5. \u4E25\u7981\u5237\u5355\u3001\u4F5C\u5F0A\u7B49\u8FDD\u89C4\u884C\u4E3A"
+  ],
+  "Notice": "\u9080\u8BF7\u597D\u53CB\u4E00\u8D77\u8D5A\u94B1\uFF0C\u5171\u4EAB\u6536\u76CA\uFF01\u9080\u8BF7\u8D8A\u591A\uFF0C\u5956\u52B1\u8D8A\u4E30\u539A\uFF01"
+}

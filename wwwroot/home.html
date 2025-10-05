@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首页</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="bottom-nav.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #e9ecef;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        
+        .mobile-container {
+            width: 450px;
+            max-width: 450px;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border-left: 1px solid #dee2e6;
+            border-right: 1px solid #dee2e6;
+            position: relative;
+            padding-bottom: 80px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #007AFF 0%, #0056CC 100%);
+            color: white;
+            padding: 15px 20px;
+            position: relative;
+        }
+        
+        .logo-area {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .brand-logo {
+            width: 120px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .language-selector {
+            width: 80px;
+            height: 30px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+
+        
+        .slideshow-container {
+            position: relative;
+            margin: 0;
+            border-radius: 0;
+            overflow: hidden;
+        }
+        
+        .slide {
+            display: none;
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, #FF6B35, #F7931E);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .slide.active {
+            display: block;
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .slide.slide-out {
+            opacity: 0;
+            transform: translateX(-100%);
+        }
+        
+        .slide-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+        }
+        
+        .slide-indicators {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+        }
+        
+        .indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .indicator.active {
+            background: white;
+            transform: scale(1.2);
+        }
+        
+        .marquee-container {
+            background: #f1f3f4;
+            padding: 10px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .marquee-content {
+            display: block;
+            font-size: 12px;
+            color: #666;
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            transform: translateX(100%);
+            opacity: 0;
+            transition: all 0.8s ease-in-out;
+        }
+        
+        .marquee-content.slide-in {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        
+        .marquee-content.slide-out {
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+        
+        /* 添加CSS动画关键帧 */
+        @keyframes marqueeSlideShow {
+            0% {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            17% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            83% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+        }
+        
+        .marquee-content.animate {
+            animation: marqueeSlideShow 4.6s ease-in-out;
+        }
+        
+        .balance-cards-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            padding: 20px;
+        }
+        
+        .balance-card {
+            background: linear-gradient(135deg, #007AFF 0%, #0056CC 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,122,255,0.3);
+        }
+        
+        .income-card {
+            background: linear-gradient(135deg, #28A745 0%, #20C997 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(40,167,69,0.3);
+        }
+        
+        .balance-amount, .income-amount {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .balance-label, .income-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            padding: 20px;
+        }
+        
+        .action-btn {
+            background: white;
+            border: none;
+            border-radius: 12px;
+            padding: 20px 10px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            text-decoration: none;
+            color: #333;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            color: #007AFF;
+        }
+        
+        .action-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: #007AFF;
+        }
+        
+        .action-text {
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 20px 20px 15px;
+            color: #333;
+        }
+        
+        .partners-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            padding: 0 20px 20px;
+        }
+        
+        .partner-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid #e9ecef;
+        }
+        
+        .partner-logo {
+            width: 60px;
+            height: 40px;
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+        
+        .partner-name {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .vip-benefits {
+            margin: 20px;
+            background: transparent;
+            padding: 0;
+        }
+        
+        .vip-card {
+            border-radius: 12px;
+            padding: 20px;
+            color: white;
+            position: relative;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+        
+        .vip-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 80px;
+            height: 80px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transform: translate(30px, -30px);
+        }
+        
+        .vip-level {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-style: italic;
+        }
+        
+        .vip-deposit {
+            font-size: 14px;
+            margin-bottom: 4px;
+            opacity: 0.9;
+        }
+        
+        .vip-info {
+            font-size: 13px;
+            opacity: 0.85;
+            line-height: 1.4;
+        }
+        
+        .vip-crown {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            color: #FFD700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+        
+        /* VIP 0 - 简单皇冠 */
+        .crown-simple {
+            color: #C0C0C0;
+            text-shadow: 0 0 5px rgba(192, 192, 192, 0.3);
+            font-size: 20px;
+        }
+        
+        /* VIP 1 - 青铜皇冠 */
+        .crown-bronze {
+            color: #CD7F32;
+            text-shadow: 0 0 8px rgba(205, 127, 50, 0.6);
+            font-size: 22px;
+        }
+        
+        /* VIP 2 - 银色皇冠 */
+        .crown-silver {
+            color: #C0C0C0;
+            text-shadow: 0 0 10px rgba(192, 192, 192, 0.7);
+            font-size: 24px;
+        }
+        
+        /* VIP 3 - 金色皇冠 */
+        .crown-gold {
+            color: #FFD700;
+            text-shadow: 0 0 12px rgba(255, 215, 0, 0.8);
+            font-size: 26px;
+        }
+        
+        /* VIP 4 - 钻石皇冠 */
+        .crown-diamond {
+            color: #B9F2FF;
+            text-shadow: 0 0 15px rgba(185, 242, 255, 0.9);
+            font-size: 28px;
+            animation: diamond-pulse 2s ease-in-out infinite;
+        }
+        
+        /* 皇冠宝石装饰 */
+        .crown-gems {
+            font-size: 8px;
+            margin-left: -8px;
+            margin-top: -5px;
+            color: #FF69B4;
+            text-shadow: 0 0 3px rgba(255, 105, 180, 0.8);
+        }
+        
+        /* 皇冠光晕效果 */
+        .crown-glow {
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.3) 0%, transparent 70%);
+            animation: glow-pulse 3s ease-in-out infinite;
+        }
+        
+        .crown-glow-intense {
+            background: radial-gradient(circle, rgba(185, 242, 255, 0.4) 0%, transparent 70%);
+            animation: intense-glow 2s ease-in-out infinite;
+        }
+        
+        /* 皇冠闪烁效果 */
+        .crown-sparkle {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 12px;
+            animation: sparkle 1.5s ease-in-out infinite;
+        }
+        
+        /* 动画效果 */
+        @keyframes diamond-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        @keyframes glow-pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        @keyframes intense-glow {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: rotate(0deg) scale(0.5); }
+            50% { opacity: 1; transform: rotate(180deg) scale(1); }
+        }
+        
+        /* 存款金额样式 */
+        .deposit-amount {
+            font-size: 0.85em;
+            opacity: 0.7;
+            font-weight: normal;
+        }
+        
+        /* VIP描述样式 */
+        .vip-description {
+            font-size: 0.9em;
+            margin-top: 8px;
+            padding: 6px 0;
+            opacity: 0.9;
+            line-height: 1.4;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.95);
+        }
+        
+        /* VIP等级渐变背景 */
+        .vip-card.vip-0 {
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            color: #1976D2;
+        }
+        
+        .vip-card.vip-1 {
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+        }
+        
+        .vip-card.vip-2 {
+            background: linear-gradient(135deg, #42A5F5 0%, #1E88E5 100%);
+        }
+        
+        .vip-card.vip-3 {
+            background: linear-gradient(135deg, #1976D2 0%, #0D47A1 100%);
+        }
+        
+        .vip-card.vip-4 {
+             background: linear-gradient(135deg, #0D47A1 0%, #01579B 100%);
+         }
+         
+         /* 响应式设计 */
+         @media (max-width: 480px) {
+             .vip-benefits {
+                 margin: 15px;
+             }
+             
+             .vip-card {
+                 padding: 16px;
+                 margin-bottom: 10px;
+             }
+             
+             .vip-level {
+                 font-size: 20px;
+                 margin-bottom: 6px;
+             }
+             
+             .vip-deposit {
+                 font-size: 13px;
+             }
+             
+             .vip-info {
+                 font-size: 12px;
+             }
+             
+             .vip-crown {
+                 font-size: 24px;
+                 right: 16px;
+                 top: 16px;
+             }
+         }
+         
+         @media (max-width: 360px) {
+             .vip-card {
+                 padding: 14px;
+             }
+             
+             .vip-level {
+                 font-size: 18px;
+             }
+             
+             .vip-deposit {
+                 font-size: 12px;
+             }
+             
+             .vip-info {
+                 font-size: 11px;
+             }
+             
+             .vip-crown {
+                 font-size: 20px;
+                 right: 14px;
+                 top: 14px;
+             }
+         }
+        
+
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+    <!-- 顶部区域 -->
+    <div class="header">
+        <div class="logo-area">
+            <div class="brand-logo" id="brandLogo">
+                <span>加载中...</span>
+            </div>
+            <div style="display: flex; align-items: center;">
+                <button class="language-selector" onclick="showLanguageOptions()">
+                    <i class="fas fa-globe"></i> 中文
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 幻灯片轮播 -->
+    <div class="slideshow-container" id="slideshowContainer">
+        <div class="loading">加载幻灯片中...</div>
+    </div>
+
+    <!-- 跑马灯公告 -->
+    <div class="marquee-container">
+        <div class="marquee-content" id="marqueeContent">
+            <i class="fas fa-gift" style="color: #FF6B35; margin-right: 8px;"></i>
+            加载公告中...
+        </div>
+    </div>
+
+    <!-- 余额显示 -->
+    <div class="balance-cards-container">
+        <div class="balance-card">
+            <div class="balance-label">当前余额</div>
+            <div class="balance-amount" id="currentBalance">$0.00</div>
+        </div>
+        <div class="income-card">
+            <div class="income-label">累计收入</div>
+            <div class="income-amount" id="totalIncome">$0.00</div>
+        </div>
+    </div>
+
+    <!-- 快捷功能区 -->
+    <div class="quick-actions">
+        <a href="recharge.html" class="action-btn">
+            <div class="action-icon"><i class="fas fa-plus-circle"></i></div>
+            <div class="action-text">充值</div>
+        </a>
+        <a href="withdraw.html" class="action-btn">
+            <div class="action-icon"><i class="fas fa-minus-circle"></i></div>
+            <div class="action-text">取款</div>
+        </a>
+        <a href="invite.html" class="action-btn">
+            <div class="action-icon"><i class="fas fa-user-plus"></i></div>
+            <div class="action-text">邀请</div>
+        </a>
+        <a href="service.html" class="action-btn">
+            <div class="action-icon"><i class="fas fa-headset"></i></div>
+            <div class="action-text">客服</div>
+        </a>
+    </div>
+
+    <!-- 合作伙伴展示 -->
+    <div class="section-title">合作伙伴</div>
+    <div class="partners-grid">
+        <div class="partner-card">
+            <div class="partner-logo" style="background: #95BF47; color: white;">S</div>
+            <div class="partner-name">Shopify</div>
+        </div>
+        <div class="partner-card">
+            <div class="partner-logo" style="background: #2FB7EC; color: white;">W</div>
+            <div class="partner-name">Wish</div>
+        </div>
+        <div class="partner-card">
+            <div class="partner-logo" style="background: #FF6B35; color: white;">O</div>
+            <div class="partner-name">OnBuy</div>
+        </div>
+        <div class="partner-card">
+            <div class="partner-logo" style="background: #FF6A00; color: white;">A</div>
+            <div class="partner-name">AliExpress</div>
+        </div>
+        <div class="partner-card">
+            <div class="partner-logo" style="background: #7B68EE; color: white;">W</div>
+            <div class="partner-name">Wayfair</div>
+        </div>
+        <div class="partner-card">
+            <div class="partner-logo" style="background: #E53238; color: white;">E</div>
+            <div class="partner-name">eBay</div>
+        </div>
+        <div class="partner-card">
+            <div class="partner-logo" style="background: #000; color: white;">T</div>
+            <div class="partner-name">TikTok</div>
+        </div>
+        <div class="partner-card">
+            <div class="partner-logo" style="background: #00A693; color: white;">M</div>
+            <div class="partner-name">ManoMano</div>
+        </div>
+        <div class="partner-card">
+            <div class="partner-logo" style="background: #FF6900; color: white;">Z</div>
+            <div class="partner-name">Zalando</div>
+        </div>
+    </div>
+
+    <!-- VIP会员权益 -->
+    <div class="section-title">VIP会员权益</div>
+    <div class="vip-benefits" id="vipBenefits">
+        <div class="loading">加载VIP权益中...</div>
+    </div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="bottom-nav.js"></script>
+    <script src="js/auth.js?v=2.0"></script>
+    <script>
+        // 全局变量
+        let currentSlide = 0;
+        let slideInterval;
+        const API_BASE = 'http://localhost:5065';
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查页面访问权限
+            authManager.checkPageAccess();
+            
+            loadSiteName();
+            loadLogo();
+            loadSlideshow();
+            loadMarquee();
+            loadBalance();
+            loadVipBenefits();
+        });
+        
+        // 加载网站名称
+        async function loadSiteName() {
+            console.log('开始加载网站名称...');
+            try {
+                // 首先尝试从API获取网站名称
+                const response = await fetch(`${API_BASE}/api/admin/site-settings`);
+                const settings = await response.json();
+                console.log('从API获取的设置:', settings);
+                
+                if (settings && settings.siteName) {
+                    console.log('设置页面标题为:', settings.siteName + '-首页');
+                    document.title = settings.siteName + '-首页';
+                } else {
+                    console.log('API未返回网站名称，尝试从localStorage获取');
+                    // 如果API失败，尝试从localStorage获取
+                    const savedSiteName = localStorage.getItem('siteName');
+                    if (savedSiteName) {
+                        console.log('从localStorage获取的网站名称:', savedSiteName + '-首页');
+                        document.title = savedSiteName + '-首页';
+                    } else {
+                        console.log('未找到保存的网站名称，使用默认标题');
+                        document.title = '首页';
+                    }
+                }
+            } catch (error) {
+                console.error('加载网站名称失败:', error);
+                // 如果API失败，尝试从localStorage获取
+                const savedSiteName = localStorage.getItem('siteName');
+                if (savedSiteName) {
+                    console.log('API失败，从localStorage获取的网站名称:', savedSiteName + '-首页');
+                    document.title = savedSiteName + '-首页';
+                } else {
+                    console.log('API失败且localStorage中无数据');
+                    document.title = '首页';
+                }
+            }
+        }
+        
+        // 加载LOGO
+        async function loadLogo() {
+            try {
+                // 首先尝试从API获取LOGO设置
+                const response = await fetch(`${API_BASE}/api/admin/logo-settings`);
+                const logoData = await response.json();
+                
+                const logoElement = document.getElementById('brandLogo');
+                
+                if (logoData && logoData.type) {
+                    renderLogo(logoElement, logoData);
+                } else {
+                    // 如果API失败，尝试从localStorage获取
+                    const savedLogoData = localStorage.getItem('logoSettings');
+                    if (savedLogoData) {
+                        const logoSettings = JSON.parse(savedLogoData);
+                        renderLogo(logoElement, logoSettings);
+                    } else {
+                        logoElement.innerHTML = '<span>品牌LOGO</span>';
+                    }
+                }
+            } catch (error) {
+                console.error('加载LOGO失败:', error);
+                // 如果API失败，尝试从localStorage获取
+                const savedLogoData = localStorage.getItem('logoSettings');
+                if (savedLogoData) {
+                    try {
+                        const logoSettings = JSON.parse(savedLogoData);
+                        renderLogo(document.getElementById('brandLogo'), logoSettings);
+                    } catch (parseError) {
+                        console.error('解析LOGO设置失败:', parseError);
+                        document.getElementById('brandLogo').innerHTML = '<span>品牌LOGO</span>';
+                    }
+                } else {
+                    document.getElementById('brandLogo').innerHTML = '<span>品牌LOGO</span>';
+                }
+            }
+        }
+        
+        // 渲染LOGO
+        function renderLogo(logoElement, logoData) {
+            if (!logoElement || !logoData) return;
+            
+            switch (logoData.type) {
+                case 'text':
+                    const textStyle = `
+                        font-family: ${logoData.fontFamily || 'Arial'};
+                        font-size: ${logoData.fontSize || 16}px;
+                        color: ${logoData.color || '#ffffff'};
+                        font-weight: ${logoData.bold ? 'bold' : 'normal'};
+                    `;
+                    logoElement.innerHTML = `<span style="${textStyle}">${logoData.text || '品牌LOGO'}</span>`;
+                    break;
+                    
+                case 'image':
+                    if (logoData.imageUrl) {
+                        logoElement.innerHTML = `<img src="${logoData.imageUrl}" alt="Logo" style="max-width: 100%; max-height: 100%; object-fit: contain;">`;
+                    } else {
+                        logoElement.innerHTML = '<span>品牌LOGO</span>';
+                    }
+                    break;
+                    
+                case 'combined':
+                    let combinedHtml = '';
+                    if (logoData.imageUrl) {
+                        combinedHtml += `<img src="${logoData.imageUrl}" alt="Logo" style="max-height: 24px; margin-right: 8px; object-fit: contain;">`;
+                    }
+                    if (logoData.text) {
+                        const textStyle = `
+                            font-family: ${logoData.fontFamily || 'Arial'};
+                            font-size: ${logoData.fontSize || 16}px;
+                            color: ${logoData.color || '#ffffff'};
+                            font-weight: ${logoData.bold ? 'bold' : 'normal'};
+                        `;
+                        combinedHtml += `<span style="${textStyle}">${logoData.text}</span>`;
+                    }
+                    logoElement.innerHTML = combinedHtml || '<span>品牌LOGO</span>';
+                    break;
+                    
+                default:
+                    logoElement.innerHTML = '<span>品牌LOGO</span>';
+                    break;
+            }
+        }
+        
+        // 加载幻灯片
+        async function loadSlideshow() {
+            try {
+                const response = await fetch(`${API_BASE}/api/slideshow`);
+                const slides = await response.json();
+                
+                const container = document.getElementById('slideshowContainer');
+                
+                if (slides && slides.length > 0) {
+                    let slidesHtml = '';
+                    let indicatorsHtml = '';
+                    
+                    slides.forEach((slide, index) => {
+                        slidesHtml += `
+                            <div class="slide ${index === 0 ? 'active' : ''}" style="background-image: url('${slide.image_url}'); background-size: cover; background-position: center;">
+                                <div class="slide-content">
+                                    <h3>${slide.title || ''}</h3>
+                                    <p>${slide.description || ''}</p>
+                                </div>
+                            </div>
+                        `;
+                        indicatorsHtml += `<div class="indicator ${index === 0 ? 'active' : ''}" onclick="goToSlide(${index})"></div>`;
+                    });
+                    
+                    container.innerHTML = slidesHtml + `<div class="slide-indicators">${indicatorsHtml}</div>`;
+                    
+                    // 启动自动轮播
+                    startSlideshow(slides.length);
+                } else {
+                    // 默认幻灯片
+                    container.innerHTML = `
+                        <div class="slide active">
+                            <div class="slide-content">
+                                <h3>欢迎来到移动电商平台</h3>
+                                <p>开始您的购物之旅</p>
+                            </div>
+                        </div>
+                        <div class="slide-indicators">
+                            <div class="indicator active"></div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('加载幻灯片失败:', error);
+                document.getElementById('slideshowContainer').innerHTML = `
+                    <div class="slide active">
+                        <div class="slide-content">
+                            <h3>欢迎来到移动电商平台</h3>
+                            <p>开始您的购物之旅</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        // 启动幻灯片自动轮播
+        function startSlideshow(totalSlides) {
+            if (totalSlides <= 1) return;
+            
+            slideInterval = setInterval(() => {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                goToSlide(currentSlide);
+            }, 5000);
+        }
+        
+        // 跳转到指定幻灯片
+        function goToSlide(index) {
+            const slides = document.querySelectorAll('.slide');
+            const indicators = document.querySelectorAll('.indicator');
+            
+            // 找到当前活跃的幻灯片
+            const currentActiveSlide = document.querySelector('.slide.active');
+            
+            if (currentActiveSlide) {
+                // 添加退出动画
+                currentActiveSlide.classList.add('slide-out');
+                currentActiveSlide.classList.remove('active');
+                
+                // 延迟显示新幻灯片，创建切入效果
+                setTimeout(() => {
+                    currentActiveSlide.classList.remove('slide-out');
+                    currentActiveSlide.style.display = 'none';
+                    
+                    // 显示新幻灯片
+                    const newSlide = slides[index];
+                    newSlide.style.display = 'block';
+                    
+                    // 强制重绘以确保动画效果
+                    newSlide.offsetHeight;
+                    
+                    newSlide.classList.add('active');
+                }, 400);
+            } else {
+                // 如果没有当前活跃幻灯片，直接显示新幻灯片
+                slides.forEach((slide, i) => {
+                    if (i === index) {
+                        slide.style.display = 'block';
+                        slide.classList.add('active');
+                    } else {
+                        slide.style.display = 'none';
+                        slide.classList.remove('active');
+                    }
+                });
+            }
+            
+            // 更新指示器
+            indicators.forEach((indicator, i) => {
+                indicator.classList.toggle('active', i === index);
+            });
+            
+            currentSlide = index;
+        }
+        
+        // 跑马灯相关变量
+        let marqueeMessages = [];
+        let currentMarqueeIndex = 0;
+        let marqueeInterval = null;
+        
+        // 加载跑马灯内容
+        async function loadMarquee() {
+            try {
+                const response = await fetch(`${API_BASE}/api/marquee`);
+                const data = await response.json();
+                
+                if (data && data.content) {
+                    // 如果API返回的是逗号分隔的字符串
+                    marqueeMessages = data.content.split(',').map(msg => msg.trim()).filter(msg => msg);
+                } else {
+                    // 默认消息
+                    marqueeMessages = [
+                        '恭喜 1356***** 赚取了 1245.67 ＄',
+                        '恭喜 1389***** 赚取了 1678.90 ＄',
+                        '恭喜 1520***** 赚取了 1432.15 ＄'
+                    ];
+                }
+                
+                // 开始跑马灯轮播
+                startMarqueeRotation();
+                
+            } catch (error) {
+                console.error('加载跑马灯失败:', error);
+                marqueeMessages = [
+                    '恭喜 1356***** 赚取了 1245.67 ＄',
+                    '恭喜 1389***** 赚取了 1678.90 ＄',
+                    '恭喜 1520***** 赚取了 1432.15 ＄'
+                ];
+                startMarqueeRotation();
+            }
+        }
+        
+        // 开始跑马灯轮播
+        function startMarqueeRotation() {
+            if (marqueeMessages.length === 0) return;
+            
+            // 显示第一条消息
+            showMarqueeMessage(0);
+            
+            // 设置定时器，每4.6秒切换一次（与幻灯片5秒错开）
+            marqueeInterval = setInterval(() => {
+                currentMarqueeIndex = (currentMarqueeIndex + 1) % marqueeMessages.length;
+                showMarqueeMessage(currentMarqueeIndex);
+            }, 4600);
+        }
+        
+        // 显示指定的跑马灯消息
+        function showMarqueeMessage(index) {
+            const marqueeElement = document.getElementById('marqueeContent');
+            if (!marqueeElement || !marqueeMessages[index]) return;
+            
+            // 重置所有动画类
+            marqueeElement.classList.remove('slide-in', 'slide-out', 'animate');
+            
+            // 设置消息内容
+            marqueeElement.innerHTML = `
+                <i class="fas fa-gift" style="color: #FF6B35; margin-right: 8px;"></i>${marqueeMessages[index]}
+            `;
+            
+            // 强制重绘以确保动画重新开始
+            marqueeElement.offsetHeight;
+            
+            // 启动动画
+            marqueeElement.classList.add('animate');
+        }
+        
+        // 加载余额信息
+        async function loadBalance() {
+            try {
+                // 获取认证token
+                const token = localStorage.getItem('authToken');
+                if (!token) {
+                    console.log('未找到认证token，跳过余额加载');
+                    return;
+                }
+
+                const response = await fetch(`${API_BASE}/api/user/account-info`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('获取到的用户余额数据:', data);
+                    
+                    // 更新当前余额
+                    const currentBalanceElement = document.getElementById('currentBalance');
+                    if (currentBalanceElement) {
+                        currentBalanceElement.textContent = `$ ${(data.currentBalance || 0).toFixed(2)}`;
+                    }
+                    
+                    // 更新累计收入（使用当前余额作为累计收入的近似值）
+                    const totalIncomeElement = document.getElementById('totalIncome');
+                    if (totalIncomeElement) {
+                        totalIncomeElement.textContent = `$ ${(data.currentBalance || 0).toFixed(2)}`;
+                    }
+                } else if (response.status === 401) {
+                    console.error('认证失败，请重新登录');
+                    localStorage.removeItem('authToken');
+                    // 不自动跳转，保持在首页
+                } else {
+                    console.error('获取账户信息失败:', response.status);
+                    // 显示错误状态
+                    const currentBalanceElement = document.getElementById('currentBalance');
+                    const totalIncomeElement = document.getElementById('totalIncome');
+                    if (currentBalanceElement) currentBalanceElement.textContent = '$ 0.00';
+                    if (totalIncomeElement) totalIncomeElement.textContent = '$ 0.00';
+                }
+            } catch (error) {
+                console.error('加载余额失败:', error);
+                // 显示错误状态
+                const currentBalanceElement = document.getElementById('currentBalance');
+                const totalIncomeElement = document.getElementById('totalIncome');
+                if (currentBalanceElement) currentBalanceElement.textContent = '$ 0.00';
+                if (totalIncomeElement) totalIncomeElement.textContent = '$ 0.00';
+            }
+        }
+        
+        // 加载VIP权益
+        async function loadVipBenefits() {
+            try {
+                const response = await fetch(`${API_BASE}/api/vip/levels`);
+                const vipLevels = await response.json();
+                
+                const container = document.getElementById('vipBenefits');
+                
+                if (vipLevels && vipLevels.length > 0) {
+                    let vipHtml = '';
+                    
+                    vipLevels.forEach((level, index) => {
+                        vipHtml += createVipCard(level, index);
+                    });
+                    
+                    container.innerHTML = vipHtml;
+                } else {
+                    // 默认VIP等级数据
+                    const defaultVipLevels = [
+                        { level: 0, name: 'VIP - 0', deposit_requirement: 0, daily_tasks: 38, commission_rate: 1.0 },
+                        { level: 1, name: 'VIP - 1', deposit_requirement: 1000, daily_tasks: 43, commission_rate: 1.5 },
+                        { level: 2, name: 'VIP - 2', deposit_requirement: 3000, daily_tasks: 51, commission_rate: 2.0 },
+                        { level: 3, name: 'VIP - 3', deposit_requirement: 5000, daily_tasks: 51, daily_task_limit: 60, commission_rate: 2.5 },
+                        { level: 4, name: 'VIP - 4', deposit_requirement: 0, daily_tasks: 68, daily_task_limit: 68, commission_rate: 3.0 }
+                    ];
+                    
+                    let vipHtml = '';
+                    defaultVipLevels.forEach((level, index) => {
+                        vipHtml += createVipCard(level, index);
+                    });
+                    
+                    container.innerHTML = vipHtml;
+                }
+            } catch (error) {
+                console.error('加载VIP权益失败:', error);
+                // 错误时显示默认VIP等级
+                const defaultVipLevels = [
+                    { level: 0, name: 'VIP - 0', deposit_requirement: 0, daily_tasks: 38, commission_rate: 1.0 },
+                    { level: 1, name: 'VIP - 1', deposit_requirement: 1000, daily_tasks: 43, commission_rate: 1.5 }
+                ];
+                
+                let vipHtml = '';
+                defaultVipLevels.forEach((level, index) => {
+                    vipHtml += createVipCard(level, index);
+                });
+                
+                document.getElementById('vipBenefits').innerHTML = vipHtml;
+            }
+        }
+        
+        // 创建VIP卡片
+        function createVipCard(level, index) {
+            const vipLevel = level.level !== undefined ? level.level : index;
+            
+            // 使用API返回的数据字段，如果没有则使用默认值
+            const depositAmount = level.min_deposit !== undefined ? level.min_deposit : (level.deposit_requirement || 0);
+            const dailyTasks = level.daily_order_limit !== undefined ? level.daily_order_limit : (level.daily_tasks || 0);
+            const commissionRate = level.commission_rate !== undefined ? (level.commission_rate * 100) : (level.commission_rate || 0);
+            
+            // 格式化佣金比例，限制最多2位小数
+            const formattedCommissionRate = parseFloat(commissionRate).toFixed(2).replace(/\.?0+$/, '');
+            
+            // 格式化显示文本，按照用户要求的格式：VIP - X （存款 XXXX）每日任务：XXX个 | 佣金比例：X%
+            const vipDisplayText = `${level.name || `VIP - ${vipLevel}`} <span class="deposit-amount">（存款 ${depositAmount}）</span>`;
+            const taskAndCommissionText = `每日任务：${dailyTasks}个 | 佣金比例：${formattedCommissionRate}%`;
+            
+            // VIP描述信息已移除，不在首页显示
+            
+            // 根据VIP等级创建不同豪华程度的皇冠
+            let crownIcon = '';
+            switch(vipLevel) {
+                case 0:
+                    crownIcon = '<i class="fas fa-crown crown-simple"></i>';
+                    break;
+                case 1:
+                    crownIcon = '<i class="fas fa-crown crown-bronze"></i><span class="crown-gems">✦</span>';
+                    break;
+                case 2:
+                    crownIcon = '<i class="fas fa-crown crown-silver"></i><span class="crown-gems">✦✦</span>';
+                    break;
+                case 3:
+                    crownIcon = '<i class="fas fa-crown crown-gold"></i><span class="crown-gems">✦✦✦</span><span class="crown-glow"></span>';
+                    break;
+                case 4:
+                    crownIcon = '<i class="fas fa-crown crown-diamond"></i><span class="crown-gems">✦✦✦✦</span><span class="crown-glow crown-glow-intense"></span><span class="crown-sparkle">✨</span>';
+                    break;
+                default:
+                    crownIcon = '<i class="fas fa-crown"></i>';
+            }
+            
+            return `
+                <div class="vip-card vip-${vipLevel}">
+                    <div class="vip-level">${vipDisplayText}</div>
+                    <div class="vip-info">
+                        ${taskAndCommissionText}
+                    </div>
+                    <div class="vip-crown">${crownIcon}</div>
+                </div>
+            `;
+        }
+        
+        // 颜色调整函数
+        function adjustColor(color, percent) {
+            const num = parseInt(color.replace('#', ''), 16);
+            const amt = Math.round(2.55 * percent);
+            const R = (num >> 16) + amt;
+            const G = (num >> 8 & 0x00FF) + amt;
+            const B = (num & 0x0000FF) + amt;
+            return '#' + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
+                (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
+                (B < 255 ? B < 1 ? 0 : B : 255)).toString(16).slice(1);
+        }
+        
+
+        
+        // 语言选择
+        function showLanguageOptions() {
+            alert('语言切换功能开发中...');
+        }
+        
+        // 页面离开时清理定时器
+        window.addEventListener('beforeunload', function() {
+            if (slideInterval) {
+                clearInterval(slideInterval);
+            }
+            if (marqueeInterval) {
+                clearInterval(marqueeInterval);
+            }
+        });
+    </script>
+    </div>
+</body>
+</html>

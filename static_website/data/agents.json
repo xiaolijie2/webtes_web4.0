@@ -1,0 +1,15 @@
+[
+  {
+    "Id": "45025b39-2b2c-4771-993a-ff5bf08e2d5f",
+    "NickName": "客服01",
+    "Account": "yewuyuan1",
+    "Password": "12345678",
+    "InviteCode": "111111",
+    "CustomerCount": 1,
+    "MonthlyPerformance": 0.0,
+    "IsActive": true,
+    "RegisterTime": "0001-01-01T00:00:00",
+    "CreatedAt": "2025-10-05T23:40:09.6056014+08:00",
+    "UpdatedAt": null
+  }
+]

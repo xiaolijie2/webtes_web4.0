@@ -1,0 +1,46 @@
+{
+  "totalAgents": 45,
+  "activeAgents": 38,
+  "totalRevenue": 1250000,
+  "avgPerformance": 27777,
+  "monthlyGrowth": {
+    "agents": 12,
+    "revenue": 25,
+    "performance": -3
+  },
+  "departmentStats": {
+    "sales": {
+      "count": 18,
+      "revenue": 650000
+    },
+    "marketing": {
+      "count": 12,
+      "revenue": 320000
+    },
+    "customer": {
+      "count": 10,
+      "revenue": 180000
+    },
+    "technical": {
+      "count": 5,
+      "revenue": 100000
+    }
+  },
+  "recentActivity": [
+    {
+      "type": "agent_added",
+      "message": "新增业务员：张小明",
+      "time": "2024-01-15T10:30:00Z"
+    },
+    {
+      "type": "performance_milestone",
+      "message": "李四达成月度业绩目标",
+      "time": "2024-01-15T09:15:00Z"
+    },
+    {
+      "type": "customer_assigned",
+      "message": "为王五分配了5个新客户",
+      "time": "2024-01-15T08:45:00Z"
+    }
+  ]
+}

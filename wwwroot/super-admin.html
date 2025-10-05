@@ -1,0 +1,2973 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>超级管理员系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f9fa;
+            overflow-x: hidden;
+        }
+
+        /* 主布局容器 */
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* 左侧导航菜单 */
+        .sidebar {
+            width: 240px;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        /* 顶部标题栏 */
+        .sidebar-header {
+            padding: 20px;
+            background-color: #34495e;
+            text-align: center;
+            border-bottom: 1px solid #34495e;
+        }
+
+        .sidebar-header h4 {
+            color: #ecf0f1;
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .sidebar-header .user-info {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #bdc3c7;
+        }
+
+        .session-status {
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        .session-status .fa-circle {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .sidebar-header .header-actions {
+            margin-top: 15px;
+        }
+
+        .sidebar-header .btn {
+            padding: 6px 12px;
+            font-size: 12px;
+            margin: 0 3px;
+        }
+
+        /* 导航菜单 */
+        .nav-menu {
+            padding: 0;
+            list-style: none;
+        }
+
+        .nav-item {
+            border-bottom: 1px solid #34495e;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: #ecf0f1;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            background-color: #34495e;
+            color: #3498db;
+        }
+
+        .nav-link.active {
+            background-color: #34495e;
+            color: #ff6b35;
+            border-left: 4px solid #ff6b35;
+        }
+
+        .nav-link i {
+            width: 20px;
+            margin-right: 12px;
+            text-align: center;
+        }
+
+        /* 主内容区域 */
+        .main-content {
+            flex: 1;
+            margin-left: 240px;
+            background-color: #ffffff;
+            min-height: 100vh;
+        }
+
+        /* 顶部面包屑导航 */
+        .content-header {
+            background-color: #ffffff;
+            padding: 20px 30px;
+            border-bottom: 1px solid #e9ecef;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .breadcrumb-nav h2 {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .breadcrumb {
+            background: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .breadcrumb-item {
+            color: #6c757d;
+        }
+
+        .breadcrumb-item.active {
+            color: #2c3e50;
+        }
+
+        /* 内容面板 */
+        .content-panel {
+            padding: 30px;
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 卡片样式 */
+        .card {
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+
+        .card-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            padding: 15px 20px;
+        }
+
+        .card-header h5 {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        /* 表单样式 */
+        .form-label {
+            font-weight: 500;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 10px 15px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        }
+
+        /* 按钮样式 */
+        .btn {
+            border-radius: 6px;
+            padding: 10px 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            border-color: #3498db;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+            border-color: #2980b9;
+        }
+
+        .btn-success {
+            background-color: #27ae60;
+            border-color: #27ae60;
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+            border-color: #e74c3c;
+        }
+
+        .btn-warning {
+            background-color: #ff6b35;
+            border-color: #ff6b35;
+        }
+
+        /* 表格样式 */
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table thead th {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            font-weight: 600;
+            color: #2c3e50;
+            padding: 12px;
+        }
+
+        .table tbody td {
+            padding: 12px;
+            vertical-align: middle;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* 状态标签 */
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-inactive {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        /* 工具提示 */
+        .tooltip-inner {
+            background-color: #2c3e50;
+        }
+
+        /* 加载动画 */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+
+
+        /* 表单样式 */
+        .form-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 10px 15px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        }
+
+        /* 按钮样式 */
+        .btn {
+            border-radius: 6px;
+            padding: 10px 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            border-color: #3498db;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+            border-color: #2980b9;
+        }
+
+        .btn-success {
+            background-color: #27ae60;
+            border-color: #27ae60;
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+            border-color: #e74c3c;
+        }
+
+        .btn-warning {
+            background-color: #ff6b35;
+            border-color: #ff6b35;
+        }
+
+        .btn-sm {
+            padding: 8px 15px;
+            font-size: 13px;
+        }
+
+        /* 表格样式 */
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table thead th {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            font-weight: 600;
+            color: #2c3e50;
+            padding: 12px;
+        }
+
+        .table tbody td {
+            padding: 12px;
+            vertical-align: middle;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* 状态标签 */
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-inactive {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        /* 搜索和筛选区域 */
+        .search-filter-area {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        /* 加载动画 */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 统计卡片样式 */
+        .stats-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .stats-card h3 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stats-card p {
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        /* 账户设置页面样式 */
+        .user-info-display {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+
+        .info-item {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .info-item label {
+            font-weight: 600;
+            margin-right: 10px;
+            min-width: 100px;
+            margin-bottom: 0;
+        }
+
+        .account-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 20px;
+        }
+
+        .account-actions .btn {
+            width: 100%;
+            padding: 12px;
+            font-weight: 600;
+        }
+
+        .security-tips {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .password-strength {
+            margin-top: 10px;
+        }
+
+        .progress-bar {
+            transition: all 0.3s ease;
+        }
+
+        .strength-weak { background-color: #dc3545; }
+        .strength-medium { background-color: #ffc107; }
+        .strength-strong { background-color: #28a745; }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .account-actions {
+                padding: 10px;
+            }
+            
+            .info-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .info-item label {
+                min-width: auto;
+                margin-bottom: 5px;
+            }
+        }
+
+        /* 账户更新成功对话框样式 */
+        .account-success-popup {
+            border-radius: 12px;
+        }
+        
+        .account-success-content {
+            padding: 0;
+        }
+        
+        .account-info-display .card {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        
+        .account-info-display .card-header {
+            border-radius: 8px 8px 0 0;
+            font-weight: 600;
+        }
+        
+        .account-info-display .badge {
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+        
+        .account-info-display .row {
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .account-info-display .row:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- 左侧导航菜单 -->
+        <nav class="sidebar">
+            <!-- 顶部标题栏 -->
+            <div class="sidebar-header">
+                <h4><i class="fas fa-crown"></i> 超级管理员</h4>
+                <div class="user-info" id="userInfoDisplay">
+                    <i class="fas fa-user-shield"></i> <span id="userTypeLabel">超级管理员</span>
+                    <span class="session-status ms-2" id="sessionStatus" title="会话状态">
+                        <i class="fas fa-circle text-success"></i>
+                    </span>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-outline-light btn-sm" onclick="goToRegularAdmin()" title="普通管理">
+                        <i class="fas fa-users-cog"></i>
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm" onclick="logout()" title="退出登录">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 导航菜单 -->
+            <ul class="nav-menu">
+                <!-- 收款账户管理 -->
+                <li class="nav-item">
+                    <a class="nav-link active" data-section="payment-accounts">
+                        <i class="fas fa-credit-card"></i>
+                        <span>收款账户管理</span>
+                    </a>
+                </li>
+
+                <!-- 管理员设置 -->
+                <li class="nav-item">
+                    <a class="nav-link" data-section="admin-management">
+                        <i class="fas fa-user-shield"></i>
+                        <span>管理员设置</span>
+                    </a>
+                </li>
+
+                <!-- 账户设置 -->
+                <li class="nav-item">
+                    <a class="nav-link" data-section="account-settings">
+                        <i class="fas fa-user-cog"></i>
+                        <span>账户设置</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- 主内容区域 -->
+        <main class="main-content">
+            <!-- 顶部面包屑导航 -->
+            <div class="content-header">
+                <div class="breadcrumb-nav">
+                    <h2 id="page-title">收款账户管理</h2>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">超级管理员系统</li>
+                            <li class="breadcrumb-item active" id="section-breadcrumb">收款账户管理</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- 内容面板 -->
+            <div class="content-panel">
+                <!-- 收款账户管理 -->
+                <div id="payment-accounts" class="content-section active">
+                    <!-- 统计卡片 -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="stats-card">
+                                <h3 id="totalPaymentAccounts">0</h3>
+                                <p>总账户数</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stats-card" style="background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);">
+                                <h3 id="activePaymentAccounts">0</h3>
+                                <p>启用账户</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stats-card" style="background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);">
+                                <h3 id="inactivePaymentAccounts">0</h3>
+                                <p>禁用账户</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stats-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                                <h3 id="defaultPaymentAccounts">0</h3>
+                                <p>默认账户</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 收款账户管理卡片 -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-credit-card"></i> 收款账户管理</h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- 操作按钮和搜索区域 -->
+                            <div class="search-filter-area">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <button class="btn btn-primary" onclick="showAddPaymentAccountModal()">
+                                            <i class="fas fa-plus"></i> 添加收款账户
+                                        </button>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select class="form-control" id="paymentAccountStatusFilter" onchange="searchPaymentAccounts()">
+                                            <option value="">全部状态</option>
+                                            <option value="enabled">启用</option>
+                                            <option value="disabled">禁用</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" id="paymentAccountSearch" placeholder="搜索账户名称或账号" onkeyup="searchPaymentAccounts()">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-success" onclick="loadPaymentAccounts()">
+                                            <i class="fas fa-sync-alt"></i> 刷新
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 收款账户表格 -->
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>钱包名称</th>
+                                            <th>数字货币</th>
+                                            <th>网络类型</th>
+                                            <th>钱包地址</th>
+                                            <th>账户标识</th>
+                                            <th>状态</th>
+                                            <th>默认</th>
+                                            <th>创建时间</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="paymentAccountsTableBody">
+                                        <!-- 动态加载收款账户数据 -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 管理员设置 -->
+                <div id="admin-management" class="content-section">
+                    <!-- 管理员统计卡片 -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="stats-card">
+                                <h3 id="totalAdmins">0</h3>
+                                <p>总管理员</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stats-card" style="background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);">
+                                <h3 id="activeAdmins">0</h3>
+                                <p>普通管理员</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stats-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                                <h3 id="superAdmins">0</h3>
+                                <p>超级管理员</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stats-card" style="background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);">
+                                <h3 id="inactiveAdmins">0</h3>
+                                <p>-</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 管理员管理卡片 -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-user-shield"></i> 管理员管理</h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- 操作按钮和搜索区域 -->
+                            <div class="search-filter-area">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <button class="btn btn-primary" onclick="showAddAdminModal()">
+                                            <i class="fas fa-plus"></i> 添加管理员
+                                        </button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" id="adminSearch" placeholder="搜索账号或昵称" onkeyup="searchAdmins()">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-success" onclick="loadAdminList()">
+                                            <i class="fas fa-sync-alt"></i> 刷新
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- 危险操作区域 -->
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <div class="alert alert-warning" role="alert">
+                                            <h6><i class="fas fa-exclamation-triangle"></i> 危险操作区域</h6>
+                                            <p class="mb-2">以下操作将永久删除数据，请谨慎使用！</p>
+                                            <button class="btn btn-danger btn-sm" onclick="showClearAllUsersModal()">
+                                                <i class="fas fa-trash-alt"></i> 一键清理所有用户数据
+                                            </button>
+                                            <small class="text-muted d-block mt-1">
+                                                此操作将清空：用户数据库、代理商数据库、普通管理员数据库
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 管理员表格 -->
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>账号</th>
+                                            <th>昵称</th>
+                                            <th>权限等级</th>
+                                            <th>创建时间</th>
+                                            <th>最后登录</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="adminTableBody">
+                                        <!-- 动态加载管理员数据 -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 账户设置 -->
+                <div id="account-settings" class="content-section">
+                    <!-- 账户信息卡片 -->
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5><i class="fas fa-user-cog"></i> 账户信息</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="user-info-display">
+                                                <div class="info-item">
+                                                    <label>当前用户名：</label>
+                                                    <span id="currentUsername" class="fw-bold text-primary">-</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <label>用户类型：</label>
+                                                    <span id="currentUserType" class="fw-bold text-success">超级管理员</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <label>权限级别：</label>
+                                                    <span id="currentPermissionLevel" class="fw-bold text-warning">最高权限</span>
+                                                </div>
+                                                <div class="info-item">
+                                                    <label>登录时间：</label>
+                                                    <span id="loginTime" class="text-muted">-</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="account-actions">
+                                                <button class="btn btn-primary mb-2" onclick="showChangeUsernameModal()">
+                                                    <i class="fas fa-edit"></i> 修改用户名
+                                                </button>
+                                                <button class="btn btn-warning" onclick="showChangePasswordModal()">
+                                                    <i class="fas fa-key"></i> 修改密码
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 安全设置卡片 -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5><i class="fas fa-shield-alt"></i> 安全设置</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="security-tips">
+                                        <div class="alert alert-info">
+                                            <h6><i class="fas fa-info-circle"></i> 安全提示</h6>
+                                            <ul class="mb-0">
+                                                <li>建议定期更换密码以确保账户安全</li>
+                                                <li>密码应包含大小写字母、数字和特殊字符</li>
+                                                <li>不要在多个平台使用相同密码</li>
+                                                <li>修改账户信息后请重新登录以确保更改生效</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 添加/编辑收款账户模态框 -->
+    <div class="modal fade" id="paymentAccountModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="paymentAccountModalTitle">添加收款账户</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="paymentAccountForm">
+                        <input type="hidden" id="paymentAccountId">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">钱包名称 *</label>
+                                    <input type="text" class="form-control" id="accountName" required placeholder="如：主钱包、备用钱包等">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">数字货币类型 *</label>
+                                    <select class="form-control" id="accountType" required onchange="updateNetworkOptions()">
+                                        <option value="">请选择数字货币</option>
+                                        <option value="BTC">Bitcoin (BTC)</option>
+                                        <option value="ETH">Ethereum (ETH)</option>
+                                        <option value="USDT">Tether (USDT)</option>
+                                        <option value="USDC">USD Coin (USDC)</option>
+                                        <option value="BNB">Binance Coin (BNB)</option>
+                                        <option value="ADA">Cardano (ADA)</option>
+                                        <option value="DOT">Polkadot (DOT)</option>
+                                        <option value="MATIC">Polygon (MATIC)</option>
+                                        <option value="LTC">Litecoin (LTC)</option>
+                                        <option value="TRX">TRON (TRX)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">网络类型 *</label>
+                                    <select class="form-control" id="networkType" required>
+                                        <option value="">请先选择数字货币</option>
+                                    </select>
+                                    <small class="text-muted">不同网络的转账费用和速度不同</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">钱包地址 *</label>
+                                    <input type="text" class="form-control" id="accountNumber" required placeholder="请输入完整的钱包地址" onblur="validateWalletAddress()">
+                                    <small class="text-muted" id="addressFormatHint">请输入有效的钱包地址</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">账户标识 *</label>
+                                    <input type="text" class="form-control" id="accountHolder" required placeholder="钱包持有者或标识名称">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">状态</label>
+                                    <select class="form-control" id="accountStatus">
+                                        <option value="enabled">启用</option>
+                                        <option value="disabled">禁用</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="isDefault">
+                                        <label class="form-check-label" for="isDefault">
+                                            设为默认收款账户
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label class="form-label">备注</label>
+                                    <textarea class="form-control" id="accountRemark" rows="3" placeholder="可选备注信息，如：用途说明、特殊要求等"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" onclick="savePaymentAccount()">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加/编辑管理员模态框 -->
+    <div class="modal fade" id="adminModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="adminModalTitle">添加管理员</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="adminForm">
+                        <input type="hidden" id="adminId">
+                        <div class="mb-3">
+                            <label class="form-label">账号 *</label>
+                            <input type="text" class="form-control" id="adminUsername" required placeholder="请输入管理员账号">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">昵称 *</label>
+                            <input type="text" class="form-control" id="adminName" required placeholder="请输入管理员昵称">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">密码 *</label>
+                                    <input type="password" class="form-control" id="adminPassword" required placeholder="请输入密码">
+                                    <small class="text-muted">编辑时留空表示不修改密码</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">确认密码 *</label>
+                                    <input type="password" class="form-control" id="adminPasswordConfirm" required placeholder="请再次输入密码">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" onclick="saveAdmin()">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 修改用户名模态框 -->
+    <div class="modal fade" id="changeUsernameModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-edit"></i> 修改用户名</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="changeUsernameForm">
+                        <div class="mb-3">
+                            <label class="form-label">当前用户名</label>
+                            <input type="text" class="form-control" id="currentUsernameDisplay" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">新用户名 *</label>
+                            <input type="text" class="form-control" id="newUsername" required placeholder="请输入新的用户名" oninput="validateUsernameMatch()">
+                            <div class="form-text">用户名长度应为3-20个字符，只能包含字母、数字和下划线</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">确认用户名 *</label>
+                            <input type="text" class="form-control" id="confirmNewUsername" required placeholder="请再次输入新的用户名" oninput="validateUsernameMatch()">
+                            <div id="usernameMatchFeedback" class="form-text" style="display: none;"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">确认密码 *</label>
+                            <input type="password" class="form-control" id="usernameChangePassword" required placeholder="请输入当前密码以确认修改">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" onclick="changeUsername()">确认修改</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 修改密码模态框 -->
+    <div class="modal fade" id="changePasswordModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-key"></i> 修改密码</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="changePasswordForm">
+                        <div class="mb-3">
+                            <label class="form-label">当前密码 *</label>
+                            <input type="password" class="form-control" id="currentPassword" required placeholder="请输入当前密码">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">新密码 *</label>
+                            <input type="password" class="form-control" id="newPassword" required placeholder="请输入新密码">
+                            <div class="form-text">密码长度至少8位，建议包含大小写字母、数字和特殊字符</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">确认新密码 *</label>
+                            <input type="password" class="form-control" id="confirmNewPassword" required placeholder="请再次输入新密码">
+                        </div>
+                        <div class="password-strength" id="passwordStrength" style="display: none;">
+                            <div class="progress mb-2" style="height: 5px;">
+                                <div class="progress-bar" id="strengthBar" style="width: 0%"></div>
+                            </div>
+                            <small id="strengthText" class="text-muted">密码强度：</small>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-warning" onclick="changePassword()">确认修改</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 清理用户数据模态框 -->
+    <div class="modal fade" id="clearAllUsersModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title"><i class="fas fa-exclamation-triangle"></i> 危险操作确认</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger" role="alert">
+                        <h6><i class="fas fa-skull-crossbones"></i> 警告：此操作不可逆！</h6>
+                        <p class="mb-0">您即将清理以下所有用户数据：</p>
+                        <ul class="mt-2 mb-0">
+                            <li><strong>用户数据库</strong> (users.json) - 所有注册用户</li>
+                            <li><strong>代理商数据库</strong> (agents.json) - 所有代理商</li>
+                            <li><strong>普通管理员数据库</strong> (regular_admins.json) - 所有普通管理员</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label text-danger fw-bold">
+                            为确认此操作，请在下方输入：<code>CLEAR ALL USERS</code>
+                        </label>
+                        <input type="text" class="form-control" id="clearConfirmationText" 
+                               placeholder="请输入确认文本" autocomplete="off">
+                        <div class="form-text text-muted">
+                            <i class="fas fa-info-circle"></i> 请确保您已备份重要数据
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="clearDataBackupConfirm">
+                            <label class="form-check-label" for="clearDataBackupConfirm">
+                                我确认已备份重要数据，并了解此操作的后果
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times"></i> 取消
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="confirmClearAllUsers()" id="clearConfirmBtn" disabled>
+                        <i class="fas fa-trash-alt"></i> 确认清理所有数据
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入必要的JS库 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        // API基础URL
+        const API_BASE = 'http://localhost:5065/api';
+        
+        // 全局变量
+        let currentUser = null;
+        let paymentAccounts = [];
+        let admins = [];
+
+        // 页面初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            checkSuperAdminAuth();
+            initializeNavigation();
+            loadPaymentAccounts();
+            loadAdminList();
+            
+            // 初始化会话状态指示器
+            updateSessionStatus('active');
+            
+            // 初始化表单事件监听器
+            initializeFormEventListeners();
+        });
+
+        // 检查超级管理员权限
+        function checkSuperAdminAuth() {
+            const superAdminLoginInfo = localStorage.getItem('superAdminLoginInfo');
+            const permissionLevel = localStorage.getItem('permissionLevel');
+            const userType = localStorage.getItem('userType');
+            const authToken = localStorage.getItem('authToken');
+
+            // 检查是否有完整的登录信息
+            if (!superAdminLoginInfo || !authToken || permissionLevel !== '0' || userType !== 'super_admin') {
+                // 清理可能存在的无效登录信息
+                localStorage.removeItem('superAdminLoginInfo');
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('permissionLevel');
+                localStorage.removeItem('userType');
+                localStorage.removeItem('currentUser');
+                
+                window.location.href = 'super-admin-login.html';
+                return;
+            }
+
+            try {
+                const superAdminInfo = JSON.parse(superAdminLoginInfo);
+                
+                // 验证超级管理员信息的完整性 - 只检查必需字段
+                if (!superAdminInfo.username || !superAdminInfo.userType || superAdminInfo.permissionLevel === undefined) {
+                    throw new Error('超级管理员信息不完整');
+                }
+
+                // 验证权限级别和用户类型
+                if (superAdminInfo.permissionLevel !== 0 || superAdminInfo.userType !== 'super_admin') {
+                    throw new Error('权限验证失败');
+                }
+
+                // 延迟验证token有效性，避免页面加载时立即验证
+                setTimeout(() => {
+                    verifyAuthToken(authToken).then(isValid => {
+                        if (!isValid) {
+                            console.warn('Token验证失败，可能已过期');
+                            // 给用户一个更温和的提示，而不是立即跳转
+                            const warningDiv = document.createElement('div');
+                            warningDiv.className = 'alert alert-warning alert-dismissible fade show';
+                            warningDiv.style.position = 'fixed';
+                            warningDiv.style.top = '20px';
+                            warningDiv.style.right = '20px';
+                            warningDiv.style.zIndex = '9999';
+                            warningDiv.innerHTML = `
+                                <strong>会话提醒：</strong> 您的登录状态可能即将过期，建议重新登录以确保正常使用。
+                                <button type="button" class="btn btn-sm btn-outline-primary ms-2" onclick="refreshSession()">刷新会话</button>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            `;
+                            document.body.appendChild(warningDiv);
+                            
+                            // 5秒后自动隐藏提醒
+                            setTimeout(() => {
+                                if (warningDiv.parentNode) {
+                                    warningDiv.remove();
+                                }
+                            }, 5000);
+                        }
+                    }).catch(error => {
+                        console.error('Token验证过程中出现错误:', error);
+                        // 网络错误时不强制跳转，只记录日志
+                    });
+                }, 2000); // 延迟2秒进行验证，确保页面完全加载
+
+                currentUser = superAdminInfo;
+                document.getElementById('userTypeLabel').textContent = '超级管理员';
+                
+                // 显示用户信息 - 使用username作为显示名称
+                const userInfoElement = document.querySelector('.user-info');
+                if (userInfoElement) {
+                    const displayName = superAdminInfo.displayName || superAdminInfo.username;
+                    userInfoElement.textContent = `${displayName} (${superAdminInfo.username})`;
+                }
+                
+            } catch (error) {
+                console.error('解析超级管理员登录信息失败:', error);
+                console.error('存储的登录信息:', superAdminLoginInfo);
+                console.error('权限级别:', permissionLevel);
+                console.error('用户类型:', userType);
+                
+                // 提供更详细的错误信息
+                let errorMessage = '登录信息解析失败，请重新登录';
+                if (error.message === '权限验证失败') {
+                    errorMessage = '权限验证失败，您不是超级管理员或权限级别不正确';
+                } else if (error.message === '超级管理员信息不完整') {
+                    errorMessage = '登录信息不完整，缺少必要的用户信息';
+                } else if (error instanceof SyntaxError) {
+                    errorMessage = '登录信息格式错误，数据已损坏';
+                }
+                
+                Swal.fire({
+                    icon: 'error',
+                    title: '登录信息异常',
+                    text: errorMessage,
+                    confirmButtonText: '确定',
+                    footer: '如果问题持续存在，请联系系统管理员'
+                }).then(() => {
+                    // 清理登录信息
+                    localStorage.removeItem('superAdminLoginInfo');
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('permissionLevel');
+                    localStorage.removeItem('userType');
+                    localStorage.removeItem('currentUser');
+                    window.location.href = 'super-admin-login.html';
+                });
+            }
+        }
+
+        // 更新会话状态指示器
+        function updateSessionStatus(status) {
+            const sessionStatus = document.getElementById('sessionStatus');
+            if (!sessionStatus) return;
+
+            const icon = sessionStatus.querySelector('i');
+            switch (status) {
+                case 'active':
+                    icon.className = 'fas fa-circle text-success';
+                    sessionStatus.title = '会话活跃';
+                    break;
+                case 'warning':
+                    icon.className = 'fas fa-circle text-warning';
+                    sessionStatus.title = '会话即将过期';
+                    break;
+                case 'expired':
+                    icon.className = 'fas fa-circle text-danger';
+                    sessionStatus.title = '会话已过期';
+                    break;
+                default:
+                    icon.className = 'fas fa-circle text-secondary';
+                    sessionStatus.title = '会话状态未知';
+            }
+        }
+
+        // 刷新会话
+        async function refreshSession() {
+            try {
+                const superAdminLoginInfo = localStorage.getItem('superAdminLoginInfo');
+                if (!superAdminLoginInfo) {
+                    throw new Error('无法获取登录信息');
+                }
+
+                const superAdminInfo = JSON.parse(superAdminLoginInfo);
+                
+                // 重新生成Token（模拟刷新）
+                const newToken = 'super_admin_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('authToken', newToken);
+                
+                // 更新最后活动时间
+                superAdminInfo.lastActivity = new Date().toISOString();
+                localStorage.setItem('superAdminLoginInfo', JSON.stringify(superAdminInfo));
+                
+                // 更新会话状态指示器
+                updateSessionStatus('active');
+                
+                // 隐藏所有警告提示
+                const alerts = document.querySelectorAll('.alert-warning');
+                alerts.forEach(alert => alert.remove());
+                
+                // 显示成功提示
+                const successDiv = document.createElement('div');
+                successDiv.className = 'alert alert-success alert-dismissible fade show';
+                successDiv.style.position = 'fixed';
+                successDiv.style.top = '20px';
+                successDiv.style.right = '20px';
+                successDiv.style.zIndex = '9999';
+                successDiv.innerHTML = `
+                    <strong>会话已刷新！</strong> 您的登录状态已更新。
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                `;
+                document.body.appendChild(successDiv);
+                
+                // 3秒后自动隐藏
+                setTimeout(() => {
+                    if (successDiv.parentNode) {
+                        successDiv.remove();
+                    }
+                }, 3000);
+                
+            } catch (error) {
+                console.error('刷新会话失败:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: '刷新失败',
+                    text: '无法刷新会话，请重新登录',
+                    confirmButtonText: '重新登录'
+                }).then(() => {
+                    window.location.href = 'super-admin-login.html';
+                });
+            }
+        }
+
+        // 验证认证token有效性
+        async function verifyAuthToken(token) {
+            try {
+                // 添加超时控制
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000); // 5秒超时
+
+                const response = await fetch('/api/super-admin/verify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ token: token }),
+                    signal: controller.signal
+                });
+
+                clearTimeout(timeoutId);
+
+                if (response.ok) {
+                    const result = await response.json();
+                    const isValid = result.success && result.isValid;
+                    updateSessionStatus(isValid ? 'active' : 'expired');
+                    return isValid;
+                } else if (response.status === 401) {
+                    // 明确的未授权状态
+                    console.warn('Token已过期或无效');
+                    updateSessionStatus('expired');
+                    return false;
+                } else {
+                    // 其他HTTP错误，可能是服务器问题
+                    console.warn('Token验证服务暂时不可用，状态码:', response.status);
+                    updateSessionStatus('warning');
+                    return true; // 暂时认为有效，避免误判
+                }
+            } catch (error) {
+                if (error.name === 'AbortError') {
+                    console.warn('Token验证请求超时');
+                } else {
+                    console.error('验证token失败:', error);
+                }
+                // 网络错误时暂时认为token有效，避免误判
+                return true;
+            }
+        }
+
+        // 初始化导航
+        function initializeNavigation() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    const section = this.getAttribute('data-section');
+                    showSection(section);
+                    
+                    // 更新导航状态
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        }
+
+        // 显示指定内容区域
+        function showSection(sectionName) {
+            // 隐藏所有内容区域
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // 显示指定区域
+            const targetSection = document.getElementById(sectionName);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+            
+            // 更新页面标题和面包屑
+            const titles = {
+                'payment-accounts': '收款账户管理',
+                'admin-management': '管理员设置',
+                'account-settings': '账户设置'
+            };
+            
+            document.getElementById('page-title').textContent = titles[sectionName] || '超级管理员系统';
+            document.getElementById('section-breadcrumb').textContent = titles[sectionName] || '超级管理员系统';
+            
+            // 如果是账户设置页面，加载当前用户信息
+            if (sectionName === 'account-settings') {
+                loadCurrentUserInfo();
+            }
+        }
+
+        // 跳转到普通管理页面
+        function goToRegularAdmin() {
+            window.location.href = 'admin.html';
+        }
+
+        // 退出登录
+        function logout() {
+            Swal.fire({
+                title: '确认退出',
+                text: '您确定要退出登录吗？',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: '确定',
+                cancelButtonText: '取消'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // 清理所有相关的超级管理员登录信息
+                    localStorage.removeItem('superAdminLoginInfo');
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('permissionLevel');
+                    localStorage.removeItem('userType');
+                    localStorage.removeItem('currentUser');
+                    
+                    // 显示退出成功提示
+                    Swal.fire({
+                        icon: 'success',
+                        title: '退出成功',
+                        text: '您已成功退出超级管理员系统',
+                        timer: 1500,
+                        showConfirmButton: false
+                    }).then(() => {
+                        window.location.href = 'super-admin-login.html';
+                    });
+                }
+            });
+        }
+
+        // ==================== 收款账户管理功能 ====================
+
+        // 加载收款账户列表
+        async function loadPaymentAccounts() {
+            try {
+                // 获取当前用户ID - 修复字段名匹配问题
+                const userId = currentUser?.id || currentUser?.Id || currentUser?.username || 'super_001';
+                
+                const response = await fetch(`${API_BASE}/admin/payment-accounts`, {
+                    headers: {
+                        'Authorization': `Bearer ${currentUser?.token || ''}`,
+                        'X-User-Id': userId || ''
+                    }
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.success && result.data) {
+                        paymentAccounts = result.data;
+                        renderPaymentAccountsTable();
+                        updatePaymentAccountStats();
+                    } else {
+                        console.error('API返回错误:', result.message);
+                        paymentAccounts = [];
+                        renderPaymentAccountsTable([]);
+                    }
+                } else {
+                    console.error('加载收款账户失败');
+                    paymentAccounts = [];
+                    renderPaymentAccountsTable([]);
+                }
+            } catch (error) {
+                console.error('加载收款账户出错:', error);
+                renderPaymentAccountsTable([]);
+            }
+        }
+
+        // 渲染收款账户表格
+        function renderPaymentAccountsTable(accounts = paymentAccounts) {
+            const tbody = document.getElementById('paymentAccountsTableBody');
+            
+            if (!accounts || accounts.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="9" class="text-center text-muted">
+                            <i class="fas fa-inbox fa-3x mb-3"></i>
+                            <p>暂无收款账户数据</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = accounts.map(account => `
+                <tr>
+                    <td>${account.walletName || '-'}</td>
+                    <td>
+                        <span class="badge bg-primary">${getCryptoCurrencyText(account.accountType)}</span>
+                    </td>
+                    <td>
+                        <span class="badge bg-info">${getNetworkTypeText(account.networkType)}</span>
+                    </td>
+                    <td>
+                        <div class="wallet-address" title="${account.accountNumber || '-'}">
+                            ${formatWalletAddress(account.accountNumber)}
+                        </div>
+                    </td>
+                    <td>${account.accountIdentifier || '-'}</td>
+                    <td>
+                        <span class="status-badge ${account.status === 'enabled' ? 'status-active' : 'status-inactive'}">
+                            ${account.status === 'enabled' ? '启用' : '禁用'}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge ${account.isDefault ? 'bg-warning' : 'bg-secondary'}">
+                            ${account.isDefault ? '默认' : '普通'}
+                        </span>
+                    </td>
+                    <td>${formatDateTime(account.createTime)}</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning me-1" onclick="editPaymentAccount('${account.id}')" title="编辑">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="deletePaymentAccount('${account.id}')" title="删除">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 更新收款账户统计
+        function updatePaymentAccountStats() {
+            const total = paymentAccounts.length;
+            const active = paymentAccounts.filter(acc => acc.status === 'enabled').length;
+            const inactive = paymentAccounts.filter(acc => acc.status === 'disabled').length;
+            const defaultCount = paymentAccounts.filter(acc => acc.isDefault).length;
+
+            document.getElementById('totalPaymentAccounts').textContent = total;
+            document.getElementById('activePaymentAccounts').textContent = active;
+            document.getElementById('inactivePaymentAccounts').textContent = inactive;
+            document.getElementById('defaultPaymentAccounts').textContent = defaultCount;
+        }
+
+        // 搜索收款账户
+        function searchPaymentAccounts() {
+            const searchTerm = document.getElementById('paymentAccountSearch').value.toLowerCase();
+            const statusFilter = document.getElementById('paymentAccountStatusFilter').value;
+
+            const filteredAccounts = paymentAccounts.filter(account => {
+                const matchesSearch = !searchTerm || 
+                    (account.walletName && account.walletName.toLowerCase().includes(searchTerm)) ||
+                    (account.accountNumber && account.accountNumber.toLowerCase().includes(searchTerm));
+                
+                const matchesStatus = !statusFilter || account.status === statusFilter;
+
+                return matchesSearch && matchesStatus;
+            });
+
+            renderPaymentAccountsTable(filteredAccounts);
+        }
+
+        // 显示添加收款账户模态框
+        function showAddPaymentAccountModal() {
+            document.getElementById('paymentAccountModalTitle').textContent = '添加收款账户';
+            document.getElementById('paymentAccountForm').reset();
+            document.getElementById('paymentAccountId').value = '';
+            
+            const modal = new bootstrap.Modal(document.getElementById('paymentAccountModal'));
+            modal.show();
+        }
+
+        // 编辑收款账户
+        function editPaymentAccount(accountId) {
+            const account = paymentAccounts.find(acc => acc.id === accountId);
+            if (!account) return;
+
+            document.getElementById('paymentAccountModalTitle').textContent = '编辑收款账户';
+            document.getElementById('paymentAccountId').value = account.id;
+            document.getElementById('accountName').value = account.walletName || '';
+            document.getElementById('accountType').value = account.accountType || '';
+            document.getElementById('accountNumber').value = account.accountNumber || '';
+            document.getElementById('accountHolder').value = account.accountIdentifier || '';
+            document.getElementById('accountStatus').value = account.status || 'enabled';
+            document.getElementById('isDefault').checked = account.isDefault || false;
+            document.getElementById('accountRemark').value = account.remarks || '';
+            
+            // 更新网络类型选项
+            updateNetworkOptions();
+            
+            // 设置网络类型值
+            if (account.networkType) {
+                setTimeout(() => {
+                    document.getElementById('networkType').value = account.networkType;
+                }, 100);
+            }
+
+            const modal = new bootstrap.Modal(document.getElementById('paymentAccountModal'));
+            modal.show();
+        }
+
+        // 保存收款账户
+        async function savePaymentAccount() {
+            const form = document.getElementById('paymentAccountForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const accountId = document.getElementById('paymentAccountId').value;
+            const accountData = {
+                walletName: document.getElementById('accountName').value,
+                accountType: document.getElementById('accountType').value,
+                networkType: document.getElementById('networkType').value,
+                accountNumber: document.getElementById('accountNumber').value,
+                accountIdentifier: document.getElementById('accountHolder')?.value || '',
+                status: document.getElementById('accountStatus').value,
+                isDefault: document.getElementById('isDefault').checked,
+                remarks: document.getElementById('accountRemark').value
+            };
+
+            try {
+                const url = accountId ? `${API_BASE}/admin/payment-accounts/${accountId}` : `${API_BASE}/admin/payment-accounts`;
+                const method = accountId ? 'PUT' : 'POST';
+
+                // 获取当前用户ID - 修复字段名匹配问题
+                const userId = currentUser?.id || currentUser?.Id || currentUser?.username || 'super_001';
+                
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentUser?.token || ''}`,
+                        'X-User-Id': userId || ''
+                    },
+                    body: JSON.stringify(accountData)
+                });
+
+                if (response.ok) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '保存成功',
+                        text: accountId ? '收款账户更新成功' : '收款账户添加成功',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+
+                    bootstrap.Modal.getInstance(document.getElementById('paymentAccountModal')).hide();
+                    loadPaymentAccounts();
+                } else {
+                    const errorData = await response.json();
+                    Swal.fire({
+                        icon: 'error',
+                        title: '保存失败',
+                        text: errorData.message || '操作失败，请重试'
+                    });
+                }
+            } catch (error) {
+                console.error('保存收款账户出错:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: '保存失败',
+                    text: '网络错误，请重试'
+                });
+            }
+        }
+
+        // 删除收款账户
+        async function deletePaymentAccount(accountId) {
+            const account = paymentAccounts.find(acc => acc.id === accountId);
+            if (!account) return;
+
+            const result = await Swal.fire({
+                title: '确认删除',
+                text: `您确定要删除收款账户"${account.walletName}"吗？此操作不可恢复！`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: '确定删除',
+                cancelButtonText: '取消',
+                confirmButtonColor: '#d33'
+            });
+
+            if (result.isConfirmed) {
+                try {
+                    // 获取当前用户ID - 修复字段名匹配问题
+                    const userId = currentUser?.id || currentUser?.Id || currentUser?.username || 'super_001';
+                    
+                    const response = await fetch(`${API_BASE}/admin/payment-accounts/${accountId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `Bearer ${currentUser?.token || ''}`,
+                            'X-User-Id': userId || ''
+                        }
+                    });
+
+                    if (response.ok) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '删除成功',
+                            text: '收款账户已删除',
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                        loadPaymentAccounts();
+                    } else {
+                        const errorData = await response.json();
+                        Swal.fire({
+                            icon: 'error',
+                            title: '删除失败',
+                            text: errorData.message || '删除失败，请重试'
+                        });
+                    }
+                } catch (error) {
+                    console.error('删除收款账户出错:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: '删除失败',
+                        text: '网络错误，请重试'
+                    });
+                }
+            }
+        }
+
+        // ==================== 管理员管理功能 ====================
+
+        // 加载管理员列表
+        async function loadAdminList() {
+            try {
+                const authToken = localStorage.getItem('authToken') || '';
+                const headers = {
+                    'Authorization': `Bearer ${authToken}`
+                };
+
+                // 同时获取普通管理员和超级管理员数据
+                const [regularAdminsResponse, superAdminsResponse] = await Promise.all([
+                    fetch(`${API_BASE}/admin/administrators`, { headers }),
+                    fetch(`${API_BASE}/super-admin/administrators`, { headers })
+                ]);
+
+                let allAdmins = [];
+
+                // 处理普通管理员数据
+                if (regularAdminsResponse.ok) {
+                    const regularResult = await regularAdminsResponse.json();
+                    if (regularResult.success && regularResult.data) {
+                        allAdmins = [...regularResult.data];
+                    }
+                } else {
+                    console.warn('加载普通管理员列表失败');
+                }
+
+                // 处理超级管理员数据（但不显示在列表中）
+                if (superAdminsResponse.ok) {
+                    const superResult = await superAdminsResponse.json();
+                    if (superResult.success && superResult.data) {
+                        // 不合并超级管理员数据到显示列表中
+                        // allAdmins = [...allAdmins, ...superResult.data];
+                    }
+                } else {
+                    console.warn('加载超级管理员列表失败');
+                }
+
+                // 过滤掉超级管理员（权限等级为0）和空信息的管理员
+                allAdmins = allAdmins.filter(admin => {
+                    // 过滤掉超级管理员
+                    if (admin.PermissionLevel === 0) {
+                        return false;
+                    }
+                    // 过滤掉关键信息为空的管理员
+                    if (!admin.Username || admin.Username === '-' || admin.Username === '未知' ||
+                        !admin.Name || admin.Name === '-' || admin.Name === '未知') {
+                        return false;
+                    }
+                    return true;
+                });
+
+                // 按权限等级排序：普通管理员按等级排序
+                allAdmins.sort((a, b) => {
+                    if (a.PermissionLevel !== b.PermissionLevel) {
+                        return a.PermissionLevel - b.PermissionLevel;
+                    }
+                    // 同等级按创建时间排序
+                    return new Date(a.CreatedAt) - new Date(b.CreatedAt);
+                });
+
+                admins = allAdmins;
+                renderAdminTable();
+                updateAdminStats();
+            } catch (error) {
+                console.error('加载管理员列表出错:', error);
+                renderAdminTable([]);
+            }
+        }
+
+        // 渲染管理员表格
+        function renderAdminTable(adminList = admins) {
+            const tbody = document.getElementById('adminTableBody');
+            
+            // 过滤掉超级管理员和空信息的管理员
+            const filteredAdminList = (adminList || []).filter(admin => {
+                // 过滤掉超级管理员
+                if (admin.PermissionLevel === 0) {
+                    return false;
+                }
+                // 过滤掉关键信息为空的管理员
+                if (!admin.Username || admin.Username === '-' || admin.Username === '未知' ||
+                    !admin.Name || admin.Name === '-' || admin.Name === '未知') {
+                    return false;
+                }
+                return true;
+            });
+            
+            if (!filteredAdminList || filteredAdminList.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">
+                            <i class="fas fa-inbox fa-3x mb-3"></i>
+                            <p>暂无管理员数据</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            // 权限等级映射
+            const permissionLevelMap = {
+                0: { name: '超级管理员', class: 'bg-danger text-white' },
+                1: { name: '高级管理员', class: 'bg-warning text-dark' },
+                2: { name: '普通管理员', class: 'bg-info text-white' },
+                3: { name: '初级管理员', class: 'bg-secondary text-white' }
+            };
+
+            tbody.innerHTML = filteredAdminList.map(admin => {
+                const permissionInfo = permissionLevelMap[admin.PermissionLevel] || { name: '未知', class: 'bg-light text-dark' };
+                const lastLoginTime = admin.LastLogin ? formatDateTime(admin.LastLogin) : '-';
+                
+                return `
+                    <tr>
+                        <td>${admin.Username || '-'}</td>
+                        <td>${admin.Name || '-'}</td>
+                        <td>
+                            <span class="badge ${permissionInfo.class}">${permissionInfo.name}</span>
+                        </td>
+                        <td>${formatDateTime(admin.CreatedAt)}</td>
+                        <td>${lastLoginTime}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning me-1" onclick="editAdmin('${admin.Id}')" title="编辑">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            ${admin.PermissionLevel !== 0 ? `
+                                <button class="btn btn-sm btn-danger" onclick="deleteAdmin('${admin.Id}')" title="删除">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            ` : `
+                                <span class="text-muted small">超级管理员</span>
+                            `}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // 更新管理员统计
+        function updateAdminStats() {
+            // 过滤掉超级管理员和空信息的管理员，只统计显示的管理员
+            const displayedAdmins = admins.filter(admin => {
+                // 过滤掉超级管理员
+                if (admin.PermissionLevel === 0) {
+                    return false;
+                }
+                // 过滤掉关键信息为空的管理员
+                if (!admin.Username || admin.Username === '-' || admin.Username === '未知' ||
+                    !admin.Name || admin.Name === '-' || admin.Name === '未知') {
+                    return false;
+                }
+                return true;
+            });
+
+            const total = displayedAdmins.length;
+            const normalAdmins = displayedAdmins.filter(admin => admin.PermissionLevel === 1).length;
+            const seniorAdmins = displayedAdmins.filter(admin => admin.PermissionLevel === 2).length;
+
+            document.getElementById('totalAdmins').textContent = total;
+            document.getElementById('activeAdmins').textContent = normalAdmins;
+            document.getElementById('superAdmins').textContent = '0'; // 不显示超级管理员
+            document.getElementById('inactiveAdmins').textContent = seniorAdmins; // 显示其他等级管理员
+        }
+
+        // 搜索管理员
+        function searchAdmins() {
+            const searchTerm = document.getElementById('adminSearch').value.toLowerCase();
+
+            const filteredAdmins = admins.filter(admin => {
+                // 首先应用基本过滤逻辑：过滤掉超级管理员和空信息的管理员
+                if (admin.PermissionLevel === 0) {
+                    return false;
+                }
+                if (!admin.Username || admin.Username === '-' || admin.Username === '未知' ||
+                    !admin.Name || admin.Name === '-' || admin.Name === '未知') {
+                    return false;
+                }
+
+                // 然后应用搜索过滤
+                const matchesSearch = !searchTerm || 
+                    (admin.Username && admin.Username.toLowerCase().includes(searchTerm)) ||
+                    (admin.Name && admin.Name.toLowerCase().includes(searchTerm));
+
+                return matchesSearch;
+            });
+
+            renderAdminTable(filteredAdmins);
+        }
+
+        // 显示添加管理员模态框
+        function showAddAdminModal() {
+            document.getElementById('adminModalTitle').textContent = '添加管理员';
+            document.getElementById('adminForm').reset();
+            document.getElementById('adminId').value = '';
+            
+            // 设置密码字段为必填
+            document.getElementById('adminPassword').required = true;
+            document.getElementById('adminPasswordConfirm').required = true;
+            
+            const modal = new bootstrap.Modal(document.getElementById('adminModal'));
+            modal.show();
+        }
+
+        // 编辑管理员
+        function editAdmin(adminId) {
+            const admin = admins.find(a => a.Id === adminId);
+            if (!admin) return;
+
+            document.getElementById('adminModalTitle').textContent = '编辑管理员';
+            document.getElementById('adminId').value = admin.Id;
+            document.getElementById('adminUsername').value = admin.Username || '';
+            document.getElementById('adminName').value = admin.Name || '';
+
+            // 编辑时密码不是必填的
+            document.getElementById('adminPassword').required = false;
+            document.getElementById('adminPasswordConfirm').required = false;
+            document.getElementById('adminPassword').value = '';
+            document.getElementById('adminPasswordConfirm').value = '';
+
+            const modal = new bootstrap.Modal(document.getElementById('adminModal'));
+            modal.show();
+        }
+
+        // 显示添加管理员模态框
+        function showAddAdminModal() {
+            document.getElementById('adminModalTitle').textContent = '添加管理员';
+            document.getElementById('adminForm').reset();
+            document.getElementById('adminId').value = '';
+            
+            // 设置密码字段为必填
+            document.getElementById('adminPassword').required = true;
+            document.getElementById('adminPasswordConfirm').required = true;
+            
+            const modal = new bootstrap.Modal(document.getElementById('adminModal'));
+            modal.show();
+        }
+
+        // 更新权限等级选项
+        function updatePermissionLevel() {
+            const adminType = document.getElementById('adminType').value;
+            const permissionLevelSelect = document.getElementById('adminPermissionLevel');
+            
+            if (adminType === 'super_admin') {
+                permissionLevelSelect.value = '0';
+                permissionLevelSelect.disabled = true;
+            } else {
+                permissionLevelSelect.disabled = false;
+                if (permissionLevelSelect.value === '0') {
+                    permissionLevelSelect.value = '1';
+                }
+            }
+        }
+
+        // 保存管理员
+        async function saveAdmin() {
+            const form = document.getElementById('adminForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const adminId = document.getElementById('adminId').value;
+            const password = document.getElementById('adminPassword').value;
+            const passwordConfirm = document.getElementById('adminPasswordConfirm').value;
+
+            // 验证密码
+            if (password && password !== passwordConfirm) {
+                Swal.fire({
+                    icon: 'error',
+                    title: '密码不匹配',
+                    text: '两次输入的密码不一致'
+                });
+                return;
+            }
+
+            const adminData = {
+                Username: document.getElementById('adminUsername').value,
+                Name: document.getElementById('adminName').value,
+                PermissionLevel: 1  // 固定为1，表示普通管理员
+            };
+
+            // 只有在有密码时才添加密码字段
+            if (password) {
+                adminData.Password = password;
+            }
+
+            try {
+                const url = adminId ? `${API_BASE}/admin/administrators/${adminId}` : `${API_BASE}/admin/administrators`;
+                const method = adminId ? 'PUT' : 'POST';
+
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('authToken') || ''}`
+                    },
+                    body: JSON.stringify(adminData)
+                });
+
+                if (response.ok) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '保存成功',
+                        text: adminId ? '管理员信息更新成功' : '管理员添加成功',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+
+                    bootstrap.Modal.getInstance(document.getElementById('adminModal')).hide();
+                    loadAdminList();
+                } else {
+                    const errorData = await response.json();
+                    Swal.fire({
+                        icon: 'error',
+                        title: '保存失败',
+                        text: errorData.message || '操作失败，请重试'
+                    });
+                }
+            } catch (error) {
+                console.error('保存管理员出错:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: '保存失败',
+                    text: '网络错误，请重试'
+                });
+            }
+        }
+
+        // 删除管理员
+        async function deleteAdmin(adminId) {
+            const admin = admins.find(a => a.Id === adminId);
+            if (!admin) return;
+
+            if (admin.PermissionLevel === 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: '无法删除',
+                    text: '不能删除超级管理员账户'
+                });
+                return;
+            }
+
+            const result = await Swal.fire({
+                title: '确认删除',
+                text: `您确定要删除管理员"${admin.Name}"吗？此操作不可恢复！`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: '确定删除',
+                cancelButtonText: '取消',
+                confirmButtonColor: '#d33'
+            });
+
+            if (result.isConfirmed) {
+                try {
+                    const response = await fetch(`${API_BASE}/admin/administrators/${adminId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('authToken') || ''}`
+                        }
+                    });
+
+                    if (response.ok) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '删除成功',
+                            text: '管理员已删除',
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                        loadAdminList();
+                    } else {
+                        const errorData = await response.json();
+                        Swal.fire({
+                            icon: 'error',
+                            title: '删除失败',
+                            text: errorData.message || '删除失败，请重试'
+                        });
+                    }
+                } catch (error) {
+                    console.error('删除管理员出错:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: '删除失败',
+                        text: '网络错误，请重试'
+                    });
+                }
+            }
+        }
+
+        // ==================== 工具函数 ====================
+
+        // 数字货币网络类型配置
+        const cryptoNetworks = {
+            'BTC': ['Bitcoin'],
+            'ETH': ['Ethereum (ERC-20)'],
+            'USDT': ['Ethereum (ERC-20)', 'TRON (TRC-20)', 'BSC (BEP-20)'],
+            'USDC': ['Ethereum (ERC-20)', 'BSC (BEP-20)', 'Polygon'],
+            'BNB': ['BSC (BEP-20)', 'Ethereum (ERC-20)'],
+            'ADA': ['Cardano'],
+            'DOT': ['Polkadot'],
+            'MATIC': ['Polygon', 'Ethereum (ERC-20)'],
+            'LTC': ['Litecoin'],
+            'TRX': ['TRON (TRC-20)']
+        };
+
+        // 更新网络类型选项
+        function updateNetworkOptions() {
+            const currencyType = document.getElementById('accountType').value;
+            const networkSelect = document.getElementById('networkType');
+            const addressHint = document.getElementById('addressFormatHint');
+            
+            // 清空现有选项
+            networkSelect.innerHTML = '<option value="">请选择网络类型</option>';
+            
+            if (currencyType && cryptoNetworks[currencyType]) {
+                cryptoNetworks[currencyType].forEach(network => {
+                    const option = document.createElement('option');
+                    option.value = network;
+                    option.textContent = network;
+                    networkSelect.appendChild(option);
+                });
+                
+                // 更新地址格式提示
+                updateAddressFormatHint(currencyType);
+            } else {
+                addressHint.textContent = '请先选择数字货币类型';
+            }
+        }
+
+        // 更新地址格式提示
+        function updateAddressFormatHint(currencyType) {
+            const addressHint = document.getElementById('addressFormatHint');
+            const hints = {
+                'BTC': 'Bitcoin地址格式：以1、3或bc1开头，长度26-35位',
+                'ETH': 'Ethereum地址格式：以0x开头，42位十六进制字符',
+                'USDT': '根据网络选择：ERC-20(0x开头)、TRC-20(T开头)、BEP-20(0x开头)',
+                'USDC': '根据网络选择：ERC-20(0x开头)、BEP-20(0x开头)、Polygon(0x开头)',
+                'BNB': '根据网络选择：BEP-20(0x开头)、ERC-20(0x开头)',
+                'ADA': 'Cardano地址格式：以addr1开头',
+                'DOT': 'Polkadot地址格式：以1开头，48位字符',
+                'MATIC': '根据网络选择：Polygon(0x开头)、ERC-20(0x开头)',
+                'LTC': 'Litecoin地址格式：以L、M或ltc1开头',
+                'TRX': 'TRON地址格式：以T开头，34位字符'
+            };
+            
+            addressHint.textContent = hints[currencyType] || '请输入有效的钱包地址';
+        }
+
+        // 验证钱包地址格式
+        function validateWalletAddress() {
+            const currencyType = document.getElementById('accountType').value;
+            const address = document.getElementById('accountNumber').value.trim();
+            const addressInput = document.getElementById('accountNumber');
+            
+            if (!address || !currencyType) return;
+            
+            let isValid = false;
+            
+            switch (currencyType) {
+                case 'BTC':
+                    isValid = /^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$|^bc1[a-z0-9]{39,59}$/.test(address);
+                    break;
+                case 'ETH':
+                case 'BNB':
+                case 'USDC':
+                case 'MATIC':
+                    isValid = /^0x[a-fA-F0-9]{40}$/.test(address);
+                    break;
+                case 'USDT':
+                    // 支持多种网络格式
+                    isValid = /^0x[a-fA-F0-9]{40}$/.test(address) || /^T[A-Za-z1-9]{33}$/.test(address);
+                    break;
+                case 'ADA':
+                    isValid = /^addr1[a-z0-9]{98}$/.test(address);
+                    break;
+                case 'DOT':
+                    isValid = /^1[a-zA-Z0-9]{47}$/.test(address);
+                    break;
+                case 'LTC':
+                    isValid = /^[LM3][a-km-zA-HJ-NP-Z1-9]{26,33}$|^ltc1[a-z0-9]{39,59}$/.test(address);
+                    break;
+                case 'TRX':
+                    isValid = /^T[A-Za-z1-9]{33}$/.test(address);
+                    break;
+                default:
+                    isValid = true; // 未知类型暂时通过
+            }
+            
+            // 更新输入框样式
+            if (isValid) {
+                addressInput.classList.remove('is-invalid');
+                addressInput.classList.add('is-valid');
+            } else {
+                addressInput.classList.remove('is-valid');
+                addressInput.classList.add('is-invalid');
+            }
+        }
+
+        // 获取数字货币类型文本
+        function getCryptoCurrencyText(type) {
+            const currencies = {
+                'BTC': 'Bitcoin',
+                'ETH': 'Ethereum',
+                'USDT': 'Tether',
+                'USDC': 'USD Coin',
+                'BNB': 'Binance Coin',
+                'ADA': 'Cardano',
+                'DOT': 'Polkadot',
+                'MATIC': 'Polygon',
+                'LTC': 'Litecoin',
+                'TRX': 'TRON'
+            };
+            return currencies[type] || type || '未知';
+        }
+
+        // 获取网络类型文本
+        function getNetworkTypeText(networkType) {
+            return networkType || '未设置';
+        }
+
+        // 格式化钱包地址显示
+        function formatWalletAddress(address) {
+            if (!address) return '-';
+            if (address.length <= 20) return address;
+            
+            // 显示前6位和后4位，中间用...代替
+            return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+        }
+
+        // 获取账户类型文本（保留兼容性）
+        function getAccountTypeText(type) {
+            return getCryptoCurrencyText(type);
+        }
+
+        // 获取权限等级名称
+        function getPermissionLevelName(level) {
+            const levels = {
+                0: '超级管理员',
+                1: '高级管理员',
+                2: '普通管理员',
+                3: '初级管理员'
+            };
+            return levels[level] || '未知';
+        }
+
+        // 格式化日期时间
+        function formatDateTime(dateString) {
+            if (!dateString) return '-';
+            
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleString('zh-CN', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } catch (error) {
+                return '-';
+            }
+        }
+
+        // 初始化表单事件监听器
+        function initializeFormEventListeners() {
+            // 货币类型选择变化时更新网络类型选项
+            const accountTypeSelect = document.getElementById('accountType');
+            if (accountTypeSelect) {
+                accountTypeSelect.addEventListener('change', function() {
+                    updateNetworkOptions();
+                    updateAddressFormatHint();
+                });
+            }
+
+            // 钱包地址输入时进行验证
+            const accountNumberInput = document.getElementById('accountNumber');
+            if (accountNumberInput) {
+                accountNumberInput.addEventListener('input', function() {
+                    const currencyType = document.getElementById('accountType').value;
+                    if (currencyType && this.value) {
+                        validateWalletAddress(this.value, currencyType);
+                    }
+                });
+
+                accountNumberInput.addEventListener('blur', function() {
+                    const currencyType = document.getElementById('accountType').value;
+                    if (currencyType && this.value) {
+                        validateWalletAddress(this.value, currencyType);
+                    }
+                });
+            }
+        }
+
+        // ==================== 账户设置功能 ====================
+
+        // 加载当前用户信息
+        function loadCurrentUserInfo() {
+            const superAdminLoginInfo = localStorage.getItem('superAdminLoginInfo');
+            const loginTime = localStorage.getItem('loginTime');
+            
+            if (superAdminLoginInfo) {
+                try {
+                    const userInfo = JSON.parse(superAdminLoginInfo);
+                    document.getElementById('currentUsername').textContent = userInfo.username || '-';
+                    document.getElementById('currentUserType').textContent = '超级管理员';
+                    document.getElementById('currentPermissionLevel').textContent = '最高权限';
+                    
+                    if (loginTime) {
+                        const loginDate = new Date(loginTime);
+                        document.getElementById('loginTime').textContent = loginDate.toLocaleString('zh-CN');
+                    }
+                } catch (error) {
+                    console.error('解析用户信息失败:', error);
+                }
+            }
+        }
+
+        // 显示修改用户名模态框
+        function showChangeUsernameModal() {
+            const superAdminLoginInfo = localStorage.getItem('superAdminLoginInfo');
+            if (superAdminLoginInfo) {
+                try {
+                    const userInfo = JSON.parse(superAdminLoginInfo);
+                    document.getElementById('currentUsernameDisplay').value = userInfo.username || '';
+                    document.getElementById('newUsername').value = '';
+                    document.getElementById('confirmNewUsername').value = '';
+                    document.getElementById('usernameChangePassword').value = '';
+                    
+                    // 隐藏验证反馈
+                    document.getElementById('usernameMatchFeedback').style.display = 'none';
+                    
+                    const modal = new bootstrap.Modal(document.getElementById('changeUsernameModal'));
+                    modal.show();
+                } catch (error) {
+                    console.error('解析用户信息失败:', error);
+                    Swal.fire('错误', '获取用户信息失败', 'error');
+                }
+            }
+        }
+
+        // 显示账户更新成功对话框
+        function showAccountUpdateSuccess(type, username, password, callback) {
+            let title, content;
+            
+            if (type === 'username') {
+                title = '用户名修改成功';
+                content = `
+                    <div class="account-info-display">
+                        <div class="alert alert-success mb-3">
+                            <i class="fas fa-check-circle me-2"></i>
+                            用户名已成功修改！
+                        </div>
+                        <div class="card border-primary">
+                            <div class="card-header bg-primary text-white">
+                                <h6 class="mb-0"><i class="fas fa-user me-2"></i>新的登录信息</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-4 text-end fw-bold">用户名：</div>
+                                    <div class="col-8">
+                                        <span class="badge bg-info fs-6 px-3 py-2">${username}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3 text-muted small">
+                            <i class="fas fa-info-circle me-1"></i>
+                            建议截图保存此信息以备后用
+                        </div>
+                    </div>
+                `;
+            } else if (type === 'password') {
+                title = '密码修改成功';
+                content = `
+                    <div class="account-info-display">
+                        <div class="alert alert-success mb-3">
+                            <i class="fas fa-check-circle me-2"></i>
+                            密码已成功修改！请使用新密码重新登录。
+                        </div>
+                        <div class="card border-primary">
+                            <div class="card-header bg-primary text-white">
+                                <h6 class="mb-0"><i class="fas fa-key me-2"></i>新的登录信息</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-2">
+                                    <div class="col-4 text-end fw-bold">用户名：</div>
+                                    <div class="col-8">
+                                        <span class="badge bg-info fs-6 px-3 py-2">${username}</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4 text-end fw-bold">新密码：</div>
+                                    <div class="col-8">
+                                        <span class="badge bg-warning fs-6 px-3 py-2">${password}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3 text-muted small">
+                            <i class="fas fa-exclamation-triangle me-1"></i>
+                            请务必截图保存此信息，点击确定后将跳转到登录页面
+                        </div>
+                    </div>
+                `;
+            }
+            
+            Swal.fire({
+                title: title,
+                html: content,
+                icon: 'success',
+                confirmButtonText: '确定',
+                confirmButtonColor: '#0d6efd',
+                width: '500px',
+                customClass: {
+                    popup: 'account-success-popup',
+                    content: 'account-success-content'
+                },
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            }).then(() => {
+                if (callback) {
+                    callback();
+                }
+            });
+        }
+
+        // 验证用户名匹配
+        function validateUsernameMatch() {
+            const newUsername = document.getElementById('newUsername').value.trim();
+            const confirmUsername = document.getElementById('confirmNewUsername').value.trim();
+            const feedback = document.getElementById('usernameMatchFeedback');
+            
+            if (!newUsername || !confirmUsername) {
+                feedback.style.display = 'none';
+                return false;
+            }
+            
+            if (newUsername === confirmUsername) {
+                feedback.style.display = 'block';
+                feedback.className = 'form-text text-success';
+                feedback.innerHTML = '<i class="fas fa-check"></i> 用户名匹配';
+                return true;
+            } else {
+                feedback.style.display = 'block';
+                feedback.className = 'form-text text-danger';
+                feedback.innerHTML = '<i class="fas fa-times"></i> 两次输入的用户名不一致';
+                return false;
+            }
+        }
+
+        // 显示修改密码模态框
+        function showChangePasswordModal() {
+            document.getElementById('currentPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmNewPassword').value = '';
+            document.getElementById('passwordStrength').style.display = 'none';
+            
+            const modal = new bootstrap.Modal(document.getElementById('changePasswordModal'));
+            modal.show();
+            
+            // 添加密码强度检测
+            const newPasswordInput = document.getElementById('newPassword');
+            newPasswordInput.addEventListener('input', function() {
+                checkPasswordStrength(this.value);
+            });
+        }
+
+        // 检查密码强度
+        function checkPasswordStrength(password) {
+            const strengthDiv = document.getElementById('passwordStrength');
+            const strengthBar = document.getElementById('strengthBar');
+            const strengthText = document.getElementById('strengthText');
+            
+            if (password.length === 0) {
+                strengthDiv.style.display = 'none';
+                return;
+            }
+            
+            strengthDiv.style.display = 'block';
+            
+            let score = 0;
+            let feedback = [];
+            
+            // 长度检查
+            if (password.length >= 8) score += 1;
+            else feedback.push('至少8个字符');
+            
+            // 大写字母
+            if (/[A-Z]/.test(password)) score += 1;
+            else feedback.push('包含大写字母');
+            
+            // 小写字母
+            if (/[a-z]/.test(password)) score += 1;
+            else feedback.push('包含小写字母');
+            
+            // 数字
+            if (/\d/.test(password)) score += 1;
+            else feedback.push('包含数字');
+            
+            // 特殊字符
+            if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) score += 1;
+            else feedback.push('包含特殊字符');
+            
+            // 更新进度条和文本
+            const percentage = (score / 5) * 100;
+            strengthBar.style.width = percentage + '%';
+            
+            if (score <= 2) {
+                strengthBar.className = 'progress-bar strength-weak';
+                strengthText.textContent = '密码强度：弱 - 建议' + feedback.slice(0, 2).join('、');
+            } else if (score <= 3) {
+                strengthBar.className = 'progress-bar strength-medium';
+                strengthText.textContent = '密码强度：中等 - 建议' + feedback.slice(0, 1).join('、');
+            } else {
+                strengthBar.className = 'progress-bar strength-strong';
+                strengthText.textContent = '密码强度：强';
+            }
+        }
+
+        // 修改用户名
+        async function changeUsername() {
+            const newUsername = document.getElementById('newUsername').value.trim();
+            const confirmUsername = document.getElementById('confirmNewUsername').value.trim();
+            const password = document.getElementById('usernameChangePassword').value;
+            
+            // 表单验证
+            if (!newUsername) {
+                Swal.fire('错误', '请输入新用户名', 'error');
+                return;
+            }
+            
+            if (!confirmUsername) {
+                Swal.fire('错误', '请输入确认用户名', 'error');
+                return;
+            }
+            
+            if (newUsername !== confirmUsername) {
+                Swal.fire('错误', '两次输入的用户名不一致', 'error');
+                return;
+            }
+            
+            if (!/^[a-zA-Z0-9_]{3,20}$/.test(newUsername)) {
+                Swal.fire('错误', '用户名长度应为3-20个字符，只能包含字母、数字和下划线', 'error');
+                return;
+            }
+            
+            if (!password) {
+                Swal.fire('错误', '请输入当前密码以确认修改', 'error');
+                return;
+            }
+            
+            // 获取当前用户名
+            const superAdminLoginInfo = localStorage.getItem('superAdminLoginInfo');
+            if (!superAdminLoginInfo) {
+                Swal.fire('错误', '获取用户信息失败', 'error');
+                return;
+            }
+            
+            const userInfo = JSON.parse(superAdminLoginInfo);
+            const currentUsername = userInfo.username;
+            
+            if (newUsername === currentUsername) {
+                Swal.fire('提示', '新用户名与当前用户名相同', 'info');
+                return;
+            }
+            
+            try {
+                console.log('开始修改用户名...');
+                console.log('API_BASE:', API_BASE);
+                console.log('请求URL:', `${API_BASE}/super-admin/change-username`);
+                console.log('请求数据:', {
+                    NewUsername: newUsername,
+                    ConfirmUsername: confirmUsername,
+                    CurrentPassword: password
+                });
+                
+                const response = await fetch(`${API_BASE}/super-admin/change-username`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                    },
+                    body: JSON.stringify({
+                        NewUsername: newUsername,
+                        ConfirmUsername: confirmUsername,
+                        CurrentPassword: password
+                    })
+                });
+                
+                console.log('响应状态:', response.status);
+                console.log('响应状态文本:', response.statusText);
+                console.log('响应头:', response.headers);
+                
+                const result = await response.json();
+                console.log('响应数据:', result);
+                
+                if (response.ok && result.success) {
+                    // 更新本地存储的用户信息
+                    userInfo.username = newUsername;
+                    localStorage.setItem('superAdminLoginInfo', JSON.stringify(userInfo));
+                    
+                    // 更新页面显示
+                    loadCurrentUserInfo();
+                    
+                    // 关闭模态框
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('changeUsernameModal'));
+                    modal.hide();
+                    
+                    // 显示新的账号信息对话框
+                    showAccountUpdateSuccess('username', newUsername, null);
+                } else {
+                    console.error('修改用户名失败 - 服务器响应:', result);
+                    Swal.fire('错误', result.message || '修改用户名失败', 'error');
+                }
+            } catch (error) {
+                console.error('修改用户名失败 - 网络错误:', error);
+                console.error('错误详情:', error.message);
+                console.error('错误堆栈:', error.stack);
+                Swal.fire('错误', '网络错误，请稍后重试', 'error');
+            }
+        }
+
+        // 修改密码
+        async function changePassword() {
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+            
+            // 表单验证
+            if (!currentPassword) {
+                Swal.fire('错误', '请输入当前密码', 'error');
+                return;
+            }
+            
+            if (!newPassword) {
+                Swal.fire('错误', '请输入新密码', 'error');
+                return;
+            }
+            
+            if (newPassword.length < 8) {
+                Swal.fire('错误', '新密码长度至少为8位', 'error');
+                return;
+            }
+            
+            if (newPassword !== confirmNewPassword) {
+                Swal.fire('错误', '两次输入的新密码不一致', 'error');
+                return;
+            }
+            
+            if (currentPassword === newPassword) {
+                Swal.fire('提示', '新密码不能与当前密码相同', 'info');
+                return;
+            }
+            
+            // 获取当前用户名
+            const superAdminLoginInfo = localStorage.getItem('superAdminLoginInfo');
+            if (!superAdminLoginInfo) {
+                Swal.fire('错误', '获取用户信息失败', 'error');
+                return;
+            }
+            
+            const userInfo = JSON.parse(superAdminLoginInfo);
+            const username = userInfo.username;
+            
+            try {
+                const response = await fetch(`${API_BASE}/super-admin/change-password`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                    },
+                    body: JSON.stringify({
+                        CurrentPassword: currentPassword,
+                        NewPassword: newPassword,
+                        ConfirmPassword: newPassword
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    // 关闭模态框
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('changePasswordModal'));
+                    modal.hide();
+                    
+                    // 显示新的账号信息对话框，然后跳转到登录页
+                    showAccountUpdateSuccess('password', userInfo.username, newPassword, () => {
+                        // 清除登录信息并跳转到登录页
+                        localStorage.removeItem('authToken');
+                        localStorage.removeItem('superAdminLoginInfo');
+                        localStorage.removeItem('permissionLevel');
+                        localStorage.removeItem('userType');
+                        localStorage.removeItem('currentUser');
+                        localStorage.removeItem('loginTime');
+                        
+                        window.location.href = 'super-admin-login.html';
+                    });
+                } else {
+                    Swal.fire('错误', result.message || '修改密码失败', 'error');
+                }
+            } catch (error) {
+                console.error('修改密码失败:', error);
+                Swal.fire('错误', '网络错误，请稍后重试', 'error');
+            }
+        }
+
+        // 在页面初始化时加载用户信息
+        document.addEventListener('DOMContentLoaded', function() {
+            // 原有的初始化代码...
+            
+            // 添加账户设置页面的初始化
+            const accountSettingsSection = document.getElementById('account-settings');
+            if (accountSettingsSection) {
+                // 当切换到账户设置页面时加载用户信息
+                const observer = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation) {
+                        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                            if (accountSettingsSection.classList.contains('active')) {
+                                loadCurrentUserInfo();
+                            }
+                        }
+                    });
+                });
+                
+                observer.observe(accountSettingsSection, { attributes: true });
+            }
+            
+            // 添加清理用户数据模态框的事件监听
+            const clearConfirmationText = document.getElementById('clearConfirmationText');
+            const clearDataBackupConfirm = document.getElementById('clearDataBackupConfirm');
+            const clearConfirmBtn = document.getElementById('clearConfirmBtn');
+            
+            function updateClearButtonState() {
+                const textCorrect = clearConfirmationText.value === 'CLEAR ALL USERS';
+                const checkboxChecked = clearDataBackupConfirm.checked;
+                clearConfirmBtn.disabled = !(textCorrect && checkboxChecked);
+            }
+            
+            clearConfirmationText.addEventListener('input', updateClearButtonState);
+            clearDataBackupConfirm.addEventListener('change', updateClearButtonState);
+        });
+
+        // ==================== 清理用户数据功能 ====================
+        
+        // 显示清理用户数据模态框
+        function showClearAllUsersModal() {
+            // 重置表单
+            document.getElementById('clearConfirmationText').value = '';
+            document.getElementById('clearDataBackupConfirm').checked = false;
+            document.getElementById('clearConfirmBtn').disabled = true;
+            
+            // 显示模态框
+            const modal = new bootstrap.Modal(document.getElementById('clearAllUsersModal'));
+            modal.show();
+        }
+
+        // 确认清理所有用户数据
+        async function confirmClearAllUsers() {
+            const confirmationText = document.getElementById('clearConfirmationText').value;
+            const backupConfirm = document.getElementById('clearDataBackupConfirm').checked;
+            
+            if (confirmationText !== 'CLEAR ALL USERS') {
+                Swal.fire('错误', '确认文本不正确', 'error');
+                return;
+            }
+            
+            if (!backupConfirm) {
+                Swal.fire('错误', '请确认您已备份重要数据', 'error');
+                return;
+            }
+            
+            // 最后一次确认
+            const result = await Swal.fire({
+                title: '最后确认',
+                text: '您确定要清理所有用户数据吗？此操作不可撤销！',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: '确认清理',
+                cancelButtonText: '取消'
+            });
+            
+            if (!result.isConfirmed) {
+                return;
+            }
+            
+            try {
+                // 显示加载状态
+                Swal.fire({
+                    title: '正在清理数据...',
+                    text: '请稍候，正在清理用户数据',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                
+                const response = await fetch(`${API_BASE}/super-admin/clear-all-users`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        confirmationText: confirmationText,
+                        operatorId: currentUser?.username || 'unknown'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    // 关闭模态框
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('clearAllUsersModal'));
+                    modal.hide();
+                    
+                    // 显示成功消息
+                    await Swal.fire({
+                        title: '清理完成',
+                        html: `
+                            <div class="text-start">
+                                <p><strong>清理结果：</strong></p>
+                                <ul>
+                                    ${data.results.map(result => `<li class="text-success">${result}</li>`).join('')}
+                                </ul>
+                                ${data.errors.length > 0 ? `
+                                    <p class="mt-3"><strong>错误信息：</strong></p>
+                                    <ul>
+                                        ${data.errors.map(error => `<li class="text-danger">${error}</li>`).join('')}
+                                    </ul>
+                                ` : ''}
+                                <p class="mt-3 text-muted"><small>操作时间：${new Date(data.timestamp).toLocaleString()}</small></p>
+                            </div>
+                        `,
+                        icon: 'success',
+                        confirmButtonText: '确定'
+                    });
+                    
+                    // 刷新管理员列表
+                    loadAdminList();
+                } else {
+                    Swal.fire('错误', data.message || '清理用户数据失败', 'error');
+                }
+            } catch (error) {
+                console.error('清理用户数据失败:', error);
+                Swal.fire('错误', '网络错误，请稍后重试', 'error');
+            }
+        }
+    </script>
+</body>
+</html>

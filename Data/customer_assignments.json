@@ -1,0 +1,74 @@
+[
+  {
+    "Id": "6a9934ff-7f3d-4812-a96b-b3c33415c916",
+    "CustomerId": "b9512e74-d564-40cf-a418-c2c1c4b1cf47",
+    "SalespersonId": "ba8524a3-76f9-407b-aa83-cf8a84d118ed",
+    "AssignedAt": "2025-09-29T22:12:30.9766284+08:00"
+  },
+  {
+    "Id": "dc5717e8-af2e-4a85-b2b1-149da1feac0e-assignment",
+    "CustomerId": "dc5717e8-af2e-4a85-b2b1-149da1feac0e",
+    "SalespersonId": "ba8524a3-76f9-407b-aa83-cf8a84d118ed",
+    "AssignedAt": "2025-09-29T22:05:30.5479909+08:00"
+  },
+  {
+    "Id": "c66c352f-f631-4d8e-a988-1eb870b2c327-assignment",
+    "CustomerId": "c66c352f-f631-4d8e-a988-1eb870b2c327",
+    "SalespersonId": "ba8524a3-76f9-407b-aa83-cf8a84d118ed",
+    "AssignedAt": "2025-09-29T22:11:30.9611327+08:00"
+  },
+  {
+    "Id": "0539623e-4ac0-4985-a1eb-36ae65b11cfc",
+    "CustomerId": "3754e8f7-c592-4aaf-adf9-c267a0914830",
+    "SalespersonId": "ba8524a3-76f9-407b-aa83-cf8a84d118ed",
+    "AssignedAt": "2025-09-29T22:13:28.8048991+08:00"
+  },
+  {
+    "Id": "950d2d61-dd8e-4f49-8d9c-ebe9d5bebcc8",
+    "CustomerId": "d46a0184-ce24-4c3e-9b05-435e562afa58",
+    "SalespersonId": "ba8524a3-76f9-407b-aa83-cf8a84d118ed",
+    "AssignedAt": "2025-09-30T13:21:52.2656964+08:00"
+  },
+  {
+    "Id": "bd92faad-a09f-440a-bebe-3baa3a1e674a",
+    "CustomerId": "f1b9b2f7-86dc-41f1-b12e-adcb8583decd",
+    "SalespersonId": "69bf41c6-f0a4-452c-a424-ea6959a18808",
+    "AssignedAt": "2025-10-04T21:18:56.6001782+08:00"
+  },
+  {
+    "Id": "98abb5f8-8548-4105-8ecf-099bed1a31c9",
+    "CustomerId": "d863af6a-f6bf-4bd3-8a97-c2763c2b6fbc",
+    "SalespersonId": "69bf41c6-f0a4-452c-a424-ea6959a18808",
+    "AssignedAt": "2025-10-05T01:14:42.1643115+08:00"
+  },
+  {
+    "Id": "0f027c9f-940e-423d-b511-113066bd84e8",
+    "CustomerId": "816ef7f6-6fa2-4fe8-9985-bc1f1332e7b4",
+    "SalespersonId": "69bf41c6-f0a4-452c-a424-ea6959a18808",
+    "AssignedAt": "2025-10-05T03:34:57.9529933+08:00"
+  },
+  {
+    "Id": "53d3a1d3-88e9-4462-ba3d-5a6bcb64f204",
+    "CustomerId": "d4c13c76-292b-4ab7-8a12-907a1c4ebc86",
+    "SalespersonId": "abc16e84-612f-4d5b-a548-25f85ebf1c1e",
+    "AssignedAt": "2025-10-05T03:35:21.5992639+08:00"
+  },
+  {
+    "Id": "ff8d2115-8992-4bdc-ada3-11763b87e058",
+    "CustomerId": "4af78fdd-0f19-4a8b-bdee-d40e59e9abed",
+    "SalespersonId": "69bf41c6-f0a4-452c-a424-ea6959a18808",
+    "AssignedAt": "2025-10-05T04:07:18.394382+08:00"
+  },
+  {
+    "Id": "a03aa113-cabb-498b-a00d-d33b6f4be8b4",
+    "CustomerId": "1ec6971c-a4e3-4407-8778-21bd7216856e",
+    "SalespersonId": "69bf41c6-f0a4-452c-a424-ea6959a18808",
+    "AssignedAt": "2025-10-05T04:14:01.7556092+08:00"
+  },
+  {
+    "Id": "931899f8-69a8-4844-b583-dec1a51bf1d3",
+    "CustomerId": "44373f89-b5c1-4956-a8c4-e873d9dfe99e",
+    "SalespersonId": "45025b39-2b2c-4771-993a-ff5bf08e2d5f",
+    "AssignedAt": "2025-10-06T00:08:39.7308049+08:00"
+  }
+]

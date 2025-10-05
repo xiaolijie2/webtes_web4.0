@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>任务</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="bottom-nav.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        
+        .mobile-container {
+            width: 450px;
+            max-width: 450px;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border-left: 1px solid #dee2e6;
+            border-right: 1px solid #dee2e6;
+            position: relative;
+            padding-bottom: 80px;
+        }
+        
+        .header {
+            background-color: #f8f9fa;
+            padding: 15px 20px;
+            text-align: center;
+            border-bottom: 1px solid #e9ecef;
+            position: relative;
+        }
+        
+        .page-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+        
+        .back-arrow {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .products-section {
+            padding: 20px;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .product-item {
+            text-align: center;
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 100px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e9ecef;
+        }
+        
+        .product-image img {
+            max-width: 80%;
+            max-height: 80%;
+            object-fit: contain;
+        }
+        
+        .product-name {
+            font-size: 12px;
+            color: #333;
+            line-height: 1.3;
+            font-weight: 500;
+        }
+        
+        .grab-order-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .grab-order-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+        }
+        
+        .vip-section {
+            margin-bottom: 20px;
+        }
+        
+        .vip-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        /* 信息容器样式 */
+        .info-container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 0 20px 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid #e9ecef;
+        }
+        
+        .info-container-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .info-container-title i {
+            color: #4a90e2;
+            font-size: 18px;
+        }
+        
+        .instructions-info-container .info-container-title i {
+            color: #4a90e2;
+        }
+        
+        .vip-info-container {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-left: 4px solid #4a90e2;
+        }
+        
+        .stats-info-container {
+            background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+            border-left: 4px solid #ff9800;
+        }
+        
+        .balance-info-container {
+            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+            border-left: 4px solid #4caf50;
+        }
+        
+        .instructions-info-container {
+            background: white;
+            border-left: 4px solid #4a90e2;
+            border: 1px solid #e9ecef;
+        }
+        
+        .instruction-item {
+            background-color: #f8f9fa;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            color: #333;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .instruction-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .vip-card {
+            border-radius: 12px;
+            padding: 20px;
+            color: white;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+        
+        .vip-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 80px;
+            height: 80px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transform: translate(30px, -30px);
+        }
+        
+        .vip-level {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-style: italic;
+        }
+        
+        .vip-deposit {
+            font-size: 14px;
+            margin-bottom: 4px;
+            opacity: 0.9;
+        }
+        
+        .vip-info {
+            font-size: 13px;
+            opacity: 0.85;
+            line-height: 1.4;
+        }
+        
+        .vip-crown {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            color: #FFD700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+        
+        /* VIP 0 - 简单皇冠 */
+        .crown-simple {
+            color: #C0C0C0;
+            text-shadow: 0 0 5px rgba(192, 192, 192, 0.3);
+            font-size: 20px;
+        }
+        
+        /* VIP 1 - 青铜皇冠 */
+        .crown-bronze {
+            color: #CD7F32;
+            text-shadow: 0 0 8px rgba(205, 127, 50, 0.6);
+            font-size: 22px;
+        }
+        
+        /* VIP 2 - 银色皇冠 */
+        .crown-silver {
+            color: #C0C0C0;
+            text-shadow: 0 0 10px rgba(192, 192, 192, 0.7);
+            font-size: 24px;
+        }
+        
+        /* VIP 3 - 金色皇冠 */
+        .crown-gold {
+            color: #FFD700;
+            text-shadow: 0 0 12px rgba(255, 215, 0, 0.8);
+            font-size: 26px;
+        }
+        
+        /* VIP 4 - 钻石皇冠 */
+        .crown-diamond {
+            color: #B9F2FF;
+            text-shadow: 0 0 15px rgba(185, 242, 255, 0.9);
+            font-size: 28px;
+            animation: diamond-pulse 2s ease-in-out infinite;
+        }
+        
+        /* 皇冠宝石装饰 */
+        .crown-gems {
+            font-size: 8px;
+            margin-left: -8px;
+            margin-top: -5px;
+            color: #FF69B4;
+            text-shadow: 0 0 3px rgba(255, 105, 180, 0.8);
+        }
+        
+        /* 皇冠光晕效果 */
+        .crown-glow {
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.3) 0%, transparent 70%);
+            animation: glow-pulse 3s ease-in-out infinite;
+        }
+        
+        .crown-glow-intense {
+            background: radial-gradient(circle, rgba(185, 242, 255, 0.4) 0%, transparent 70%);
+            animation: intense-glow 2s ease-in-out infinite;
+        }
+        
+        /* 皇冠闪烁效果 */
+        .crown-sparkle {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 12px;
+            animation: sparkle 1.5s ease-in-out infinite;
+        }
+        
+        /* 动画效果 */
+        @keyframes diamond-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        @keyframes glow-pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        @keyframes intense-glow {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: rotate(0deg) scale(0.5); }
+            50% { opacity: 1; transform: rotate(180deg) scale(1); }
+        }
+        
+        /* 存款金额样式 */
+        .deposit-amount {
+            font-size: 0.85em;
+            opacity: 0.7;
+            font-weight: normal;
+        }
+        
+        /* VIP描述样式 */
+        .vip-description {
+            font-size: 0.9em;
+            margin-top: 8px;
+            padding: 6px 0;
+            opacity: 0.9;
+            line-height: 1.4;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.95);
+        }
+        
+        /* VIP等级渐变背景 */
+        .vip-card.vip-0 {
+            background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+            color: #1976D2;
+        }
+        
+        .vip-card.vip-1 {
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+        }
+        
+        .vip-card.vip-2 {
+            background: linear-gradient(135deg, #42A5F5 0%, #1E88E5 100%);
+        }
+        
+        .vip-card.vip-3 {
+            background: linear-gradient(135deg, #1976D2 0%, #0D47A1 100%);
+        }
+        
+        .vip-card.vip-4 {
+             background: linear-gradient(135deg, #0D47A1 0%, #01579B 100%);
+         }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0;
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .stat-item {
+            padding: 15px 10px;
+            border-right: 1px solid rgba(255, 152, 0, 0.2);
+        }
+        
+        .stat-item:last-child {
+            border-right: none;
+        }
+        
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .balance-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .balance-item {
+            text-align: center;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            border: 1px solid rgba(76, 175, 80, 0.2);
+        }
+        
+        .balance-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .balance-label {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .instructions-section {
+            background-color: #f8f9fa;
+            padding: 20px;
+            margin: 0 20px 20px;
+            border-radius: 8px;
+        }
+        
+        .instructions-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .instruction-item {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 8px;
+            padding-left: 0;
+        }
+        
+        .instruction-item:before {
+            content: counter(item) ".";
+            counter-increment: item;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+        
+        .instructions-list {
+            counter-reset: item;
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <!-- 顶部标题 -->
+        <div class="header">
+            <h1 class="page-title">Grab Order</h1>
+            <div class="back-arrow">
+                <i class="fas fa-chevron-up"></i>
+                <i class="fas fa-chevron-up" style="margin-left: -8px;"></i>
+            </div>
+        </div>
+
+        <!-- 商品展示区域 -->
+        <div class="products-section">
+            <div class="products-grid">
+                <div class="product-item">
+                    <div class="product-image">
+                        <img src="https://trae-api-sg.mchost.guru/api/ide/v1/text_to_image?prompt=Moncler%20Gamma%20Rouge%20Over%20The%20Knee%20Mesh%20Skirt%20in%20Black%20luxury%20fashion%20item&image_size=square" alt="Moncler Skirt">
+                    </div>
+                    <div class="product-name">Moncler Gamma Rouge Over The Knee Mesh Skirt in Black</div>
+                </div>
+                <div class="product-item">
+                    <div class="product-image">
+                        <img src="https://trae-api-sg.mchost.guru/api/ide/v1/text_to_image?prompt=soho%20Chain%20bag%20Crossbody%20bag%20pink%20luxury%20handbag&image_size=square" alt="Soho Chain Bag">
+                    </div>
+                    <div class="product-name">soho Chain bag/Crossbody bag</div>
+                </div>
+                <div class="product-item">
+                    <div class="product-image">
+                        <img src="https://trae-api-sg.mchost.guru/api/ide/v1/text_to_image?prompt=Pre-loved%20Alma%20Monogram%20multicolor%20Louis%20Vuitton%20handbag&image_size=square" alt="Alma Monogram">
+                    </div>
+                    <div class="product-name">Pre-loved Alma Monogram multicolor</div>
+                </div>
+            </div>
+            
+            <!-- 开始抓取订单按钮 -->
+            <button class="grab-order-btn" onclick="startGrabOrder()">
+                开始抓取订单
+            </button>
+        </div>
+
+        <!-- VIP等级信息容器 -->
+        <div class="info-container vip-info-container">
+            <div class="info-container-title">
+                <i class="fas fa-crown"></i>
+                我的等级权益
+            </div>
+            <div id="userVipCard" class="vip-card vip-0">
+                <div class="vip-level">VIP 0 <span class="deposit-amount">(存款 0)</span></div>
+                <div class="vip-info">每日任务数: 38 | 佣金比例: 1%</div>
+                <div class="vip-crown">
+                    <i class="fas fa-crown crown-simple"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- 任务统计容器 -->
+        <div class="info-container stats-info-container">
+            <div class="info-container-title">
+                <i class="fas fa-tasks"></i>
+                任务统计
+            </div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">已完成</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">38</div>
+                    <div class="stat-label">All</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">38</div>
+                    <div class="stat-label">未完成</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 余额统计容器 -->
+        <div class="info-container balance-info-container">
+            <div class="info-container-title">
+                <i class="fas fa-wallet"></i>
+                余额统计
+            </div>
+            <div class="balance-grid">
+                <div class="balance-item">
+                    <div class="balance-value" id="currentBalance">$ 0</div>
+                    <div class="balance-label">当前余额</div>
+                </div>
+                <div class="balance-item">
+                    <div class="balance-value" id="totalIncome">$ 0</div>
+                    <div class="balance-label">订单佣金</div>
+                </div>
+                <div class="balance-item">
+                    <div class="balance-value" id="frozenAmount">$ 0</div>
+                    <div class="balance-label">冻结</div>
+                </div>
+                <div class="balance-item">
+                    <div class="balance-value" id="creditScore">100</div>
+                    <div class="balance-label">信誉分</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 订购说明容器 -->
+        <div class="info-container instructions-info-container">
+            <div class="info-container-title">
+                <i class="fas fa-info-circle"></i>
+                订购说明
+            </div>
+            <div id="vipDescription" class="vip-description">
+                <!-- VIP描述将在这里动态加载 -->
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="bottom-nav.js"></script>
+    <script>
+        // 开始抓取订单
+        function startGrabOrder() {
+            if (confirm('确定要开始抓取订单吗？')) {
+                // 这里可以调用API开始抓取订单
+                alert('正在为您匹配订单...');
+                // 实际项目中这里应该跳转到订单页面或开始抓取流程
+            }
+        }
+        
+        // 动态加载网站名称并设置页面标题
+        function loadSiteName() {
+            // 尝试从localStorage获取网站名称
+            const siteName = localStorage.getItem('siteName');
+            if (siteName) {
+                document.title = siteName + '-任务';
+                return;
+            }
+            
+            // 如果localStorage中没有，尝试从API获取
+            fetch('/api/settings/site-name')
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.siteName) {
+                        localStorage.setItem('siteName', data.siteName);
+                        document.title = data.siteName + '-任务';
+                    } else {
+                        document.title = '任务';
+                    }
+                })
+                .catch(error => {
+                    console.log('获取网站名称失败:', error);
+                    document.title = '任务';
+                });
+        }
+        
+        // 加载用户VIP等级数据
+        async function loadUserVipData() {
+            try {
+                const response = await fetch('/api/vip/levels');
+                const vipLevels = await response.json();
+                
+                if (vipLevels && vipLevels.length > 0) {
+                    // 假设用户当前是VIP 0，实际项目中应该从用户数据获取
+                    const userVipLevel = 0;
+                    const currentVip = vipLevels.find(vip => vip.level === userVipLevel) || vipLevels[0];
+                    
+                    updateVipCard(currentVip);
+                    updateInstructions(currentVip);
+                } else {
+                    // 使用默认VIP数据
+                    const defaultVip = {
+                        level: 0,
+                        name: 'VIP - 0',
+                        min_deposit: 0,
+                        daily_order_limit: 38,
+                        commission_rate: 0.01,
+                        benefits: ['新手专享，轻松入门']
+                    };
+                    updateVipCard(defaultVip);
+                    updateInstructions(defaultVip);
+                }
+            } catch (error) {
+                console.error('加载VIP数据失败:', error);
+                // 使用默认数据
+                const defaultVip = {
+                    level: 0,
+                    name: 'VIP - 0',
+                    min_deposit: 0,
+                    daily_order_limit: 38,
+                    commission_rate: 0.01,
+                    benefits: ['新手专享，轻松入门']
+                };
+                updateVipCard(defaultVip);
+                updateInstructions(defaultVip);
+            }
+        }
+        
+        // 更新VIP卡片显示
+        function updateVipCard(vipData) {
+            const vipCard = document.getElementById('userVipCard');
+            const vipLevel = vipData.level || 0;
+            
+            // 更新卡片样式类
+            vipCard.className = `vip-card vip-${vipLevel}`;
+            
+            // 格式化数据
+            const depositAmount = vipData.min_deposit || vipData.deposit_requirement || 0;
+            const dailyTasks = vipData.daily_order_limit || vipData.daily_tasks || 0;
+            const commissionRate = vipData.commission_rate ? (vipData.commission_rate * 100) : 0;
+            const formattedCommissionRate = parseFloat(commissionRate).toFixed(2).replace(/\.?0+$/, '');
+            
+            // 创建皇冠图标
+            let crownIcon = '';
+            switch(vipLevel) {
+                case 0:
+                    crownIcon = '<i class="fas fa-crown crown-simple"></i>';
+                    break;
+                case 1:
+                    crownIcon = '<i class="fas fa-crown crown-bronze"></i><span class="crown-gems">✦</span>';
+                    break;
+                case 2:
+                    crownIcon = '<i class="fas fa-crown crown-silver"></i><span class="crown-gems">✦✦</span>';
+                    break;
+                case 3:
+                    crownIcon = '<i class="fas fa-crown crown-gold"></i><span class="crown-gems">✦✦✦</span><span class="crown-glow"></span>';
+                    break;
+                case 4:
+                    crownIcon = '<i class="fas fa-crown crown-diamond"></i><span class="crown-gems">✦✦✦✦</span><span class="crown-glow crown-glow-intense"></span><span class="crown-sparkle">✨</span>';
+                    break;
+                default:
+                    crownIcon = '<i class="fas fa-crown"></i>';
+            }
+            
+            // 更新卡片内容
+            vipCard.innerHTML = `
+                <div class="vip-level">${vipData.name || `VIP ${vipLevel}`} <span class="deposit-amount">(存款 ${depositAmount})</span></div>
+                <div class="vip-info">每日任务数: ${dailyTasks} | 佣金比例: ${formattedCommissionRate}%</div>
+                <div class="vip-crown">${crownIcon}</div>
+            `;
+        }
+        
+        // 更新订购说明
+        function updateInstructions(vipData) {
+            // 显示VIP描述
+            const vipDescriptionElement = document.getElementById('vipDescription');
+            if (vipData.benefits && vipData.benefits.length > 0 && vipData.benefits[0]) {
+                // 显示VIP等级描述内容，将换行符转换为HTML换行
+                const description = vipData.benefits[0].replace(/\n/g, '<br>');
+                vipDescriptionElement.innerHTML = `<div class="instruction-item">${description}</div>`;
+            } else {
+                // 如果没有VIP描述，显示默认提示
+                vipDescriptionElement.innerHTML = `<div class="instruction-item">暂无订购说明</div>`;
+            }
+        }
+        
+        // 加载用户余额数据
+        async function loadBalance() {
+            try {
+                const response = await fetch('/api/balance');
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    // 更新余额显示
+                    const currentBalanceElement = document.getElementById('currentBalance');
+                    const totalIncomeElement = document.getElementById('totalIncome');
+                    const frozenAmountElement = document.getElementById('frozenAmount');
+                    const creditScoreElement = document.getElementById('creditScore');
+                    
+                    if (currentBalanceElement) {
+                        currentBalanceElement.textContent = `$ ${(data.currentBalance || 0).toFixed(2)}`;
+                    }
+                    if (totalIncomeElement) {
+                        totalIncomeElement.textContent = `$ ${(data.totalIncome || 0).toFixed(2)}`;
+                    }
+                    if (frozenAmountElement) {
+                        frozenAmountElement.textContent = `$ ${(data.frozenAmount || 0).toFixed(2)}`;
+                    }
+                    if (creditScoreElement) {
+                        creditScoreElement.textContent = data.creditScore || 100;
+                    }
+                } else {
+                    console.error('获取余额失败:', response.status);
+                    // 保持默认值
+                }
+            } catch (error) {
+                console.error('加载余额数据失败:', error);
+                // 保持默认值
+            }
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSiteName();
+            loadUserVipData();
+            loadBalance();
+            console.log('Grab Order页面已加载');
+        });
+    </script>
+</body>
+</html>

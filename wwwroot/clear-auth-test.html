@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>清除认证信息测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        .btn:hover { background: #c82333; }
+        .btn-primary { background: #007AFF; }
+        .btn-primary:hover { background: #0056b3; }
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #007AFF;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>清除认证信息测试</h1>
+        <p>这个页面用于手动清除所有认证信息并测试登录流程</p>
+        
+        <div id="status" class="status">
+            点击下面的按钮开始测试...
+        </div>
+        
+        <button class="btn" onclick="clearAllAuth()">清除所有认证信息</button>
+        <button class="btn btn-primary" onclick="testLogin()">测试登录页面</button>
+        <button class="btn btn-primary" onclick="testHome()">测试首页</button>
+        
+        <div style="margin-top: 30px;">
+            <h3>测试步骤：</h3>
+            <ol style="text-align: left;">
+                <li>点击"清除所有认证信息"</li>
+                <li>点击"测试登录页面" - 应该能正常访问</li>
+                <li>点击"测试首页" - 应该被重定向到登录页</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        function updateStatus(message) {
+            document.getElementById('status').innerHTML = message;
+        }
+
+        function clearAllAuth() {
+            try {
+                // 清除 localStorage
+                localStorage.clear();
+                
+                // 清除所有 cookies
+                document.cookie.split(";").forEach(function(c) { 
+                    document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+                });
+                
+                updateStatus('✅ 所有认证信息已清除！现在可以测试登录流程。');
+                
+            } catch (error) {
+                updateStatus('❌ 清除认证信息时出错: ' + error.message);
+            }
+        }
+
+        function testLogin() {
+            updateStatus('🔄 正在跳转到登录页面...');
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 1000);
+        }
+
+        function testHome() {
+            updateStatus('🔄 正在跳转到首页（应该被重定向到登录页）...');
+            setTimeout(() => {
+                window.location.href = 'home.html';
+            }, 1000);
+        }
+
+        // 页面加载时显示当前状态
+        window.onload = function() {
+            const hasToken = localStorage.getItem('authToken') || localStorage.getItem('userToken');
+            const hasUser = localStorage.getItem('currentUser');
+            const hasCookies = document.cookie.includes('userToken');
+            
+            if (hasToken || hasUser || hasCookies) {
+                updateStatus('⚠️ 检测到残留的认证信息，建议先清除。');
+            } else {
+                updateStatus('✅ 当前没有认证信息，可以开始测试。');
+            }
+        };
+    </script>
+</body>
+</html>

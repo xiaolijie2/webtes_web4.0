@@ -1,0 +1,127 @@
+{
+  "user_1": {
+    "user_id": "user_1",
+    "daily_stats": {
+      "date": "2024-01-15",
+      "completed_orders": 3,
+      "pending_orders": 2,
+      "total_commission": 1853.82,
+      "target_orders": 8,
+      "completion_rate": 0.625
+    },
+    "weekly_stats": {
+      "week_start": "2024-01-08",
+      "completed_orders": 18,
+      "total_commission": 12450.30,
+      "target_orders": 50,
+      "completion_rate": 0.36
+    },
+    "monthly_stats": {
+      "month": "2024-01",
+      "completed_orders": 45,
+      "total_commission": 28920.75,
+      "target_orders": 200,
+      "completion_rate": 0.225
+    },
+    "available_tasks": [
+      {
+        "id": "TASK001",
+        "title": "高端电子产品订单",
+        "description": "处理iPhone 15系列订单",
+        "amount": 12999.00,
+        "commission_rate": 0.06,
+        "estimated_commission": 779.94,
+        "difficulty": "medium",
+        "time_limit": 30,
+        "category": "electronics"
+      },
+      {
+        "id": "TASK002",
+        "title": "笔记本电脑订单",
+        "description": "处理MacBook Pro订单",
+        "amount": 18999.00,
+        "commission_rate": 0.06,
+        "estimated_commission": 1139.94,
+        "difficulty": "high",
+        "time_limit": 45,
+        "category": "computers"
+      }
+    ]
+  },
+  "user_2": {
+    "user_id": "user_2",
+    "daily_stats": {
+      "date": "2024-01-15",
+      "completed_orders": 2,
+      "pending_orders": 1,
+      "total_commission": 629.90,
+      "target_orders": 5,
+      "completion_rate": 0.6
+    },
+    "weekly_stats": {
+      "week_start": "2024-01-08",
+      "completed_orders": 12,
+      "total_commission": 7850.40,
+      "target_orders": 30,
+      "completion_rate": 0.4
+    },
+    "monthly_stats": {
+      "month": "2024-01",
+      "completed_orders": 28,
+      "total_commission": 18420.60,
+      "target_orders": 120,
+      "completion_rate": 0.233
+    },
+    "available_tasks": [
+      {
+        "id": "TASK003",
+        "title": "智能手表订单",
+        "description": "处理Apple Watch订单",
+        "amount": 3999.00,
+        "commission_rate": 0.05,
+        "estimated_commission": 199.95,
+        "difficulty": "easy",
+        "time_limit": 20,
+        "category": "accessories"
+      }
+    ]
+  },
+  "default": {
+    "user_id": "default",
+    "daily_stats": {
+      "date": "2024-01-15",
+      "completed_orders": 0,
+      "pending_orders": 0,
+      "total_commission": 0.00,
+      "target_orders": 3,
+      "completion_rate": 0
+    },
+    "weekly_stats": {
+      "week_start": "2024-01-08",
+      "completed_orders": 0,
+      "total_commission": 0.00,
+      "target_orders": 15,
+      "completion_rate": 0
+    },
+    "monthly_stats": {
+      "month": "2024-01",
+      "completed_orders": 0,
+      "total_commission": 0.00,
+      "target_orders": 50,
+      "completion_rate": 0
+    },
+    "available_tasks": [
+      {
+        "id": "TASK_DEFAULT",
+        "title": "新手任务",
+        "description": "完成第一个订单",
+        "amount": 100.00,
+        "commission_rate": 0.05,
+        "estimated_commission": 5.00,
+        "difficulty": "easy",
+        "time_limit": 15,
+        "category": "beginner"
+      }
+    ]
+  }
+}

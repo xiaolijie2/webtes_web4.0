@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>任务中心</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            padding-bottom: 80px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 24px;
+            color: white;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .filter-tabs {
+            display: flex;
+            background: white;
+            border-radius: 12px;
+            padding: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .filter-tab {
+            flex: 1;
+            padding: 12px 20px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            color: #666;
+        }
+
+        .filter-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .task-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .task-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .task-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .task-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .task-type {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .type-daily {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .type-weekly {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .type-special {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .task-description {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .task-progress {
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .task-reward {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .reward-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .reward-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .reward-value {
+            font-weight: 600;
+            color: #f39c12;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #667eea;
+            color: #667eea;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .task-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-available {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-in-progress {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-completed {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .status-expired {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e9ecef;
+            padding: 10px 0;
+            z-index: 1000;
+        }
+
+        .nav-items {
+            display: flex;
+            justify-content: space-around;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #666;
+            padding: 5px;
+            transition: color 0.3s;
+        }
+
+        .nav-item.active {
+            color: #667eea;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .nav-item span {
+            font-size: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 15px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .filter-tabs {
+                flex-wrap: wrap;
+            }
+
+            .filter-tab {
+                min-width: 80px;
+                padding: 10px 15px;
+            }
+
+            .task-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .task-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <div class="header">
+        <div class="header-content">
+            <button class="back-btn" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h1 class="header-title">任务中心</h1>
+            <div></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 统计卡片 -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: #28a745;">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-value" id="completedTasks">0</div>
+                <div class="stat-label">已完成</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: #ffc107;">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-value" id="inProgressTasks">0</div>
+                <div class="stat-label">进行中</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: #17a2b8;">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <div class="stat-value" id="availableTasks">0</div>
+                <div class="stat-label">可接取</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: #f39c12;">
+                    <i class="fas fa-coins"></i>
+                </div>
+                <div class="stat-value" id="totalRewards">0</div>
+                <div class="stat-label">总收益</div>
+            </div>
+        </div>
+
+        <!-- 筛选标签 -->
+        <div class="filter-tabs">
+            <div class="filter-tab active" data-filter="all">全部</div>
+            <div class="filter-tab" data-filter="available">可接取</div>
+            <div class="filter-tab" data-filter="in-progress">进行中</div>
+            <div class="filter-tab" data-filter="completed">已完成</div>
+        </div>
+
+        <!-- 任务列表 -->
+        <div class="task-list" id="taskList">
+            <!-- 任务卡片将通过JavaScript动态生成 -->
+        </div>
+
+        <!-- 空状态 -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <div class="empty-icon">
+                <i class="fas fa-tasks"></i>
+            </div>
+            <h3>暂无任务</h3>
+            <p>当前没有符合条件的任务</p>
+        </div>
+    </div>
+
+    <!-- 底部导航 -->
+    <div class="bottom-nav">
+        <div class="nav-items">
+            <a href="home.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>首页</span>
+            </a>
+            <a href="orders.html" class="nav-item">
+                <i class="fas fa-shopping-cart"></i>
+                <span>订单</span>
+            </a>
+            <a href="tasks.html" class="nav-item active">
+                <i class="fas fa-tasks"></i>
+                <span>任务</span>
+            </a>
+            <a href="account.html" class="nav-item">
+                <i class="fas fa-user"></i>
+                <span>我的</span>
+            </a>
+        </div>
+    </div>
+
+    <script src="js/static-data-manager.js"></script>
+    <script src="js/static-auth.js"></script>
+    <script>
+        let currentFilter = 'all';
+        let tasks = [];
+        let userTasks = [];
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查登录状态
+            if (!window.staticAuth.isLoggedIn()) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            initializePage();
+        });
+
+        // 初始化页面
+        async function initializePage() {
+            try {
+                await loadTasks();
+                await loadUserTasks();
+                updateStats();
+                renderTasks();
+                setupEventListeners();
+            } catch (error) {
+                console.error('初始化页面失败:', error);
+            }
+        }
+
+        // 加载任务数据
+        async function loadTasks() {
+            try {
+                tasks = await window.staticDataManager.getTasks();
+            } catch (error) {
+                console.error('加载任务失败:', error);
+                tasks = [];
+            }
+        }
+
+        // 加载用户任务数据
+        async function loadUserTasks() {
+            try {
+                const currentUser = window.staticAuth.getCurrentUser();
+                userTasks = await window.staticDataManager.getUserTasks(currentUser.id) || [];
+            } catch (error) {
+                console.error('加载用户任务失败:', error);
+                userTasks = [];
+            }
+        }
+
+        // 更新统计数据
+        function updateStats() {
+            const stats = {
+                completed: 0,
+                inProgress: 0,
+                available: 0,
+                totalRewards: 0
+            };
+
+            tasks.forEach(task => {
+                const userTask = userTasks.find(ut => ut.taskId === task.id);
+                
+                if (userTask) {
+                    if (userTask.status === 'completed') {
+                        stats.completed++;
+                        stats.totalRewards += task.reward;
+                    } else if (userTask.status === 'in-progress') {
+                        stats.inProgress++;
+                    }
+                } else if (task.status === 'active') {
+                    stats.available++;
+                }
+            });
+
+            document.getElementById('completedTasks').textContent = stats.completed;
+            document.getElementById('inProgressTasks').textContent = stats.inProgress;
+            document.getElementById('availableTasks').textContent = stats.available;
+            document.getElementById('totalRewards').textContent = stats.totalRewards;
+        }
+
+        // 渲染任务列表
+        function renderTasks() {
+            const taskList = document.getElementById('taskList');
+            const emptyState = document.getElementById('emptyState');
+            
+            const filteredTasks = getFilteredTasks();
+            
+            if (filteredTasks.length === 0) {
+                taskList.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            taskList.style.display = 'grid';
+            emptyState.style.display = 'none';
+            
+            taskList.innerHTML = filteredTasks.map(task => createTaskCard(task)).join('');
+        }
+
+        // 获取筛选后的任务
+        function getFilteredTasks() {
+            return tasks.filter(task => {
+                const userTask = userTasks.find(ut => ut.taskId === task.id);
+                
+                switch (currentFilter) {
+                    case 'available':
+                        return !userTask && task.status === 'active';
+                    case 'in-progress':
+                        return userTask && userTask.status === 'in-progress';
+                    case 'completed':
+                        return userTask && userTask.status === 'completed';
+                    default:
+                        return true;
+                }
+            });
+        }
+
+        // 创建任务卡片
+        function createTaskCard(task) {
+            const userTask = userTasks.find(ut => ut.taskId === task.id);
+            const status = getTaskStatus(task, userTask);
+            const progress = getTaskProgress(task, userTask);
+            
+            return `
+                <div class="task-card">
+                    <div class="task-header">
+                        <div>
+                            <div class="task-title">${task.title}</div>
+                            <div class="task-type type-${task.type}">${getTaskTypeLabel(task.type)}</div>
+                        </div>
+                        <div class="task-status status-${status.class}">${status.label}</div>
+                    </div>
+                    
+                    <div class="task-description">${task.description}</div>
+                    
+                    ${progress.show ? `
+                        <div class="task-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${progress.percentage}%"></div>
+                            </div>
+                            <div class="progress-text">
+                                <span>进度</span>
+                                <span>${progress.current}/${progress.total}</span>
+                            </div>
+                        </div>
+                    ` : ''}
+                    
+                    <div class="task-reward">
+                        <div class="reward-info">
+                            <div class="reward-item">
+                                <i class="fas fa-coins"></i>
+                                <span class="reward-value">+${task.reward}</span>
+                            </div>
+                            ${task.experience ? `
+                                <div class="reward-item">
+                                    <i class="fas fa-star"></i>
+                                    <span class="reward-value">+${task.experience} 经验</span>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                    
+                    <div class="task-actions">
+                        ${getTaskActions(task, userTask)}
+                    </div>
+                </div>
+            `;
+        }
+
+        // 获取任务状态
+        function getTaskStatus(task, userTask) {
+            if (!userTask) {
+                return task.status === 'active' 
+                    ? { class: 'available', label: '可接取' }
+                    : { class: 'expired', label: '已过期' };
+            }
+            
+            switch (userTask.status) {
+                case 'in-progress':
+                    return { class: 'in-progress', label: '进行中' };
+                case 'completed':
+                    return { class: 'completed', label: '已完成' };
+                default:
+                    return { class: 'available', label: '可接取' };
+            }
+        }
+
+        // 获取任务进度
+        function getTaskProgress(task, userTask) {
+            if (!userTask || !userTask.progress) {
+                return { show: false };
+            }
+            
+            const current = userTask.progress.current || 0;
+            const total = userTask.progress.total || task.target || 1;
+            const percentage = Math.min((current / total) * 100, 100);
+            
+            return {
+                show: true,
+                current,
+                total,
+                percentage
+            };
+        }
+
+        // 获取任务类型标签
+        function getTaskTypeLabel(type) {
+            const labels = {
+                daily: '每日任务',
+                weekly: '每周任务',
+                special: '特殊任务'
+            };
+            return labels[type] || '普通任务';
+        }
+
+        // 获取任务操作按钮
+        function getTaskActions(task, userTask) {
+            if (!userTask) {
+                return `<button class="btn btn-primary" onclick="acceptTask(${task.id})">
+                    <i class="fas fa-plus"></i> 接取任务
+                </button>`;
+            }
+            
+            switch (userTask.status) {
+                case 'in-progress':
+                    return `
+                        <button class="btn btn-outline" onclick="viewTaskDetail(${task.id})">
+                            <i class="fas fa-eye"></i> 查看详情
+                        </button>
+                        ${canCompleteTask(task, userTask) ? `
+                            <button class="btn btn-success" onclick="completeTask(${task.id})">
+                                <i class="fas fa-check"></i> 完成任务
+                            </button>
+                        ` : ''}
+                    `;
+                case 'completed':
+                    return `<button class="btn btn-secondary" disabled>
+                        <i class="fas fa-check-circle"></i> 已完成
+                    </button>`;
+                default:
+                    return '';
+            }
+        }
+
+        // 检查是否可以完成任务
+        function canCompleteTask(task, userTask) {
+            if (!userTask.progress) return true;
+            
+            const current = userTask.progress.current || 0;
+            const total = userTask.progress.total || task.target || 1;
+            
+            return current >= total;
+        }
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 筛选标签点击事件
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    currentFilter = this.dataset.filter;
+                    renderTasks();
+                });
+            });
+        }
+
+        // 接取任务
+        async function acceptTask(taskId) {
+            try {
+                const currentUser = window.staticAuth.getCurrentUser();
+                const task = tasks.find(t => t.id === taskId);
+                
+                if (!task) {
+                    alert('任务不存在');
+                    return;
+                }
+                
+                const userTask = {
+                    id: Date.now(),
+                    userId: currentUser.id,
+                    taskId: taskId,
+                    status: 'in-progress',
+                    acceptedAt: new Date().toISOString(),
+                    progress: {
+                        current: 0,
+                        total: task.target || 1
+                    }
+                };
+                
+                userTasks.push(userTask);
+                await window.staticDataManager.saveUserTasks(currentUser.id, userTasks);
+                
+                updateStats();
+                renderTasks();
+                
+                alert('任务接取成功！');
+                
+            } catch (error) {
+                console.error('接取任务失败:', error);
+                alert('接取任务失败，请重试');
+            }
+        }
+
+        // 完成任务
+        async function completeTask(taskId) {
+            try {
+                const currentUser = window.staticAuth.getCurrentUser();
+                const userTaskIndex = userTasks.findIndex(ut => ut.taskId === taskId);
+                const task = tasks.find(t => t.id === taskId);
+                
+                if (userTaskIndex === -1 || !task) {
+                    alert('任务不存在');
+                    return;
+                }
+                
+                // 更新任务状态
+                userTasks[userTaskIndex].status = 'completed';
+                userTasks[userTaskIndex].completedAt = new Date().toISOString();
+                
+                // 发放奖励
+                await window.staticDataManager.addUserBalance(currentUser.id, task.reward);
+                
+                // 保存数据
+                await window.staticDataManager.saveUserTasks(currentUser.id, userTasks);
+                
+                updateStats();
+                renderTasks();
+                
+                alert(`任务完成！获得 ${task.reward} 金币奖励！`);
+                
+            } catch (error) {
+                console.error('完成任务失败:', error);
+                alert('完成任务失败，请重试');
+            }
+        }
+
+        // 查看任务详情
+        function viewTaskDetail(taskId) {
+            const task = tasks.find(t => t.id === taskId);
+            const userTask = userTasks.find(ut => ut.taskId === taskId);
+            
+            if (!task) {
+                alert('任务不存在');
+                return;
+            }
+            
+            const progress = userTask && userTask.progress 
+                ? `${userTask.progress.current}/${userTask.progress.total}`
+                : '0/1';
+            
+            alert(`任务详情：\n\n标题：${task.title}\n描述：${task.description}\n进度：${progress}\n奖励：${task.reward} 金币`);
+        }
+
+        // 返回上一页
+        function goBack() {
+            if (document.referrer) {
+                window.history.back();
+            } else {
+                window.location.href = 'home.html';
+            }
+        }
+    </script>
+</body>
+</html>

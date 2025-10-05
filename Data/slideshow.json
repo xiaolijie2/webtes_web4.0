@@ -1,0 +1,22 @@
+[
+  {
+    "Id": "96ef9858-a408-4850-9c04-2c13651cfade",
+    "Title": "",
+    "Description": "",
+    "Image": "/uploads/slideshow/9b827214-4866-4d92-9b60-91462145eb5c.png",
+    "Link": "",
+    "Order": 2,
+    "CreateTime": "2025-09-29T11:48:32.8375592+08:00",
+    "UploadTime": "2025-09-29T11:48:32.8375592+08:00"
+  },
+  {
+    "Id": "5428e0c5-1ae9-4996-84b1-04f09e8fbcc2",
+    "Title": "111",
+    "Description": "111",
+    "Image": "/uploads/slideshow/31f94fad-a6b0-422b-86d9-6707bef5c12f.png",
+    "Link": "",
+    "Order": 3,
+    "CreateTime": "2025-10-04T21:20:33.2190745+08:00",
+    "UploadTime": "2025-10-04T21:20:33.2190763+08:00"
+  }
+]

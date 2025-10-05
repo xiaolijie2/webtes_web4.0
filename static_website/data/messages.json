@@ -1,0 +1,30 @@
+[
+  {
+    "Id": "msg001",
+    "UserId": "1",
+    "AgentId": "3adbbc97-aefb-4d7f-9458-e95bdbcd7848",
+    "Sender": "user",
+    "Content": "你好，我想了解一下充值的流程",
+    "Timestamp": "2024-01-15T10:30:00",
+    "Status": "sent"
+  },
+  {
+    "Id": "msg002",
+    "UserId": "1",
+    "AgentId": "3adbbc97-aefb-4d7f-9458-e95bdbcd7848",
+    "Sender": "agent",
+    "Content": "您好！充值流程很简单：\n1. 点击首页充值按钮\n2. 选择充值金额\n3. 选择支付方式\n4. 完成支付即可\n\n有其他问题随时联系我！",
+    "Timestamp": "2024-01-15T10:31:00",
+    "Status": "sent"
+  },
+
+  {
+    "Id": "msg005",
+    "UserId": "3",
+    "AgentId": "3adbbc97-aefb-4d7f-9458-e95bdbcd7848",
+    "Sender": "user",
+    "Content": "请问VIP会员有什么特权？",
+    "Timestamp": "2024-01-15T14:20:00",
+    "Status": "sent"
+  }
+]

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户登录</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #e9ecef;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .mobile-container {
+            width: 450px;
+            max-width: 450px;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border-left: 1px solid #dee2e6;
+            border-right: 1px solid #dee2e6;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #007AFF 0%, #0056CC 100%);
+            color: white;
+            padding: 20px;
+            position: relative;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .brand-logo {
+            width: 120px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .language-selector {
+            width: 80px;
+            height: 30px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .login-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .welcome-text {
+            font-size: 14px;
+            opacity: 0.9;
+            text-align: center;
+        }
+
+        .form-container {
+            flex: 1;
+            padding: 30px 20px;
+            background: white;
+            margin: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #007AFF;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #007AFF 0%, #0056CC 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .links-section {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .links-section a {
+            color: #007AFF;
+            text-decoration: none;
+            font-size: 14px;
+            margin: 0 10px;
+        }
+
+        .links-section a:hover {
+            text-decoration: underline;
+        }
+
+        .admin-login-link {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .admin-login-link a {
+            color: #6c757d;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .admin-login-link a:hover {
+            color: #007AFF;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <div class="header">
+            <div class="logo-area">
+                <div class="brand-logo" id="brandLogo">品牌LOGO</div>
+                <select class="language-selector" onclick="showLanguageMenu()">
+                    <option>中文</option>
+                </select>
+            </div>
+            <div class="login-title">欢迎登录</div>
+            <div class="welcome-text">请输入您的账号信息</div>
+        </div>
+
+        <div class="form-container">
+            <div class="error-message" id="login-alert"></div>
+            <div class="success-message" id="login-success"></div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">手机号码</label>
+                    <input type="text" id="username" name="username" placeholder="请输入手机号码" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">登录密码</label>
+                    <input type="password" id="password" name="password" placeholder="请输入登录密码" required>
+                </div>
+                
+                <button type="submit" class="login-btn">登录</button>
+            </form>
+
+            <div class="links-section">
+                <a href="register.html">注册账号</a>
+                <a href="forgot-password.html">忘记密码</a>
+            </div>
+
+            <div class="admin-login-link">
+                <a href="admin-login.html">管理员登录</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/static-data-manager.js"></script>
+    <script src="js/static-auth.js"></script>
+    <script>
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 设置登录表单
+            setupLoginForm('loginForm', 'user');
+            
+            // 加载品牌LOGO
+            loadBrandLogo();
+            
+            // 检查是否已经登录
+            if (window.staticAuth.isLoggedIn()) {
+                window.staticAuth.redirectToHome();
+            }
+        });
+
+        // 显示提示信息
+        function showAlert(elementId, message, type = 'error') {
+            const alertElement = document.getElementById(elementId);
+            const successElement = document.getElementById('login-success');
+            
+            // 隐藏所有提示
+            alertElement.style.display = 'none';
+            successElement.style.display = 'none';
+            
+            if (type === 'success') {
+                successElement.textContent = message;
+                successElement.style.display = 'block';
+            } else {
+                alertElement.textContent = message;
+                alertElement.style.display = 'block';
+            }
+        }
+
+        // 语言选择菜单
+        function showLanguageMenu() {
+            alert('语言选择功能开发中...');
+        }
+
+        // 加载品牌LOGO
+        async function loadBrandLogo() {
+            try {
+                const logoData = await window.staticDataManager.getLogoSettings();
+                const logoElement = document.getElementById('brandLogo');
+                
+                if (logoData && logoData.type) {
+                    if (logoData.type === 'text') {
+                        logoElement.textContent = logoData.text || '品牌LOGO';
+                        logoElement.style.fontSize = logoData.fontSize || '16px';
+                        logoElement.style.color = logoData.color || 'white';
+                    } else if (logoData.type === 'image' && logoData.imageUrl) {
+                        logoElement.innerHTML = `<img src="${logoData.imageUrl}" alt="品牌LOGO" style="max-width: 100%; max-height: 100%; object-fit: contain;">`;
+                    }
+                }
+            } catch (error) {
+                console.error('加载LOGO失败:', error);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>提现</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/common.css">
+    <link href="bottom-nav.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #e9ecef;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* 移动端容器样式 */
+        .mobile-container {
+            width: 450px;
+            max-width: 450px;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border-left: 1px solid #dee2e6;
+            border-right: 1px solid #dee2e6;
+            position: relative;
+            padding-bottom: 80px;
+        }
+
+        /* 页面头部 */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background: #fff;
+            border-bottom: 1px solid #eee;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .page-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin: 0;
+        }
+
+        .help-btn {
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            color: #666;
+            width: 20px;
+        }
+
+        /* 提款页面容器 */
+        .withdraw-container {
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        /* 余额卡片 */
+        .balance-card {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            border-radius: 16px;
+            padding: 24px;
+            color: white;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .balance-card::after {
+            content: '';
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60px;
+            height: 60px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23f1c40f"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>') no-repeat center;
+            background-size: contain;
+        }
+
+        .balance-title {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+
+        .balance-amount {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+
+        .balance-subtitle {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        /* 表单样式 */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            background: #fff;
+            outline: none;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            border-color: #007bff;
+        }
+
+        .form-input::placeholder {
+            color: #999;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            background: #fff;
+            outline: none;
+            cursor: pointer;
+            box-sizing: border-box;
+            appearance: none;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23666"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 20px;
+        }
+
+        .address-input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .address-input {
+            flex: 1;
+        }
+
+        .paste-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .paste-btn:hover {
+            background: #0056b3;
+        }
+
+        /* 确认按钮 */
+        .confirm-button {
+            width: 100%;
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .confirm-button:hover {
+            background: #0056b3;
+        }
+
+        .confirm-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .mobile-container {
+                width: 100%;
+                max-width: 100%;
+            }
+            
+            .withdraw-container {
+                padding: 15px;
+            }
+        }
+
+
+
+        /* 提款表单 */
+        .withdraw-form {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quick-amounts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .quick-amount {
+            padding: 8px 16px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .quick-amount:hover {
+            background: #e9ecef;
+        }
+
+        .quick-amount.selected {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        .form-tips {
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        .form-error {
+            font-size: 12px;
+            color: #dc3545;
+            margin-top: 4px;
+            min-height: 16px;
+        }
+
+        /* 地址管理 */
+        .address-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .address-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border: 2px solid #f0f0f0;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .address-item:hover {
+            border-color: #007bff;
+        }
+
+        .address-item.selected {
+            border-color: #007bff;
+            background: #f8f9ff;
+        }
+
+        .address-icon {
+            width: 40px;
+            height: 40px;
+            background: #f8f9fa;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 18px;
+        }
+
+        .address-info {
+            flex: 1;
+        }
+
+        .address-type {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .address-detail {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .address-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            padding: 4px 8px;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn.edit {
+            background: #007bff;
+            color: white;
+        }
+
+        .action-btn.delete {
+            background: #dc3545;
+            color: white;
+        }
+
+        .add-address-btn {
+            width: 100%;
+            padding: 12px;
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            color: #666;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-address-btn:hover {
+            background: #e9ecef;
+            border-color: #007bff;
+            color: #007bff;
+        }
+
+        /* 安全验证 */
+        .security-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .verification-group {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .verification-input {
+            flex: 1;
+        }
+
+        .send-code-btn {
+            padding: 15px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .send-code-btn:hover {
+            background: #0056b3;
+        }
+
+        .send-code-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
+        /* 提款按钮 */
+        .withdraw-button {
+            width: 100%;
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .withdraw-button:hover {
+            background: #218838;
+        }
+
+        .withdraw-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Toast 样式 */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 14px;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        .toast.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .toast.toast-success {
+            background: #28a745;
+        }
+
+        .toast.toast-error {
+            background: #dc3545;
+        }
+
+        .toast.toast-warning {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .toast.toast-info {
+            background: #17a2b8;
+        }
+
+        /* 提款记录 */
+        .records-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .records-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .view-all-btn {
+            background: none;
+            border: none;
+            color: #007bff;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .record-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .record-item:last-child {
+            border-bottom: none;
+        }
+
+        .record-icon {
+            width: 40px;
+            height: 40px;
+            background: #fff3cd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 18px;
+        }
+
+        .record-info {
+            flex: 1;
+        }
+
+        .record-title {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .record-time {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .record-amount {
+            font-size: 16px;
+            font-weight: bold;
+            color: #dc3545;
+        }
+
+        .record-status {
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-top: 4px;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-failed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-reviewing {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        /* 空状态 */
+        .empty-records {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .empty-text {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        /* 提款规则 */
+        .rules-section {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .rules-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 12px;
+        }
+
+        .rules-list {
+            font-size: 12px;
+            color: #856404;
+            line-height: 1.6;
+        }
+
+        .rules-list li {
+            margin-bottom: 4px;
+        }
+
+        /* 模态框 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 400px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn.primary {
+            background: #007bff;
+            color: white;
+        }
+
+        .modal-btn.secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .withdraw-container {
+                padding: 16px;
+            }
+
+            .verification-group {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .send-code-btn {
+                width: 100%;
+            }
+
+            .balance-amount {
+                font-size: 28px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .quick-amounts {
+                justify-content: center;
+            }
+
+            .address-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="mobile-container">
+    <!-- 顶部导航 -->
+    <div class="header">
+        <button class="back-btn" onclick="goBack()">←</button>
+        <h1 class="page-title">提现</h1>
+    </div>
+
+    <div class="withdraw-container">
+        <!-- 余额卡片 -->
+        <div class="balance-card">
+            <div class="balance-icon">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" fill="#FFD700"/>
+                    <text x="12" y="16" text-anchor="middle" fill="#333" font-size="12" font-weight="bold">$</text>
+                </svg>
+            </div>
+            <div class="balance-info">
+                <div class="balance-label">当前余额</div>
+                <div class="balance-amount" id="userBalance">$0.00</div>
+                <div class="balance-tip">您将在一个小时内收到您的提现</div>
+            </div>
+        </div>
+
+        <!-- 提款表单 -->
+        <div class="withdraw-form">
+            <div class="form-group">
+                <label class="form-label">金额</label>
+                <input type="number" class="form-input" id="withdrawAmount" placeholder="金额" min="10">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">网络</label>
+                <select class="form-select" id="networkSelect">
+                    <option value="">选择一个提现网络</option>
+                    <option value="USDT-TRC20">USDT (TRC20)</option>
+                    <option value="USDT-ERC20">USDT (ERC20)</option>
+                    <option value="USDC-ETH">USDC (ETH)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">地址</label>
+                <div class="address-input-group">
+                    <input type="text" class="form-input" id="walletAddress" placeholder="地址">
+                    <button type="button" class="paste-btn" onclick="pasteAddress()">
+                        粘贴
+                    </button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">提现码</label>
+                <input type="password" class="form-input" id="withdrawCode" placeholder="输入您的提现码">
+            </div>
+        </div>
+
+        <!-- 确认按钮 -->
+        <button class="confirm-button" id="confirmBtn" onclick="confirmWithdraw()">
+            Confirm
+        </button>
+    </div>
+
+    <!-- 底部导航 -->
+    <div class="bottom-nav">
+        <a href="home.html" class="nav-item">
+            <span class="nav-icon">🏠</span>
+            <span class="nav-text">首页</span>
+        </a>
+        <a href="start.html" class="nav-item">
+            <span class="nav-icon">▶️</span>
+            <span class="nav-text">开始</span>
+        </a>
+        <a href="orders.html" class="nav-item">
+            <span class="nav-icon">📋</span>
+            <span class="nav-text">订单</span>
+        </a>
+        <a href="account.html" class="nav-item active">
+            <span class="nav-icon">👤</span>
+            <span class="nav-text">我的</span>
+        </a>
+    </div>
+
+    <!-- Toast 消息 -->
+    <div id="toast" class="toast"></div>
+
+    <script src="js/auth.js"></script>
+    <script>
+        // 全局变量
+        let userBalance = 0;
+        
+        // 加载网站名称
+        async function loadSiteName() {
+            try {
+                const response = await fetch('/api/admin/site-settings');
+                const settings = await response.json();
+                
+                if (settings && settings.siteName) {
+                    document.title = settings.siteName + '-提现';
+                } else {
+                    const savedSiteName = localStorage.getItem('siteName');
+                    if (savedSiteName) {
+                        document.title = savedSiteName + '-提现';
+                    } else {
+                        document.title = '提现';
+                    }
+                }
+            } catch (error) {
+                console.error('加载网站名称失败:', error);
+                const savedSiteName = localStorage.getItem('siteName');
+                if (savedSiteName) {
+                    document.title = savedSiteName + '-提现';
+                } else {
+                    document.title = '提现';
+                }
+            }
+        }
+
+        // 页面初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSiteName();
+            initializePage();
+            loadUserBalance();
+        });
+        
+        // 初始化页面
+        function initializePage() {
+            // 检查用户登录状态
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // 页面标题已在loadSiteName函数中设置
+        }
+        
+        // 加载用户余额
+        async function loadUserBalance() {
+            try {
+                // 模拟API调用
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                // 模拟数据
+                const mockData = {
+                    balance: 1250.50
+                };
+                
+                userBalance = mockData.balance;
+                
+                // 更新页面显示
+                document.getElementById('userBalance').textContent = `$${mockData.balance.toFixed(2)}`;
+                
+            } catch (error) {
+                console.error('加载余额失败:', error);
+                showToast('加载余额失败，请刷新页面重试', 'error');
+            }
+        }
+
+        // 粘贴地址
+        function pasteAddress() {
+            navigator.clipboard.readText().then(text => {
+                document.getElementById('walletAddress').value = text;
+                showToast('地址已粘贴', 'success');
+            }).catch(err => {
+                showToast('粘贴失败，请手动输入', 'error');
+            });
+        }
+        
+        // 确认提现
+        function confirmWithdraw() {
+            const amount = document.getElementById('withdrawAmount').value;
+            const network = document.getElementById('networkSelect').value;
+            const address = document.getElementById('walletAddress').value;
+            const code = document.getElementById('withdrawCode').value;
+            
+            // 表单验证
+            if (!amount || amount < 10) {
+                showToast('请输入有效的提现金额（最低$10）', 'error');
+                return;
+            }
+            
+            if (!network) {
+                showToast('请选择提现网络', 'error');
+                return;
+            }
+            
+            if (!address) {
+                showToast('请输入提现地址', 'error');
+                return;
+            }
+            
+            if (!code) {
+                showToast('请输入提现码', 'error');
+                return;
+            }
+            
+            if (parseFloat(amount) > userBalance) {
+                showToast('提现金额不能超过可用余额', 'error');
+                return;
+            }
+            
+            // 模拟提现处理
+            const confirmBtn = document.getElementById('confirmBtn');
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = 'Processing...';
+            
+            setTimeout(() => {
+                showToast('提现申请已提交，请等待处理', 'success');
+                
+                // 重置表单
+                document.getElementById('withdrawAmount').value = '';
+                document.getElementById('networkSelect').value = '';
+                document.getElementById('walletAddress').value = '';
+                document.getElementById('withdrawCode').value = '';
+                
+                confirmBtn.disabled = false;
+                confirmBtn.textContent = 'Confirm';
+            }, 2000);
+        }
+
+        // 显示提示消息
+        function showToast(message, type = 'info') {
+            // 创建提示元素
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+            
+            // 添加样式
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
+                color: white;
+                padding: 12px 24px;
+                border-radius: 4px;
+                z-index: 10000;
+                font-size: 14px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            `;
+            
+            document.body.appendChild(toast);
+            
+            // 3秒后自动移除
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.parentNode.removeChild(toast);
+                }
+            }, 3000);
+        }
+
+        // 页面初始化完成
+        console.log('提现页面初始化完成');
+
+        // 返回上一页
+        function goBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = 'account.html';
+            }
+        }
+
+        // 显示帮助信息
+        function showHelp() {
+            const helpContent = `
+                <div style="text-align: left; line-height: 1.6;">
+                    <h3>提款中心使用指南</h3>
+                    <p><strong>1. 提款条件</strong><br>最低50元，需完成实名认证</p>
+                    <p><strong>2. 手续费说明</strong><br>VIP0: 2%, VIP1: 1.5%, VIP2+: 1%</p>
+                    <p><strong>3. 到账时间</strong><br>工作日2-24小时，节假日可能延迟</p>
+                    <p><strong>4. 安全验证</strong><br>需要支付密码和短信验证码</p>
+                    <p><strong>5. 地址管理</strong><br>支持支付宝、微信、银行卡、USDT</p>
+                </div>
+            `;
+            showToast(helpContent, 'info', 6000);
+        }
+
+        // Toast 消息显示
+        function showToast(message, type = 'info', duration = 3000) {
+            const toast = document.getElementById('toast');
+            toast.innerHTML = message;
+            toast.className = `toast toast-${type} show`;
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, duration);
+        }
+    </script>
+</div>
+</body>
+</html>

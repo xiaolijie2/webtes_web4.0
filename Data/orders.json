@@ -1,0 +1,101 @@
+{
+  "user_1": [
+    {
+      "id": "ORD001",
+      "user_id": "user_1",
+      "product_name": "iPhone 15 Pro Max",
+      "amount": 9999.00,
+      "commission": 599.94,
+      "status": "completed",
+      "created_at": "2024-01-15T10:30:00Z",
+      "completed_at": "2024-01-15T10:45:00Z",
+      "description": "高端智能手机订单",
+      "category": "electronics",
+      "created_by": "agent_001",
+      "assigned_to": "user_1",
+      "is_assigned": true,
+      "assigned_time": "2024-01-15T10:30:00Z"
+    },
+    {
+      "id": "ORD002",
+      "user_id": "user_1",
+      "product_name": "MacBook Pro 16寸",
+      "amount": 18999.00,
+      "commission": 1139.94,
+      "status": "in_progress",
+      "created_at": "2024-01-15T14:20:00Z",
+      "description": "专业笔记本电脑订单",
+      "category": "computers",
+      "created_by": "agent_002",
+      "assigned_to": "",
+      "is_assigned": false,
+      "assigned_time": null
+    },
+    {
+      "id": "ORD003",
+      "user_id": "user_1",
+      "product_name": "AirPods Pro 2",
+      "amount": 1899.00,
+      "commission": 113.94,
+      "status": "pending",
+      "created_at": "2024-01-15T16:10:00Z",
+      "description": "无线耳机订单",
+      "category": "accessories",
+      "created_by": "agent_001",
+      "assigned_to": "",
+      "is_assigned": false,
+      "assigned_time": null
+    }
+  ],
+  "user_2": [
+    {
+      "id": "ORD004",
+      "user_id": "user_2",
+      "product_name": "Samsung Galaxy S24",
+      "amount": 7999.00,
+      "commission": 399.95,
+      "status": "completed",
+      "created_at": "2024-01-15T09:15:00Z",
+      "completed_at": "2024-01-15T09:30:00Z",
+      "description": "安卓旗舰手机订单",
+      "category": "electronics",
+      "created_by": "agent_003",
+      "assigned_to": "user_2",
+      "is_assigned": true,
+      "assigned_time": "2024-01-15T09:15:00Z"
+    },
+    {
+      "id": "ORD005",
+      "user_id": "user_2",
+      "product_name": "iPad Air 5",
+      "amount": 4599.00,
+      "commission": 229.95,
+      "status": "cancelled",
+      "created_at": "2024-01-15T11:45:00Z",
+      "cancelled_at": "2024-01-15T12:00:00Z",
+      "description": "平板电脑订单",
+      "category": "tablets",
+      "created_by": "agent_002",
+      "assigned_to": "",
+      "is_assigned": false,
+      "assigned_time": null
+    }
+  ],
+  "default": [
+    {
+      "id": "ORD_DEFAULT",
+      "user_id": "default",
+      "product_name": "示例商品",
+      "amount": 100.00,
+      "commission": 5.00,
+      "status": "pending",
+      "created_at": "2024-01-15T00:00:00Z",
+      "description": "示例订单",
+      "category": "sample",
+      "created_by": "agent_001",
+      "assigned_to": "",
+      "is_assigned": false,
+      "assigned_time": null
+    }
+  ]
+}

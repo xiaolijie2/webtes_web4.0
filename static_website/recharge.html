@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>充值中心</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            padding-bottom: 80px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .balance-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+        }
+
+        .balance-label {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .balance-amount {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .balance-subtitle {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .recharge-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .amount-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .amount-option {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .amount-option:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .amount-option.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .amount-value {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .amount-bonus {
+            font-size: 12px;
+            color: #28a745;
+            font-weight: 500;
+        }
+
+        .amount-option.selected .amount-bonus {
+            color: #90ee90;
+        }
+
+        .custom-amount {
+            margin-bottom: 30px;
+        }
+
+        .custom-amount label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .amount-input-group {
+            display: flex;
+            align-items: center;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: border-color 0.3s;
+        }
+
+        .amount-input-group:focus-within {
+            border-color: #667eea;
+        }
+
+        .amount-prefix {
+            background: #f8f9fa;
+            padding: 15px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .amount-input {
+            flex: 1;
+            border: none;
+            padding: 15px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .payment-methods {
+            margin-bottom: 30px;
+        }
+
+        .payment-options {
+            display: grid;
+            gap: 15px;
+        }
+
+        .payment-option {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .payment-option:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .payment-option.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .payment-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 20px;
+        }
+
+        .payment-info h4 {
+            margin: 0 0 5px 0;
+            font-size: 16px;
+        }
+
+        .payment-info p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .payment-option.selected .payment-info p {
+            opacity: 1;
+        }
+
+        .recharge-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 18px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .recharge-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .recharge-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .recharge-history {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-info h5 {
+            margin: 0 0 5px 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .history-info p {
+            margin: 0;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .history-amount {
+            font-size: 16px;
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        .empty-history {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .empty-history i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e9ecef;
+            padding: 10px 0;
+            z-index: 1000;
+        }
+
+        .nav-items {
+            display: flex;
+            justify-content: space-around;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #666;
+            padding: 5px;
+            transition: color 0.3s;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .nav-item span {
+            font-size: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 15px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .amount-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .balance-amount {
+                font-size: 28px;
+            }
+
+            .recharge-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <div class="header">
+        <div class="header-content">
+            <button class="back-btn" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h1 class="header-title">充值中心</h1>
+            <div></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 余额卡片 -->
+        <div class="balance-card">
+            <div class="balance-label">当前余额</div>
+            <div class="balance-amount" id="currentBalance">¥0.00</div>
+            <div class="balance-subtitle">账户可用余额</div>
+        </div>
+
+        <!-- 充值区域 -->
+        <div class="recharge-section">
+            <h3 class="section-title">选择充值金额</h3>
+            
+            <!-- 预设金额选项 -->
+            <div class="amount-options">
+                <div class="amount-option" data-amount="10">
+                    <div class="amount-value">¥10</div>
+                </div>
+                <div class="amount-option" data-amount="50">
+                    <div class="amount-value">¥50</div>
+                    <div class="amount-bonus">送¥2</div>
+                </div>
+                <div class="amount-option" data-amount="100">
+                    <div class="amount-value">¥100</div>
+                    <div class="amount-bonus">送¥5</div>
+                </div>
+                <div class="amount-option" data-amount="200">
+                    <div class="amount-value">¥200</div>
+                    <div class="amount-bonus">送¥15</div>
+                </div>
+                <div class="amount-option" data-amount="500">
+                    <div class="amount-value">¥500</div>
+                    <div class="amount-bonus">送¥50</div>
+                </div>
+                <div class="amount-option" data-amount="1000">
+                    <div class="amount-value">¥1000</div>
+                    <div class="amount-bonus">送¥120</div>
+                </div>
+            </div>
+
+            <!-- 自定义金额 -->
+            <div class="custom-amount">
+                <label for="customAmount">自定义金额</label>
+                <div class="amount-input-group">
+                    <div class="amount-prefix">¥</div>
+                    <input type="number" id="customAmount" class="amount-input" placeholder="请输入充值金额" min="1" max="10000">
+                </div>
+            </div>
+
+            <!-- 支付方式 -->
+            <div class="payment-methods">
+                <h4 class="section-title">选择支付方式</h4>
+                <div class="payment-options">
+                    <div class="payment-option selected" data-method="alipay">
+                        <div class="payment-icon" style="background: #1677ff; color: white;">
+                            <i class="fab fa-alipay"></i>
+                        </div>
+                        <div class="payment-info">
+                            <h4>支付宝</h4>
+                            <p>安全快捷的在线支付</p>
+                        </div>
+                    </div>
+                    <div class="payment-option" data-method="wechat">
+                        <div class="payment-icon" style="background: #07c160; color: white;">
+                            <i class="fab fa-weixin"></i>
+                        </div>
+                        <div class="payment-info">
+                            <h4>微信支付</h4>
+                            <p>便捷的移动支付方式</p>
+                        </div>
+                    </div>
+                    <div class="payment-option" data-method="bank">
+                        <div class="payment-icon" style="background: #ff6b35; color: white;">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <div class="payment-info">
+                            <h4>银行卡</h4>
+                            <p>支持各大银行储蓄卡</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 充值按钮 -->
+            <button id="rechargeBtn" class="recharge-btn" onclick="processRecharge()">
+                立即充值
+            </button>
+
+            <!-- 提示信息 -->
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i>
+                充值金额将实时到账，如有问题请联系客服
+            </div>
+        </div>
+
+        <!-- 充值记录 -->
+        <div class="recharge-history">
+            <h3 class="section-title">充值记录</h3>
+            <div id="historyList">
+                <div class="empty-history">
+                    <i class="fas fa-receipt"></i>
+                    <p>暂无充值记录</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部导航 -->
+    <div class="bottom-nav">
+        <div class="nav-items">
+            <a href="home.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>首页</span>
+            </a>
+            <a href="orders.html" class="nav-item">
+                <i class="fas fa-shopping-cart"></i>
+                <span>订单</span>
+            </a>
+            <a href="service.html" class="nav-item">
+                <i class="fas fa-headset"></i>
+                <span>客服</span>
+            </a>
+            <a href="account.html" class="nav-item">
+                <i class="fas fa-user"></i>
+                <span>我的</span>
+            </a>
+        </div>
+    </div>
+
+    <script src="js/static-data-manager.js"></script>
+    <script src="js/static-auth.js"></script>
+    <script>
+        let selectedAmount = 0;
+        let selectedMethod = 'alipay';
+        let currentUser = null;
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查登录状态
+            if (!window.staticAuth.isLoggedIn()) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // 初始化页面
+            initPage();
+            
+            // 设置金额选项
+            setupAmountOptions();
+            
+            // 设置支付方式
+            setupPaymentMethods();
+            
+            // 设置自定义金额输入
+            setupCustomAmount();
+            
+            // 加载充值记录
+            loadRechargeHistory();
+        });
+
+        // 初始化页面
+        async function initPage() {
+            try {
+                currentUser = window.staticAuth.getCurrentUser();
+                if (!currentUser) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                // 更新余额显示
+                await updateBalanceDisplay();
+                
+            } catch (error) {
+                console.error('初始化页面失败:', error);
+            }
+        }
+
+        // 更新余额显示
+        async function updateBalanceDisplay() {
+            try {
+                const userBalance = await window.staticDataManager.getUserBalance(currentUser.id);
+                document.getElementById('currentBalance').textContent = `¥${(userBalance || 0).toFixed(2)}`;
+            } catch (error) {
+                console.error('获取余额失败:', error);
+            }
+        }
+
+        // 设置金额选项
+        function setupAmountOptions() {
+            const amountOptions = document.querySelectorAll('.amount-option');
+            amountOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // 移除所有选中状态
+                    amountOptions.forEach(opt => opt.classList.remove('selected'));
+                    // 添加当前选中状态
+                    this.classList.add('selected');
+                    
+                    // 更新选中金额
+                    selectedAmount = parseFloat(this.getAttribute('data-amount'));
+                    
+                    // 清空自定义金额
+                    document.getElementById('customAmount').value = '';
+                    
+                    updateRechargeButton();
+                });
+            });
+        }
+
+        // 设置支付方式
+        function setupPaymentMethods() {
+            const paymentOptions = document.querySelectorAll('.payment-option');
+            paymentOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // 移除所有选中状态
+                    paymentOptions.forEach(opt => opt.classList.remove('selected'));
+                    // 添加当前选中状态
+                    this.classList.add('selected');
+                    
+                    // 更新选中支付方式
+                    selectedMethod = this.getAttribute('data-method');
+                });
+            });
+        }
+
+        // 设置自定义金额输入
+        function setupCustomAmount() {
+            const customAmountInput = document.getElementById('customAmount');
+            customAmountInput.addEventListener('input', function() {
+                const amount = parseFloat(this.value);
+                
+                if (amount > 0) {
+                    // 清除预设金额选择
+                    document.querySelectorAll('.amount-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    selectedAmount = amount;
+                } else {
+                    selectedAmount = 0;
+                }
+                
+                updateRechargeButton();
+            });
+        }
+
+        // 更新充值按钮状态
+        function updateRechargeButton() {
+            const rechargeBtn = document.getElementById('rechargeBtn');
+            
+            if (selectedAmount > 0) {
+                rechargeBtn.disabled = false;
+                rechargeBtn.textContent = `充值 ¥${selectedAmount.toFixed(2)}`;
+            } else {
+                rechargeBtn.disabled = true;
+                rechargeBtn.textContent = '请选择充值金额';
+            }
+        }
+
+        // 处理充值
+        async function processRecharge() {
+            if (selectedAmount <= 0) {
+                alert('请选择充值金额');
+                return;
+            }
+
+            if (selectedAmount < 1) {
+                alert('充值金额不能少于1元');
+                return;
+            }
+
+            if (selectedAmount > 10000) {
+                alert('单次充值金额不能超过10000元');
+                return;
+            }
+
+            try {
+                // 显示确认对话框
+                const confirmed = confirm(`确认充值 ¥${selectedAmount.toFixed(2)} 吗？\n支付方式：${getPaymentMethodName(selectedMethod)}`);
+                if (!confirmed) {
+                    return;
+                }
+
+                // 禁用充值按钮
+                const rechargeBtn = document.getElementById('rechargeBtn');
+                rechargeBtn.disabled = true;
+                rechargeBtn.textContent = '处理中...';
+
+                // 模拟支付处理
+                await simulatePayment();
+
+                // 创建充值记录
+                const rechargeRecord = {
+                    id: Date.now().toString(),
+                    userId: currentUser.id,
+                    amount: selectedAmount,
+                    method: selectedMethod,
+                    status: 'completed',
+                    createdAt: new Date().toISOString()
+                };
+
+                // 保存充值记录
+                await window.staticDataManager.addRechargeRecord(rechargeRecord);
+
+                // 更新用户余额
+                await window.staticDataManager.updateUserBalance(currentUser.id, selectedAmount);
+
+                // 更新余额显示
+                await updateBalanceDisplay();
+
+                // 重新加载充值记录
+                await loadRechargeHistory();
+
+                // 显示成功消息
+                showSuccessMessage(`充值成功！已到账 ¥${selectedAmount.toFixed(2)}`);
+
+                // 重置选择
+                resetSelection();
+
+            } catch (error) {
+                console.error('充值失败:', error);
+                alert('充值失败，请重试');
+            } finally {
+                // 恢复充值按钮
+                updateRechargeButton();
+            }
+        }
+
+        // 模拟支付处理
+        function simulatePayment() {
+            return new Promise((resolve) => {
+                setTimeout(resolve, 2000); // 模拟2秒支付处理时间
+            });
+        }
+
+        // 获取支付方式名称
+        function getPaymentMethodName(method) {
+            const methodNames = {
+                'alipay': '支付宝',
+                'wechat': '微信支付',
+                'bank': '银行卡'
+            };
+            return methodNames[method] || '未知支付方式';
+        }
+
+        // 显示成功消息
+        function showSuccessMessage(message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-success';
+            alertDiv.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            
+            const container = document.querySelector('.container');
+            container.insertBefore(alertDiv, container.firstChild);
+            
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+
+        // 重置选择
+        function resetSelection() {
+            selectedAmount = 0;
+            document.querySelectorAll('.amount-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            document.getElementById('customAmount').value = '';
+            updateRechargeButton();
+        }
+
+        // 加载充值记录
+        async function loadRechargeHistory() {
+            try {
+                const records = await window.staticDataManager.getUserRechargeRecords(currentUser.id);
+                const historyList = document.getElementById('historyList');
+                
+                if (records.length === 0) {
+                    historyList.innerHTML = `
+                        <div class="empty-history">
+                            <i class="fas fa-receipt"></i>
+                            <p>暂无充值记录</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // 按时间倒序排列
+                records.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+                const historyHtml = records.map(record => `
+                    <div class="history-item">
+                        <div class="history-info">
+                            <h5>${getPaymentMethodName(record.method)}充值</h5>
+                            <p>${new Date(record.createdAt).toLocaleString()}</p>
+                        </div>
+                        <div class="history-amount">+¥${record.amount.toFixed(2)}</div>
+                    </div>
+                `).join('');
+
+                historyList.innerHTML = historyHtml;
+
+            } catch (error) {
+                console.error('加载充值记录失败:', error);
+            }
+        }
+
+        // 返回上一页
+        function goBack() {
+            if (document.referrer) {
+                window.history.back();
+            } else {
+                window.location.href = 'account.html';
+            }
+        }
+    </script>
+</body>
+</html>
