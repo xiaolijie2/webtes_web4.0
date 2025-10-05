@@ -24,7 +24,7 @@ RUN mkdir -p /app/Data && chmod 755 /app/Data
 ENV ASPNETCORE_ENVIRONMENT=Production
 ENV ASPNETCORE_URLS=http://+:$PORT
 
-# 暴露端口（Render 会动态分配端口）
+# 暴露端口（Railway 会动态分配端口）
 EXPOSE $PORT
 
 # 启动应用程序
